@@ -1,0 +1,8 @@
+{
+  "name": "@bvalosek/lib-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "ethers": "5.0.29"
+  }
+}

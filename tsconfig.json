@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "jsx": "react",
+    "lib": [ "ESNext", "DOM" ],
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "ES2019"
+  },
+  "include": [
+    "./packages/*/src/**/*.ts",
+    "./packages/*/index.ts"
+  ]
+}

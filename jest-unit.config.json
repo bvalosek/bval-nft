@@ -1,0 +1,7 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "testTimeout": 10000,
+  "testMatch": [ "<rootDir>/packages/*/src/**/*.spec.ts" ],
+  "setupFilesAfterEnv": [ "<rootDir>/jest/setup-unit-tests.ts" ]
+}
