@@ -1,0 +1,12 @@
+{
+  "name": "@bvalosek/token-manifest",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p ./data && ts-node -T -P ../../tsconfig.json ./src/scripts/write-data.ts",
+    "clean": "rm -rf ./data"
+  },
+  "dependencies": {
+    "@bvalosek/lib-tokens": "*"
+  }
+}
