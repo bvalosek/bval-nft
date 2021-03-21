@@ -122,23 +122,23 @@ contract CoreERC721 is
 
   // mint a new token for the contract owner and emit metadata as an event
   function mint(TokenMintData memory token) external {
-      address msgSender = _msgSender();
-      uint256 tokenId = token.tokenId;
+    address msgSender = _msgSender();
+    uint256 tokenId = token.tokenId;
 
-      require(hasRole(MINTER_ROLE, msgSender), "requires MINTER_ROLE");
-      require(tokenId.isTokenValid() == true, "malformed token");
-      require(tokenId.tokenVersion() > 0, "invalid token version");
-      require(getSequenceState(tokenId.tokenSequenceNumber()) == SequenceState.STARTED, "sequence is not active");
+    require(hasRole(MINTER_ROLE, msgSender), "requires MINTER_ROLE");
+    require(tokenId.isTokenValid() == true, "malformed token");
+    require(tokenId.tokenVersion() > 0, "invalid token version");
+    require(getSequenceState(tokenId.tokenSequenceNumber()) == SequenceState.STARTED, "sequence is not active");
 
-      // create the NFT and persist CID / emit metadata
-      _mint(msgSender, tokenId);
-      _tokenMetadataCIDs[tokenId] = token.metadataCID;
-      emit TokenMetadata(tokenId, token.name, token.description, token.data);
+    // create the NFT and persist CID / emit metadata
+    _mint(msgSender, tokenId);
+    _tokenMetadataCIDs[tokenId] = token.metadataCID;
+    emit TokenMetadata(tokenId, token.name, token.description, token.data);
 
-      // emit rarible royalty info
-      address[] memory recipients = new address[](1);
-      recipients[0] = _royaltyRecipient;
-      emit SecondarySaleFees(tokenId, recipients, getFeeBps(tokenId));
+    // emit rarible royalty info
+    address[] memory recipients = new address[](1);
+    recipients[0] = _royaltyRecipient;
+    emit SecondarySaleFees(tokenId, recipients, getFeeBps(tokenId));
   }
 
   // ---
