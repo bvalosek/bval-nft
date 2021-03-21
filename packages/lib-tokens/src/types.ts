@@ -35,3 +35,20 @@ export interface TokenData {
   /** uint16 */
   width: number;
 }
+
+/** information required to mint a token */
+export interface TokenMintData {
+  tokenId: string;
+  name: string;
+  description: string;
+  metadataCID: string;
+  data: string;
+}
+
+/** information required to start a sequence */
+export interface SequenceCreateData {
+  sequenceNumber: number;
+  name: string;
+  description: string;
+  data: string;
+}

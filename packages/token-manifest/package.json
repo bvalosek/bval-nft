@@ -7,6 +7,9 @@
     "clean": "rm -rf ./data"
   },
   "dependencies": {
-    "@bvalosek/lib-tokens": "*"
+    "@bvalosek/lib-tokens": "*",
+    "@pinata/sdk": "1.1.13",
+    "dotenv": "8.2.0",
+    "ipfs-core": "0.5.4"
   }
 }

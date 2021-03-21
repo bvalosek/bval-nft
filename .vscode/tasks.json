@@ -4,7 +4,7 @@
     {
       "label": "🌈 Build token manifest",
       "type": "shell",
-      "command": "npx lerna run build --scope @bvalosek/token-manifest",
+      "command": "npx lerna run --stream build --scope @bvalosek/token-manifest",
       "problemMatcher": [],
     },
   ],

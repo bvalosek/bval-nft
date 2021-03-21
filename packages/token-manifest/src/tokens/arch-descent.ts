@@ -1,5 +1,5 @@
 import { AssetType } from '@bvalosek/lib-tokens';
-import { TokenSource } from '../types';
+import { SequenceSource, TokenSource } from '../types';
 
 const tokenBase = {
   version: 1,
@@ -13,11 +13,21 @@ const tokenBase = {
   height: 2400,
 };
 
+export const archDescentSequence: SequenceSource = {
+  name: 'ARCH DESCENT',
+  sequenceNumber: 1,
+  collectionNumber: 1,
+  description: 'Journey Through a Fractaled Space',
+  image: 'ARCH-DESCENT/ARCH-DESCENT.png',
+  completed: true,
+  atomic: true,
+};
+
 export const archDescentTokens: TokenSource[] = [
   {
     name: 'INIT SPACE',
     description: 'Descent Sequence Initiated',
-    image: 'ARCH-DESCENT/INT_SPACE.png',
+    image: 'ARCH-DESCENT/INIT_SPACE.png',
     token: { ...tokenBase, tokenNumber: 1, created: '2020-11-29' },
   },
   {
