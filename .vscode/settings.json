@@ -1,5 +1,9 @@
 {
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+
+  // solidity dev
+  "solidity.packageDefaultDependenciesDirectory": "packages/solidity-contracts/node_modules",
+  "solidity.compileUsingRemoteVersion": "v0.8.1+commit.df193b15",
 }
