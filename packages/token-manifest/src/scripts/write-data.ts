@@ -1,53 +1,58 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
-import { tokens, sequences } from '../tokens';
+import { writeFileSync } from 'fs';
 import { join } from 'path';
+
+import { tokens, sequences } from '../tokens';
 import { getAllPins, unpin, uploadFromDisk, uploadJSON } from '../pinata';
 import { generateTokenMetadata } from '../metadata';
 import { TokenManifestEntry } from '../types';
-import { generateTokenMintData } from '../minting';
 
 const assetPath = (filename: string): string => join(__dirname, '../assets', filename);
 
+const PROJECT_TAG = 'bval-nft';
+
 const writeData = async () => {
+  const entries: TokenManifestEntry[] = [];
+
   // a map from a "name" to the CID
   const cidMap = new Map<string, string>();
 
-  // upload all assets to IPFS
-  const assetNames = [...tokens.map((t) => t.image), ...sequences.map((s) => s.image)];
-  for (const name of assetNames) {
-    const filename = assetPath(name);
-    console.log(`uploading ${name} to IPFS...`);
-    const resp = await uploadFromDisk(filename, { name, tag: 'bval-nft' });
-    cidMap.set(name, resp.IpfsHash);
-  }
-
   // generate all token metadata json and upload to IPFS
   for (const source of tokens) {
-    const cid = cidMap.get(source.image);
+    // upload the primary asset to IPFS
+    const filename = assetPath(source.image);
+    const assetName = source.image;
+    console.log(`uploading ${assetName} to IPFS...`);
+    const { IpfsHash: assetCID } = await uploadFromDisk(filename, { name: assetName, tag: PROJECT_TAG });
+    cidMap.set(assetName, assetCID);
+
+    // resolve sequence
     const sequence = sequences.find((s) => s.sequenceNumber === source.token.sequenceNumber);
-    if (!sequence || !cid) {
+    if (!sequence) {
       throw new Error();
     }
-    const metadata = generateTokenMetadata(source, sequence, cid);
-    const name = `${metadata.token_id}.json`;
 
-    console.log(`uploading ${source.name} metadata to IPFS...`);
-    const resp = await uploadJSON(metadata, { name, tag: 'bval-nft' });
-    const metadataCID = resp.IpfsHash;
-    cidMap.set(name, metadataCID);
-    // const mintData = generateTokenMintData(metadata, metadataCID);
-    // const entry: TokenManifestEntry = {
-    //   metadata,
-    //   source,
-    //   mintData,
-    //   metadataCID,
-    // };
+    // generate and upload the metadata to IPFS
+    const metadata = generateTokenMetadata(source, sequence, assetCID);
+    const metadataName = `${metadata.token_id}.json`;
+
+    console.log(`uploading ${metadataName} metadata to IPFS...`);
+    const { IpfsHash: metadataCID } = await uploadJSON(metadata, { name: metadataName, tag: PROJECT_TAG });
+    cidMap.set(metadataName, metadataCID);
+
+    const entry: TokenManifestEntry = {
+      tokenId: metadata.token_id,
+      source,
+      metadata,
+      metadataCID,
+    };
+    entries.push(entry);
   }
 
   // find all extra pinned files that we can now unpin
-  const existing = await getAllPins('bval-nft');
+  const existing = await getAllPins(PROJECT_TAG);
   console.log('checking for outdated pins...');
   for (const pinned of existing) {
     const { name = '' } = pinned.metadata;
@@ -57,6 +62,8 @@ const writeData = async () => {
       await unpin(pinned.ipfs_pin_hash);
     }
   }
+
+  writeFileSync(join(__dirname, '../../data', 'tokens.json'), JSON.stringify(entries, null, 2));
 };
 
 writeData();

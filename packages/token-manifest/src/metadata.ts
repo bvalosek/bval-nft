@@ -1,6 +1,5 @@
 import { createToken } from '@bvalosek/lib-tokens';
 import { toHexStringBytes } from '@bvalosek/lib-tokens/src/util';
-import { sequences } from './tokens';
 import { MarketplaceAttribute, SequenceSource, TokenMetadata, TokenSource } from './types';
 
 const createSlug = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]+/gi, '-');
