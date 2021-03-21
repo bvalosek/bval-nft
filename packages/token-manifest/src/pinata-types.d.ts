@@ -54,6 +54,28 @@ declare module '@pinata/sdk' {
     pinList: (filter: PinListFilter) => Promise<PinListResponse>;
     pinFromFS: (path: string, options: PinOptions) => Promise<PinResponse>;
     pinJSONToIPFS: (body: unknown, options: PinOptions) => Promise<PinResponse>;
+    unpin: (hash: string) => Promise<void>;
+  }
+
+  export type PinataFilterOperation =
+    | 'gt'
+    | 'gte'
+    | 'lt'
+    | 'lte'
+    | 'ne'
+    | 'eq'
+    | 'between'
+    | 'notBetween'
+    | 'like'
+    | 'notLike'
+    | 'iLike'
+    | 'notILike'
+    | 'regexp'
+    | 'iRegexp';
+
+  export interface PinataMetadataFilter {
+    name?: string;
+    keyvalues?: Record<string, { value: string; op: PinataFilterOperation }>;
   }
 
   export interface PinListFilter {
@@ -61,6 +83,7 @@ declare module '@pinata/sdk' {
     status?: 'all' | 'pinned' | 'unpinned';
     pageLimit?: number;
     pageOffset?: number;
+    metadata?: PinataMetadataFilter;
   }
 
   export default Factory;

@@ -1,4 +1,4 @@
-import pinataSDK, { PinataSDK, PinDetail, PinOptions, PinResponse } from '@pinata/sdk';
+import pinataSDK, { PinataSDK, PinDetail, PinListFilter, PinOptions, PinResponse } from '@pinata/sdk';
 
 /** create the pinata sdk */
 export const getSDK = (): PinataSDK => {
@@ -11,13 +11,21 @@ export const getSDK = (): PinataSDK => {
 };
 
 /** fetch all (actively) pinned items in pinata */
-export const getAllPins = async (): Promise<PinDetail[]> => {
+export const getAllPins = async (uploadTagFilter?: string): Promise<PinDetail[]> => {
   const sdk = getSDK();
-  const resp = await sdk.pinList({
-    pageLimit: 1000,
+  const filter: PinListFilter = {
     pageOffset: 0,
+    pageLimit: 1000,
     status: 'pinned',
-  });
+  };
+
+  if (uploadTagFilter) {
+    filter.metadata = {
+      keyvalues: { uploadTag: { value: uploadTagFilter, op: 'eq' } },
+    };
+  }
+
+  const resp = await sdk.pinList(filter);
   if (resp.count > 990) {
     throw new Error('TODO: implement paging');
   }
@@ -58,10 +66,15 @@ export const uploadFromDisk = async (filename: string, metadata: UploadMetadata)
 };
 
 /** upload data as JSON to pinata  */
-export const uploadJSON = async (data: unknown, metadata: UploadMetadata): Promise<PinReponse> => {
+export const uploadJSON = async (data: unknown, metadata: UploadMetadata): Promise<PinResponse> => {
   const sdk = getSDK();
   const options = pinOptionsFromMetadata(metadata);
   const json = JSON.parse(JSON.stringify(data));
   const resp = await sdk.pinJSONToIPFS(json, options);
   return resp;
+};
+
+export const unpin = async (ipfsHash: string): Promise<void> => {
+  const sdk = getSDK();
+  await sdk.unpin(ipfsHash);
 };
