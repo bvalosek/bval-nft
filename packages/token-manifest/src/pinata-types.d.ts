@@ -53,6 +53,7 @@ declare module '@pinata/sdk' {
     testAuthentication: () => Promise<TestAuthenticationResponse>;
     pinList: (filter: PinListFilter) => Promise<PinListResponse>;
     pinFromFS: (path: string, options: PinOptions) => Promise<PinResponse>;
+    pinJSONToIPFS: (body: unknown, options: PinOptions) => Promise<PinResponse>;
   }
 
   export interface PinListFilter {

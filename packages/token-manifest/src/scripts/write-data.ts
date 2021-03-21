@@ -3,7 +3,7 @@ require('dotenv').config();
 
 import { tokens, sequences } from '../tokens';
 import { join } from 'path';
-import { upload } from '../pinata';
+import { uploadFromDisk, uploadJSON } from '../pinata';
 import { generateTokenMetadata } from '../metadata';
 import { TokenManifestEntry } from '../types';
 
@@ -15,7 +15,8 @@ const writeData = async () => {
   const assetNames = [...tokens.map((t) => t.image), ...sequences.map((s) => s.image)];
   for (const name of assetNames) {
     const filename = assetPath(name);
-    const resp = await upload(filename, { name, tag: 'bval-nft' });
+    console.log(`uploading ${name} to IPFS...`);
+    const resp = await uploadFromDisk(filename, { name, tag: 'bval-nft' });
     cidMap.set(name, resp.IpfsHash);
   }
 
@@ -26,12 +27,8 @@ const writeData = async () => {
       throw new Error();
     }
     const metadata = generateTokenMetadata(token, cid);
-    const entry = {
-      source: token,
-      metadata,
-      metadataCID: 'hey',
-    };
-    console.log(entry);
+    console.log(`uploading ${token.name} metadata to IPFS...`);
+    await uploadJSON(metadata, { name: `${metadata.token_id}.json`, tag: 'bval-nft' });
   }
 
   // const cids = await computeCIDs(assetFilenames);

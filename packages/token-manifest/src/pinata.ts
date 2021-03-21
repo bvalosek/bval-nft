@@ -29,9 +29,9 @@ interface UploadMetadata {
   tag: string;
 }
 
-export const upload = async (filename: string, metadata: UploadMetadata): Promise<PinResponse> => {
-  const sdk = getSDK();
-  const options: PinOptions = {
+/** generate the SDK metadata options from the base UploadMetadata info */
+const pinOptionsFromMetadata = (metadata: UploadMetadata): PinOptions => {
+  return {
     pinataMetadata: {
       name: metadata.name,
       keyvalues: {
@@ -47,7 +47,21 @@ export const upload = async (filename: string, metadata: UploadMetadata): Promis
       },
     },
   };
-  const resp = await sdk.pinFromFS(filename, options);
+};
 
+/** stream a file from disk to pinata */
+export const uploadFromDisk = async (filename: string, metadata: UploadMetadata): Promise<PinResponse> => {
+  const sdk = getSDK();
+  const options = pinOptionsFromMetadata(metadata);
+  const resp = await sdk.pinFromFS(filename, options);
+  return resp;
+};
+
+/** upload data as JSON to pinata  */
+export const uploadJSON = async (data: unknown, metadata: UploadMetadata): Promise<PinReponse> => {
+  const sdk = getSDK();
+  const options = pinOptionsFromMetadata(metadata);
+  const json = JSON.parse(JSON.stringify(data));
+  const resp = await sdk.pinJSONToIPFS(json, options);
   return resp;
 };
