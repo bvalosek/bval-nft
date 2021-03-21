@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./@openzeppelin/Strings.sol";
 import "./@openzeppelin/AccessControlEnumerable.sol";
 import "./@openzeppelin/ERC721Enumerable.sol";
 
@@ -13,13 +12,12 @@ import "./Sequenced.sol";
 import "./TokenID.sol";
 
 // A general enumerable/metadata-enabled 721 contract with several extra
-// features added + opinionated tokenURI semantics
+// features added
 //
 // Adds:
 // - emitting token metadata via event logs
 // - royality support (rarible, EIP2981)
 // - RBAC via AccessControlEnumerable
-// - tokenURI computed by tokenID and overrideable per-token
 // - tokenID parsing/validation
 // - sequenced functionality
 contract CoreERC721 is
@@ -34,7 +32,6 @@ contract CoreERC721 is
 
   {
 
-  using Strings for uint256;
   using TokenID for uint256;
 
   // announce token metadata
@@ -43,20 +40,23 @@ contract CoreERC721 is
   // announce collection data
   event CollectionMetadata(string name, string description, string data);
 
-  // royality fee BPS (1/100ths of a percent, eg 1000 = 10%)
-  uint16 private immutable _feeBps;
-
   // able to mint and manage sequences
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-  // base URI of token gateway
-  string private _gatewayURI;
+  // royality fee BPS (1/100ths of a percent, eg 1000 = 10%)
+  uint16 private immutable _feeBps;
 
   // address to send royalties to
   address private _royaltyRecipient;
 
-  // token URI override
-  mapping (uint256 => string) private _tokenURIs;
+  // ipfs base when calculating tokenURI
+  string private _ipfsBaseURI = "ipfs://ipfs/";
+
+  // collection metadata
+  string private _collectionMetadataCID;
+
+  // token metadata CIDs
+  mapping (uint256 => string) private _tokenMetadataCIDs;
 
   // constructor options
   struct ContractOptions {
@@ -64,8 +64,17 @@ contract CoreERC721 is
     string description;
     string data;
     string symbol;
+    string collectionMetadataCID;
     uint16 feeBps;
-    string baseURI;
+  }
+
+  // data required to mint a new token
+  struct TokenMintData {
+    uint256 tokenId;
+    string name;
+    string description;
+    string data;
+    string metadataCID;
   }
 
   constructor (ContractOptions memory options) ERC721(options.name, options.symbol) {
@@ -75,8 +84,8 @@ contract CoreERC721 is
     _setupRole(MINTER_ROLE, msgSender);
 
     _royaltyRecipient = msgSender;
-    _gatewayURI = options.baseURI;
     _feeBps = options.feeBps;
+    _collectionMetadataCID = options.collectionMetadataCID;
 
     emit CollectionMetadata(options.name, options.description, options.data);
   }
@@ -85,17 +94,10 @@ contract CoreERC721 is
   // Admin
   // ---
 
-  // set a token URI override
-  function setTokenURI(uint256 tokenId, string memory uri) external {
+  // swap out IPFS base URI
+  function setIPFSBaseURI(string calldata uri) external {
     require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "requires DEFAULT_ADMIN_ROLE");
-    require(_exists(tokenId), "invalid token");
-    _tokenURIs[tokenId] = uri;
-  }
-
-  // swap out base URI
-  function setBaseURI(string calldata uri) external {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "requires DEFAULT_ADMIN_ROLE");
-    _gatewayURI = uri;
+    _ipfsBaseURI = uri;
   }
 
   // set address that royalties are sent to
@@ -119,19 +121,19 @@ contract CoreERC721 is
   // ---
 
   // mint a new token for the contract owner and emit metadata as an event
-  function mint(
-    uint256 tokenId,
-    string memory name_,
-    string memory description_,
-    string memory data_) external {
+  function mint(TokenMintData memory token) external {
       address msgSender = _msgSender();
+      uint256 tokenId = token.tokenId;
+
       require(hasRole(MINTER_ROLE, msgSender), "requires MINTER_ROLE");
       require(tokenId.isTokenValid() == true, "malformed token");
       require(tokenId.tokenVersion() > 0, "invalid token version");
       require(getSequenceState(tokenId.tokenSequenceNumber()) == SequenceState.STARTED, "sequence is not active");
 
+      // create the NFT and persist CID / emit metadata
       _mint(msgSender, tokenId);
-      emit TokenMetadata(tokenId, name_, description_, data_);
+      _tokenMetadataCIDs[tokenId] = token.metadataCID;
+      emit TokenMetadata(tokenId, token.name, token.description, token.data);
 
       // emit rarible royalty info
       address[] memory recipients = new address[](1);
@@ -167,27 +169,14 @@ contract CoreERC721 is
   // token metadata URI
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     require(_exists(tokenId), "invalid token");
-
-    // if an override was set for this token
-    string memory uri = _tokenURIs[tokenId];
-    if (bytes(uri).length > 0) {
-      return uri;
-    }
-
-    return string(abi.encodePacked(
-      _gatewayURI,
-      "/api/metadata/token/",
-      tokenId.toString()
-    ));
+    string memory cid = _tokenMetadataCIDs[tokenId];
+    return string(abi.encodePacked(_ipfsBaseURI, cid));
   }
 
 
   // contract metadata URI (opensea)
   function contractURI() external view override returns (string memory) {
-    return string(abi.encodePacked(
-      _gatewayURI,
-      "/api/metadata/collection"
-    ));
+    return string(abi.encodePacked(_ipfsBaseURI, _collectionMetadataCID));
   }
 
   // ---
@@ -240,7 +229,7 @@ contract CoreERC721 is
   function _beforeTokenTransfer(address from, address to, uint256 tokenId) override internal virtual {
     // clean up on burn
     if (to == address(0)) {
-      delete _tokenURIs[tokenId];
+      delete _tokenMetadataCIDs[tokenId];
     }
 
     super._beforeTokenTransfer(from, to, tokenId);
