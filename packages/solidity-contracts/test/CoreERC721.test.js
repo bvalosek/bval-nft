@@ -221,24 +221,6 @@ contract('CoreERC721', (accounts) => {
       });
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'sequence is not active');
     });
-    it('should emit a metadata event on minting', async () => {
-      const instance = await factory();
-      const name = 'name';
-      const description = 'desc';
-      const data = 'image';
-      const tokenId = TOKENS[0];
-      await instance.startSequence('1', 'name', 'desc', 'image');
-      const res = await instance.mint({ tokenId, name, description, data, metadataCID: 'cid' });
-      truffleAssert.eventEmitted(
-        res,
-        'TokenMetadata',
-        (event) =>
-          event.name === name &&
-          event.description === description &&
-          event.data === data &&
-          event.tokenId.toString() === tokenId
-      );
-    });
     it('should emit a SecondarySaleFees event on minting', async () => {
       const [a1] = accounts;
       const instance = await factory();

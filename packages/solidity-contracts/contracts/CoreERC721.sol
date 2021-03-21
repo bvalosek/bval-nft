@@ -34,12 +34,6 @@ contract CoreERC721 is
 
   using TokenID for uint256;
 
-  // announce token metadata
-  event TokenMetadata(uint256 indexed tokenId, string name, string description, string data);
-
-  // announce collection data
-  event CollectionMetadata(string name, string description, string data);
-
   // able to mint and manage sequences
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
@@ -86,8 +80,6 @@ contract CoreERC721 is
     _royaltyRecipient = msgSender;
     _feeBps = options.feeBps;
     _collectionMetadataCID = options.collectionMetadataCID;
-
-    emit CollectionMetadata(options.name, options.description, options.data);
   }
 
   // ---
@@ -133,7 +125,6 @@ contract CoreERC721 is
     // create the NFT and persist CID / emit metadata
     _mint(msgSender, tokenId);
     _tokenMetadataCIDs[tokenId] = token.metadataCID;
-    emit TokenMetadata(tokenId, token.name, token.description, token.data);
 
     // emit rarible royalty info
     address[] memory recipients = new address[](1);
