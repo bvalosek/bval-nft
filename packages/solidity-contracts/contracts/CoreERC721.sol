@@ -114,7 +114,7 @@ contract CoreERC721 is
   // ---
 
   // mint a new token for the contract owner and emit metadata as an event
-  function mint(TokenMintData memory data) external {
+  function mint(TokenMintData memory data) public {
     address msgSender = _msgSender();
     uint256 tokenId = data.tokenId;
 
@@ -133,18 +133,27 @@ contract CoreERC721 is
     emit SecondarySaleFees(tokenId, recipients, getFeeBps(tokenId));
   }
 
+  // start a sequence, mint some tokens, and complete a sequence
+  function atomicMint(SequenceCreateData memory sequence, TokenMintData[] memory tokens) external {
+    startSequence(sequence);
+    for (uint i = 0; i < tokens.length; i++) {
+      mint(tokens[i]);
+    }
+    completeSequence(sequence.sequenceNumber);
+  }
+
   // ---
   // Sequences
   // ---
 
   // start sequence
-  function startSequence(SequenceCreateData memory data) override external {
+  function startSequence(SequenceCreateData memory data) override public {
     require(hasRole(MINTER_ROLE, _msgSender()), "requires MINTER_ROLE");
     _startSequence(data.sequenceNumber, data.name, data.description, data.image);
   }
 
   // complete the sequence
-  function completeSequence(uint16 number) override external {
+  function completeSequence(uint16 number) override public {
     require(hasRole(MINTER_ROLE, _msgSender()), "requires MINTER_ROLE");
     _completeSequence(number);
   }

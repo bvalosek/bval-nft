@@ -81,6 +81,56 @@ contract('CoreERC721', (accounts) => {
       assert.isBelow(res.receipt.gasUsed, MAX_MUTATION_GAS * 1.5);
       console.log('mint w/ 3 variations', res.receipt.gasUsed);
     });
+    it('atomic mint of a 9-piece sequence should cost less than target mutationgas * 9', async () => {
+      const instance = await factory();
+      const seq = {
+        sequenceNumber: '1',
+        name: 'ARCH DESCENT',
+        description: 'Journey Through a Fractaled Space',
+        image: 'QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU',
+      };
+      const tokens = [
+        {
+          tokenId: '0x018500010001490548a300010001010960096000000000000000000000000001',
+          metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
+        },
+        {
+          tokenId: '0x017a00010001490548a400010001010960096000000000000000000000000002',
+          metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
+        },
+        {
+          tokenId: '0x019300010001490548a500010001010960096000000000000000000000000003',
+          metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
+        },
+        {
+          tokenId: '0x01e800010001490548a600010001010960096000000000000000000000000004',
+          metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
+        },
+        {
+          tokenId: '0x012c00010001490548a700010001010960096000000000000000000000000005',
+          metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
+        },
+        {
+          tokenId: '0x017200010001490548a800010001010960096000000000000000000000000006',
+          metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
+        },
+        {
+          tokenId: '0x016200010001490548a900010001010960096000000000000000000000000007',
+          metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
+        },
+        {
+          tokenId: '0x016200010001490548aa00010001010960096000000000000000000000000008',
+          metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
+        },
+        {
+          tokenId: '0x017f00010001490548ab00010001010960096000000000000000000000000009',
+          metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
+        },
+      ];
+      const res = await instance.atomicMint(seq, tokens);
+      assert.isBelow(res.receipt.gasUsed, MAX_MUTATION_GAS * 9);
+      console.log('atomic mint w/ 9 tokens', res.receipt.gasUsed);
+    });
     it('start sequence should cost less than target announce gas', async () => {
       const instance = await factory();
       const res = await instance.startSequence({
