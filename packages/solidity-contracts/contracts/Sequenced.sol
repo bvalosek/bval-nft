@@ -47,15 +47,12 @@ abstract contract Sequenced is ISequenced {
   }
 
   // create a new sequence
-  function _startSequence(
-    uint16 number,
-    string memory name,
-    string memory description,
-    string memory image) internal {
-      require(number > 0, "invalid sequence number");
-      require(_sequences[number] == SequenceState.NOT_STARTED, "sequence already started");
-      _sequences[number] = SequenceState.STARTED;
-      emit SequenceMetadata(number, name, description, image);
+  function _startSequence(SequenceCreateData memory data) internal {
+    uint16 number = data.sequenceNumber;
+    require(number > 0, "invalid sequence number");
+    require(_sequences[number] == SequenceState.NOT_STARTED, "sequence already started");
+    _sequences[number] = SequenceState.STARTED;
+    emit SequenceMetadata(number, data.name, data.description, data.image);
   }
 
   // complete the sequence (no new tokens can be minted)

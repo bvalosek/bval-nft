@@ -131,6 +131,7 @@ contract CoreERC721 is
 
   // start a sequence, mint some tokens, and complete a sequence
   function atomicMint(SequenceCreateData memory sequence, TokenMintData[] memory tokens) external {
+    // no access control check here since each individual step is already checking roles
     startSequence(sequence);
     for (uint i = 0; i < tokens.length; i++) {
       mint(tokens[i]);
@@ -145,7 +146,7 @@ contract CoreERC721 is
   // start sequence
   function startSequence(SequenceCreateData memory data) override public {
     require(hasRole(MINTER_ROLE, _msgSender()), "requires MINTER_ROLE");
-    _startSequence(data.sequenceNumber, data.name, data.description, data.image);
+    _startSequence(data);
   }
 
   // complete the sequence
