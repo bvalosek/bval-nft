@@ -50,9 +50,6 @@ contract CoreERC721 is
   // able to mint and manage sequences
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-  // able to change the metadata index for a token
-  bytes32 public constant METADATA_CONTROLLER_ROLE = keccak256("METADATA_CONTROLLER_ROLE");
-
   // royality fee BPS (1/100ths of a percent, eg 1000 = 10%)
   uint16 private immutable _feeBps;
 
@@ -76,7 +73,6 @@ contract CoreERC721 is
 
     _setupRole(DEFAULT_ADMIN_ROLE, msgSender);
     _setupRole(MINTER_ROLE, msgSender);
-    _setupRole(METADATA_CONTROLLER_ROLE, msgSender);
 
     _feeBps = options.feeBps;
     _collectionMetadataCID = options.collectionMetadataCID;
@@ -173,14 +169,6 @@ contract CoreERC721 is
   // contract metadata URI (opensea)
   function contractURI() external view override returns (string memory) {
     return string(abi.encodePacked(_ipfsBaseURI, _collectionMetadataCID));
-  }
-
-  // select which metadata variation is returned from tokenURI
-  function setMetadataIndex(uint256 tokenId, uint idx) external {
-    require(hasRole(METADATA_CONTROLLER_ROLE, _msgSender()), "requires METADATA_CONTROLLER_ROLE");
-    require(_exists(tokenId), "invalid token");
-    require(idx < _tokenMetadataCIDs[tokenId].length, "invalid metadata index");
-    _tokenMetadataIndexes[tokenId] = idx;
   }
 
   // ---
