@@ -7,6 +7,12 @@
       "command": "npx lerna run --stream build --scope @bvalosek/token-manifest",
       "problemMatcher": [],
     },
+    {
+      "label": "💻 Run token management app locally",
+      "type": "shell",
+      "command": "npx lerna run --stream dev --scope @bvalosek/app-tokens",
+      "problemMatcher": [],
+    },
   ],
   "inputs": [
 

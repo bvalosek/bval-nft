@@ -1,0 +1,19 @@
+{
+  "name": "@bvalosek/app-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf ./dist ./.cache",
+    "dev": "webpack serve --config=./webpack.dev.js"
+  },
+  "dependencies": {
+    "@bvalosek/lib-tokens": "*",
+    "@bvalosek/token-manifest": "*",
+    "@geist-ui/react": "2.1.0-canary.2",
+    "@geist-ui/react-icons": "1.0.1",
+    "@material-ui/styles": "4.11.3",
+    "@web3-react/core": "6.1.1",
+    "@web3-react/injected-connector": "6.0.7",
+    "ethers": "5.0.29"
+  }
+}
