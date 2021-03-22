@@ -9,7 +9,7 @@ interface ISequenced {
     uint16 number,
     string memory name,
     string memory description,
-    string memory data) external;
+    string memory image) external;
 
   // complete the sequence (no new tokens can be minted)
   function completeSequence(uint16 number) external;
@@ -47,11 +47,11 @@ abstract contract Sequenced is ISequenced {
     uint16 number,
     string memory name,
     string memory description,
-    string memory data) internal {
+    string memory image) internal {
       require(number > 0, "invalid sequence number");
       require(_sequences[number] == SequenceState.NOT_STARTED, "sequence already started");
       _sequences[number] = SequenceState.STARTED;
-      emit SequenceMetadata(number, name, description, data);
+      emit SequenceMetadata(number, name, description, image);
   }
 
   // complete the sequence (no new tokens can be minted)

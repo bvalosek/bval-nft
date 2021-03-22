@@ -59,7 +59,6 @@ ${url}
     edition_number: source.token.editionNumber,
     edition_total: source.token.editionTotal,
     short_description: metadata.description,
-    data: assetCid,
     attributes,
   };
 };

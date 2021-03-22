@@ -50,9 +50,6 @@ export interface TokenMetadata {
   slug: string;
   token_id: string;
   short_description: string;
-
-  /** arbitrary JSON encodeable data */
-  data: unknown;
 }
 
 /** generated metadata content + corresponding IPFS CID */
