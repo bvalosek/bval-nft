@@ -1,8 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const truffleAssert = require('truffle-assertions');
 
 const CoreERC721 = artifacts.require('CoreERC721');
-const DESC = 'description';
-const IMAGE = 'https://image';
 const SYMBOL = 'BVAL';
 const NAME = '@bvalosek Collection';
 
@@ -11,10 +10,8 @@ const factory = () =>
   CoreERC721.new({
     name: NAME,
     symbol: SYMBOL,
-    description: DESC,
-    data: IMAGE,
-    collectionMetadataCID: 'blah',
     feeBps: 1000,
+    collectionMetadataCID: 'blah',
   });
 
 // max gas for deployment
@@ -39,10 +36,7 @@ const simpleMint = async (instance, tokenId = TOKENS[0]) => {
   await instance.startSequence('1', 'name', 'desc', 'data');
   const res = await instance.mint({
     tokenId,
-    name: 'name',
-    description: 'description',
-    data: 'data',
-    metadataCID: 'cid',
+    metadataCIDs: ['cid'],
   });
   return res;
 };
@@ -67,13 +61,25 @@ contract('CoreERC721', (accounts) => {
       await instance.startSequence('1', 'name', 'desc', 'image');
       const res = await instance.mint({
         tokenId,
-        name: 'Example Token Name',
-        description: 'This is an example of a token description that is a bit longer',
-        data: '"QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU"',
-        metadataCID: 'QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU',
+        metadataCIDs: ['QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU'],
       });
       assert.isBelow(res.receipt.gasUsed, MAX_MUTATION_GAS);
       console.log('mint', res.receipt.gasUsed);
+    });
+    it('mint with 3 metadata variations should cost lest than target mutation gas + 50%', async () => {
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await instance.startSequence('1', 'name', 'desc', 'image');
+      const res = await instance.mint({
+        tokenId,
+        metadataCIDs: [
+          'QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU',
+          'QmXgbjFDaVLBUTYhJz6J5ss7rNC6EGnuvhVn9hPARa7K8F',
+          'QmZYcPoWP5arnjbBr2SYAEFJTcU3jB8vAABiRoejA3AWjn',
+        ],
+      });
+      assert.isBelow(res.receipt.gasUsed, MAX_MUTATION_GAS * 1.5);
+      console.log('mint w/ 3 variations', res.receipt.gasUsed);
     });
     it('start sequence should cost less than target announce gas', async () => {
       const instance = await factory();
@@ -189,10 +195,7 @@ contract('CoreERC721', (accounts) => {
       const task = instance.mint(
         {
           tokenId,
-          name: 'name',
-          description: 'desc',
-          data: 'data',
-          metadataCID: 'cid',
+          metadataCIDs: ['cid'],
         },
         { from: a2 }
       );
@@ -202,10 +205,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const task = instance.mint({
         tokenId: TOKENS[0],
-        name: 'name',
-        description: 'description',
-        data: 'image',
-        metadataCID: 'cid',
+        metadataCIDs: ['cid'],
       });
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'sequence is not active');
     });
@@ -214,22 +214,16 @@ contract('CoreERC721', (accounts) => {
       await instance.startSequence('1', 'name', 'desc', 'image');
       const task = instance.mint({
         tokenId: TOKENS[1],
-        name: 'name',
-        description: 'description',
-        data: 'image',
-        metadataCID: 'cid',
+        metadataCIDs: ['cid'],
       });
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'sequence is not active');
     });
     it('should emit a SecondarySaleFees event on minting', async () => {
       const [a1] = accounts;
       const instance = await factory();
-      const name = 'name';
-      const description = 'desc';
-      const data = 'image';
       const tokenId = TOKENS[0];
       await instance.startSequence('1', 'name', 'desc', 'image');
-      const res = await instance.mint({ tokenId, name, description, data, metadataCID: 'cid' });
+      const res = await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       truffleAssert.eventEmitted(res, 'SecondarySaleFees', (event) => {
         return (
           event.tokenId.toString() === tokenId &&
@@ -289,7 +283,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence('1', 'name', 'desc', 'image');
-      await instance.mint({ tokenId, name: 'name', description: 'description', data: 'image', metadataCID: 'cid' });
+      await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       const fee = await instance.getFeeBps(tokenId);
       assert.isNumber(fee[0].toNumber());
       assert.lengthOf(fee, 1);
@@ -299,7 +293,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence('1', 'name', 'desc', 'image');
-      await instance.mint({ tokenId, name: 'name', description: 'description', data: 'image', metadataCID: 'cid' });
+      await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       const rec = await instance.getFeeRecipients(tokenId);
       assert.equal(rec[0], a1);
       assert.lengthOf(rec, 1);
@@ -311,7 +305,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence('1', 'name', 'desc', 'image');
-      await instance.mint({ tokenId, name: 'name', description: 'description', data: 'image', metadataCID: 'cid' });
+      await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       const rec = await instance.royaltyInfo(tokenId);
       assert.equal(rec[0].toString(), a1);
       assert.equal(rec[1].toNumber(), 100000);

@@ -1,14 +1,20 @@
-import { SequenceCreateData, TokenData, TokenMintData } from '@bvalosek/lib-tokens';
+import { TokenData } from '@bvalosek/lib-tokens';
+
+/** standard metadata information */
+export interface Metadata {
+  name: string;
+  description: string;
+  image: string;
+}
 
 /**
  * datatype that serves as the "source" for token information, that will be
  * processed and transformed
  */
 export interface TokenSource {
-  name: string;
-  description: string;
-  image: string;
   token: TokenData;
+  summary?: string;
+  metadata: Metadata[];
 }
 
 /** source for sequence information that will be processed and transformed */
@@ -49,10 +55,15 @@ export interface TokenMetadata {
   data: unknown;
 }
 
+/** generated metadata content + corresponding IPFS CID */
+interface MetadataEntry {
+  cid: string;
+  content: TokenMetadata;
+}
+
 /** roles up all the information sourced and generated for a specific token */
 export interface TokenManifestEntry {
   tokenId: string;
   source: TokenSource;
-  metadata: TokenMetadata;
-  metadataCID: string;
+  metadata: MetadataEntry[];
 }

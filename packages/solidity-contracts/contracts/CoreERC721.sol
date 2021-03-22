@@ -11,11 +11,24 @@ import "./interfaces/IERC2981.sol";
 import "./Sequenced.sol";
 import "./TokenID.sol";
 
+// constructor options
+struct CollectionOptions {
+  string name;
+  string symbol;
+  string collectionMetadataCID;
+  uint16 feeBps;
+}
+
+// data required to mint a new token
+struct TokenMintData {
+  uint256 tokenId;
+  string[] metadataCIDs;
+}
+
 // A general enumerable/metadata-enabled 721 contract with several extra
 // features added
 //
 // Adds:
-// - emitting token metadata via event logs
 // - royality support (rarible, EIP2981)
 // - RBAC via AccessControlEnumerable
 // - tokenID parsing/validation
@@ -37,6 +50,9 @@ contract CoreERC721 is
   // able to mint and manage sequences
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
+  // able to change the metadata index for a token
+  bytes32 public constant METADATA_CONTROLLER_ROLE = keccak256("METADATA_CONTROLLER_ROLE");
+
   // royality fee BPS (1/100ths of a percent, eg 1000 = 10%)
   uint16 private immutable _feeBps;
 
@@ -50,36 +66,21 @@ contract CoreERC721 is
   string private _collectionMetadataCID;
 
   // token metadata CIDs
-  mapping (uint256 => string) private _tokenMetadataCIDs;
+  mapping (uint256 => string[]) private _tokenMetadataCIDs;
 
-  // constructor options
-  struct ContractOptions {
-    string name;
-    string description;
-    string data;
-    string symbol;
-    string collectionMetadataCID;
-    uint16 feeBps;
-  }
+  // token metadata index
+  mapping (uint256 => uint) private _tokenMetadataIndexes;
 
-  // data required to mint a new token
-  struct TokenMintData {
-    uint256 tokenId;
-    string name;
-    string description;
-    string data;
-    string metadataCID;
-  }
-
-  constructor (ContractOptions memory options) ERC721(options.name, options.symbol) {
+  constructor (CollectionOptions memory options) ERC721(options.name, options.symbol) {
     address msgSender = _msgSender();
 
     _setupRole(DEFAULT_ADMIN_ROLE, msgSender);
     _setupRole(MINTER_ROLE, msgSender);
+    _setupRole(METADATA_CONTROLLER_ROLE, msgSender);
 
-    _royaltyRecipient = msgSender;
     _feeBps = options.feeBps;
     _collectionMetadataCID = options.collectionMetadataCID;
+    _royaltyRecipient = msgSender;
   }
 
   // ---
@@ -124,7 +125,7 @@ contract CoreERC721 is
 
     // create the NFT and persist CID / emit metadata
     _mint(msgSender, tokenId);
-    _tokenMetadataCIDs[tokenId] = token.metadataCID;
+    _tokenMetadataCIDs[tokenId] = token.metadataCIDs;
 
     // emit rarible royalty info
     address[] memory recipients = new address[](1);
@@ -160,14 +161,21 @@ contract CoreERC721 is
   // token metadata URI
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     require(_exists(tokenId), "invalid token");
-    string memory cid = _tokenMetadataCIDs[tokenId];
+    string memory cid = _tokenMetadataCIDs[tokenId][_tokenMetadataIndexes[tokenId]];
     return string(abi.encodePacked(_ipfsBaseURI, cid));
   }
-
 
   // contract metadata URI (opensea)
   function contractURI() external view override returns (string memory) {
     return string(abi.encodePacked(_ipfsBaseURI, _collectionMetadataCID));
+  }
+
+  // select which metadata variation is returned from tokenURI
+  function setMetadataIndex(uint256 tokenId, uint idx) external {
+    require(hasRole(METADATA_CONTROLLER_ROLE, _msgSender()), "requires METADATA_CONTROLLER_ROLE");
+    require(_exists(tokenId), "invalid token");
+    require(idx < _tokenMetadataCIDs[tokenId].length, "invalid metadata index");
+    _tokenMetadataIndexes[tokenId] = idx;
   }
 
   // ---

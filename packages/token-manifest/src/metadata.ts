@@ -8,9 +8,11 @@ const createSlug = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]+/gi
 export const generateTokenMetadata = (
   source: TokenSource,
   sequence: SequenceSource,
+  metadataIndex: number,
   assetCid: string
 ): TokenMetadata => {
-  const slug = createSlug(source.name);
+  const metadata = source.metadata[metadataIndex];
+  const slug = createSlug(metadata.name);
   const url = `https://tokens.bvalosek.com/tokens/${slug}`;
 
   const attributes: MarketplaceAttribute[] = [
@@ -31,11 +33,13 @@ export const generateTokenMetadata = (
 
   const description = `
 
-${source.description}
+${metadata.description}${source.summary ? '\n\n' + `${source.summary}` : ''}
 
 Edition ${source.token.editionNumber} / ${source.token.editionTotal}
 
-This is token #${source.token.tokenNumber} in the @bvalosek NFT Collection, minted on ${source.token.minted}. It is part of the "${sequence.name}" sequence.${atomic}
+This is token #${source.token.tokenNumber} in the @bvalosek NFT Collection, minted on ${
+    source.token.minted
+  }. It is part of the "${sequence.name}" sequence.${atomic}
 
 Original File: ${source.token.width} ✕ ${source.token.height} ${source.token.assetType}, created ${source.token.created}
 
@@ -46,7 +50,7 @@ ${url}
 `.trim();
 
   return {
-    name: source.name,
+    name: metadata.name,
     slug,
     description,
     image: `ipfs://ipfs/${assetCid}`,
@@ -54,7 +58,7 @@ ${url}
     token_id: toHexStringBytes(createToken(source.token), 32),
     edition_number: source.token.editionNumber,
     edition_total: source.token.editionTotal,
-    short_description: source.description,
+    short_description: metadata.description,
     data: assetCid,
     attributes,
   };

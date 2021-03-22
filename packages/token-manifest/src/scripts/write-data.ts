@@ -8,6 +8,7 @@ import { tokens, sequences } from '../tokens';
 import { getAllPins, unpin, uploadFromDisk, uploadJSON } from '../pinata';
 import { generateTokenMetadata } from '../metadata';
 import { TokenManifestEntry } from '../types';
+import { createToken, toHexStringBytes } from '@bvalosek/lib-tokens';
 
 const assetPath = (filename: string): string => join(__dirname, '../assets', filename);
 
@@ -21,33 +22,36 @@ const writeData = async () => {
 
   // generate all token metadata json and upload to IPFS
   for (const source of tokens) {
-    // upload the primary asset to IPFS
-    const filename = assetPath(source.image);
-    const assetName = source.image;
-    console.log(`uploading ${assetName} to IPFS...`);
-    const { IpfsHash: assetCID } = await uploadFromDisk(filename, { name: assetName, tag: PROJECT_TAG });
-    cidMap.set(assetName, assetCID);
-
     // resolve sequence
     const sequence = sequences.find((s) => s.sequenceNumber === source.token.sequenceNumber);
     if (!sequence) {
       throw new Error();
     }
 
-    // generate and upload the metadata to IPFS
-    const metadata = generateTokenMetadata(source, sequence, assetCID);
-    const metadataName = `${metadata.token_id}.json`;
-
-    console.log(`uploading ${metadataName} metadata to IPFS...`);
-    const { IpfsHash: metadataCID } = await uploadJSON(metadata, { name: metadataName, tag: PROJECT_TAG });
-    cidMap.set(metadataName, metadataCID);
-
     const entry: TokenManifestEntry = {
-      tokenId: metadata.token_id,
+      tokenId: toHexStringBytes(createToken(source.token), 32),
+      metadata: [],
       source,
-      metadata,
-      metadataCID,
     };
+
+    // upload each variation of metadata
+    for (const [idx, meta] of source.metadata.entries()) {
+      // upload the primary asset to IPFS
+      const filename = assetPath(meta.image);
+      const assetName = `${meta.image}`;
+      console.log(`uploading ${assetName} to IPFS...`);
+      const { IpfsHash: assetCID } = await uploadFromDisk(filename, { name: assetName, tag: PROJECT_TAG });
+      cidMap.set(assetName, assetCID);
+
+      // generate and upload the metadata to IPFS
+      const metadata = generateTokenMetadata(source, sequence, idx, assetCID);
+      const metadataName = `${metadata.token_id}.json[${idx}]`;
+      console.log(`uploading ${metadataName} metadata to IPFS...`);
+      const { IpfsHash: metadataCID } = await uploadJSON(metadata, { name: metadataName, tag: PROJECT_TAG });
+      cidMap.set(metadataName, metadataCID);
+
+      entry.metadata.push({ content: metadata, cid: metadataCID });
+    }
     entries.push(entry);
   }
 
@@ -58,7 +62,7 @@ const writeData = async () => {
     const { name = '' } = pinned.metadata;
     const uploaded = cidMap.get(name);
     if (uploaded !== pinned.ipfs_pin_hash) {
-      console.log(`removing old hash ${pinned.ipfs_pin_hash}`);
+      console.log(`unpinning out of date hash for ${name}: ${pinned.ipfs_pin_hash}`);
       await unpin(pinned.ipfs_pin_hash);
     }
   }
