@@ -5,11 +5,7 @@ pragma solidity ^0.8.0;
 interface ISequenced {
 
   // start a new sequence
-  function startSequence(
-    uint16 number,
-    string memory name,
-    string memory description,
-    string memory image) external;
+  function startSequence(SequenceCreateData memory data) external;
 
   // complete the sequence (no new tokens can be minted)
   function completeSequence(uint16 number) external;
@@ -21,6 +17,14 @@ enum SequenceState {
   NOT_STARTED,
   STARTED,
   COMPLETED
+}
+
+// data required to create a sequence
+struct SequenceCreateData {
+  uint16 sequenceNumber;
+  string name;
+  string description;
+  string image;
 }
 
 // Manage multiple parallel "sequences" Sequences can be "completed" in order to

@@ -15,7 +15,7 @@ const factory = () =>
   });
 
 // max gas for deployment
-const MAX_DEPLOYMENT_GAS = 3200000;
+const MAX_DEPLOYMENT_GAS = 3500000;
 
 // max amount of gas we want to allow for basic on-chain mutations
 const MAX_MUTATION_GAS = 250000;
@@ -33,7 +33,7 @@ const TOKENS = [
 
 // start a sequence and mint
 const simpleMint = async (instance, tokenId = TOKENS[0]) => {
-  await instance.startSequence('1', 'name', 'desc', 'data');
+  await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
   const res = await instance.mint({
     tokenId,
     metadataCIDs: ['cid'],
@@ -58,7 +58,7 @@ contract('CoreERC721', (accounts) => {
     it('mint with longer strings should cost less than target mutation gas', async () => {
       const instance = await factory();
       const tokenId = TOKENS[0];
-      await instance.startSequence('1', 'name', 'desc', 'image');
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       const res = await instance.mint({
         tokenId,
         metadataCIDs: ['QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU'],
@@ -69,7 +69,7 @@ contract('CoreERC721', (accounts) => {
     it('mint with 3 metadata variations should cost lest than target mutation gas + 50%', async () => {
       const instance = await factory();
       const tokenId = TOKENS[0];
-      await instance.startSequence('1', 'name', 'desc', 'image');
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       const res = await instance.mint({
         tokenId,
         metadataCIDs: [
@@ -83,24 +83,30 @@ contract('CoreERC721', (accounts) => {
     });
     it('start sequence should cost less than target announce gas', async () => {
       const instance = await factory();
-      const res = await instance.startSequence('1', 'name', 'desc', 'image');
+      const res = await instance.startSequence({
+        sequenceNumber: '1',
+        name: 'name',
+        description: 'desc',
+        image: 'data',
+      });
       assert.isBelow(res.receipt.gasUsed, MAX_ANNOUNCE_GAS);
       console.log('start sequence', res.receipt.gasUsed);
     });
     it('start seqeunce with longer strings should cost less than target announce gas', async () => {
       const instance = await factory();
-      const res = await instance.startSequence(
-        '1',
-        'Example Sequence Name',
-        'This is a bit more realistic example of sequence metadata. At least two sentences for plenty of detail',
-        'QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU'
-      );
+      const res = await instance.startSequence({
+        sequenceNumber: '1',
+        name: 'Example Sequence Name',
+        description:
+          'This is a bit more realistic example of sequence metadata. At least two sentences for plenty of detail',
+        image: 'QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU',
+      });
       assert.isBelow(res.receipt.gasUsed, MAX_ANNOUNCE_GAS);
       console.log('start sequence', res.receipt.gasUsed);
     });
     it('complete seqeunce should cost less than target announce gas', async () => {
       const instance = await factory();
-      await instance.startSequence('1', 'name', 'desc', 'image');
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       const res = await instance.completeSequence('1');
       assert.isBelow(res.receipt.gasUsed, MAX_ANNOUNCE_GAS);
       console.log('complete sequence', res.receipt.gasUsed);
@@ -191,7 +197,7 @@ contract('CoreERC721', (accounts) => {
       const [, a2] = accounts;
       const instance = await factory();
       const tokenId = TOKENS[0];
-      await instance.startSequence('1', 'name', 'desc', 'image');
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       const task = instance.mint(
         {
           tokenId,
@@ -211,7 +217,7 @@ contract('CoreERC721', (accounts) => {
     });
     it('should revert if minted with wrong sequence number', async () => {
       const instance = await factory();
-      await instance.startSequence('1', 'name', 'desc', 'image');
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       const task = instance.mint({
         tokenId: TOKENS[1],
         metadataCIDs: ['cid'],
@@ -222,7 +228,7 @@ contract('CoreERC721', (accounts) => {
       const [a1] = accounts;
       const instance = await factory();
       const tokenId = TOKENS[0];
-      await instance.startSequence('1', 'name', 'desc', 'image');
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       const res = await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       truffleAssert.eventEmitted(res, 'SecondarySaleFees', (event) => {
         return (
@@ -282,7 +288,7 @@ contract('CoreERC721', (accounts) => {
     it('should return fee bps value', async () => {
       const instance = await factory();
       const tokenId = TOKENS[0];
-      await instance.startSequence('1', 'name', 'desc', 'image');
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       const fee = await instance.getFeeBps(tokenId);
       assert.isNumber(fee[0].toNumber());
@@ -292,7 +298,7 @@ contract('CoreERC721', (accounts) => {
       const [a1] = accounts;
       const instance = await factory();
       const tokenId = TOKENS[0];
-      await instance.startSequence('1', 'name', 'desc', 'image');
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       const rec = await instance.getFeeRecipients(tokenId);
       assert.equal(rec[0], a1);
@@ -304,7 +310,7 @@ contract('CoreERC721', (accounts) => {
       const [a1] = accounts;
       const instance = await factory();
       const tokenId = TOKENS[0];
-      await instance.startSequence('1', 'name', 'desc', 'image');
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       const rec = await instance.royaltyInfo(tokenId);
       assert.equal(rec[0].toString(), a1);

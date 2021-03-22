@@ -114,9 +114,9 @@ contract CoreERC721 is
   // ---
 
   // mint a new token for the contract owner and emit metadata as an event
-  function mint(TokenMintData memory token) external {
+  function mint(TokenMintData memory data) external {
     address msgSender = _msgSender();
-    uint256 tokenId = token.tokenId;
+    uint256 tokenId = data.tokenId;
 
     require(hasRole(MINTER_ROLE, msgSender), "requires MINTER_ROLE");
     require(tokenId.isTokenValid() == true, "malformed token");
@@ -125,7 +125,7 @@ contract CoreERC721 is
 
     // create the NFT and persist CID / emit metadata
     _mint(msgSender, tokenId);
-    _tokenMetadataCIDs[tokenId] = token.metadataCIDs;
+    _tokenMetadataCIDs[tokenId] = data.metadataCIDs;
 
     // emit rarible royalty info
     address[] memory recipients = new address[](1);
@@ -138,13 +138,9 @@ contract CoreERC721 is
   // ---
 
   // start sequence
-  function startSequence(
-    uint16 number,
-    string memory name_,
-    string memory description_,
-    string memory data_) override external {
-      require(hasRole(MINTER_ROLE, _msgSender()), "requires MINTER_ROLE");
-      _startSequence(number, name_, description_, data_);
+  function startSequence(SequenceCreateData memory data) override external {
+    require(hasRole(MINTER_ROLE, _msgSender()), "requires MINTER_ROLE");
+    _startSequence(data.sequenceNumber, data.name, data.description, data.image);
   }
 
   // complete the sequence
