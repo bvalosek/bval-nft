@@ -1,0 +1,7 @@
+# gatsby output
+public
+.cache
+
+# source data
+src/data/sequences.json
+src/data/tokens.json

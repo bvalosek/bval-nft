@@ -21,7 +21,6 @@ const createData = (): TokenData => {
 describe('token encoding', () => {
   it('should encode at token', () => {
     const token = createToken({ ...createData() });
-    console.log(token.toString());
     expect(toHexStringBytes(token)).toMatchInlineSnapshot(
       `"0x01bc00010001491348a500010001010960096000000000000000000000000001"`
     );

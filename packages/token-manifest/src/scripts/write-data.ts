@@ -37,11 +37,8 @@ const writeData = async () => {
     // upload each variation of metadata
     for (const [idx, meta] of source.metadata.entries()) {
       // upload the primary asset to IPFS
-      const filename = assetPath(meta.image);
-      const assetName = `${meta.image}`;
-      console.log(`uploading ${assetName} to IPFS...`);
-      const { IpfsHash: assetCID } = await uploadFromDisk(filename, { name: assetName, tag: PROJECT_TAG });
-      cidMap.set(assetName, assetCID);
+      const assetCID = await uploadAsset(meta.image);
+      cidMap.set(meta.image, assetCID);
 
       // generate and upload the metadata to IPFS
       const metadata = generateTokenMetadata(source, sequence, idx, assetCID);
@@ -68,6 +65,14 @@ const writeData = async () => {
   }
 
   writeFileSync(join(__dirname, '../../data', 'tokens.json'), JSON.stringify(entries, null, 2));
+};
+
+/** upload a static asset from the assets/ directory to IPFS and return the CID */
+const uploadAsset = async (relativeAssetPath: string) => {
+  const filename = assetPath(relativeAssetPath);
+  console.log(`uploading ${relativeAssetPath} to IPFS...`);
+  const { IpfsHash: cid } = await uploadFromDisk(filename, { name: relativeAssetPath, tag: PROJECT_TAG });
+  return cid;
 };
 
 writeData();
