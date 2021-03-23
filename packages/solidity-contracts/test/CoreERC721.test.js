@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const truffleAssert = require('truffle-assertions');
+const timeMachine = require('ganache-time-traveler');
 
 const CoreERC721 = artifacts.require('CoreERC721');
 const SYMBOL = 'BVAL';
@@ -40,6 +41,22 @@ const simpleMint = async (instance, tokenId = TOKENS[0]) => {
   });
   return res;
 };
+
+// set the date of the local blockchain
+const setNetworkTime = async (date) => {
+  const timestamp = Math.round(new Date(date).getTime() / 1000);
+  await timeMachine.advanceBlockAndSetTime(timestamp);
+};
+
+// helps keeps tests more consistent when messing with network time
+let snapshotId;
+beforeEach(async () => {
+  const snapshot = await timeMachine.takeSnapshot();
+  snapshotId = snapshot['result'];
+});
+afterEach(async () => {
+  await timeMachine.revertToSnapshot(snapshotId);
+});
 
 contract('CoreERC721', (accounts) => {
   describe('gas constraints', () => {
@@ -365,6 +382,65 @@ contract('CoreERC721', (accounts) => {
       const rec = await instance.royaltyInfo(tokenId);
       assert.equal(rec[0].toString(), a1);
       assert.equal(rec[1].toNumber(), 100000);
+    });
+  });
+  describe('token locking', () => {
+    it('should start tokens unlocked', async () => {
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(instance, tokenId);
+      assert.isFalse(await instance.isTokenLocked(tokenId));
+    });
+    it('should lock a token', async () => {
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(instance, tokenId);
+      await instance.lockToken(tokenId);
+      assert.isTrue(await instance.isTokenLocked(tokenId));
+    });
+    it('should automatically unlock after 30 days', async () => {
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(instance, tokenId);
+      await setNetworkTime('2021-01-01');
+      await instance.lockToken(tokenId);
+      assert.isTrue(await instance.isTokenLocked(tokenId));
+      await setNetworkTime('2021-01-31T00:00:05'); /// 5s buffer to account for test lag
+      assert.isFalse(await instance.isTokenLocked(tokenId));
+    });
+    it('should unlock after 1 day after calling unlock()', async () => {
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(instance, tokenId);
+      await setNetworkTime('2021-01-01');
+      await instance.lockToken(tokenId);
+      await instance.unlockToken(tokenId);
+      await setNetworkTime('2021-01-02T00:00:05'); // 5s buffer to account for test lag
+      assert.isFalse(await instance.isTokenLocked(tokenId));
+    });
+    it('should revert of non-owner attempts to lock', async () => {
+      const [, a2] = accounts;
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(instance, tokenId);
+      const task = instance.lockToken(tokenId, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not token owner');
+    });
+    it('should revert of non-owner attempts to unlock', async () => {
+      const [, a2] = accounts;
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(instance, tokenId);
+      await instance.lockToken(tokenId);
+      const task = instance.unlockToken(tokenId, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not token owner');
+    });
+    it('should not re-lock if unlocking an unlocked token', async () => {
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(instance, tokenId);
+      await instance.unlockToken(tokenId);
+      assert.isFalse(await instance.isTokenLocked(tokenId));
     });
   });
 });
