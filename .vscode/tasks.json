@@ -4,13 +4,19 @@
     {
       "label": "🌈 Build token manifest",
       "type": "shell",
-      "command": "npx lerna run --stream build --scope @bvalosek/token-manifest",
+      "command": "npm run manifest:build",
+      "problemMatcher": [],
+    },
+    {
+      "label": "⚙️ Compile all smart contracts",
+      "type": "shell",
+      "command": "npm run contracts:build",
       "problemMatcher": [],
     },
     {
       "label": "💻 Run token management app locally",
       "type": "shell",
-      "command": "npx lerna run --stream dev --scope @bvalosek/app-tokens",
+      "command": "npm run app:dev",
       "problemMatcher": [],
     },
   ],

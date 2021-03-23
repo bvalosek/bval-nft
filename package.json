@@ -8,7 +8,10 @@
     "test": "jest --verbose --runInBand --config jest-unit.config.json",
     "clean": "lerna run clean",
     "nuke": "npm run clean && lerna clean -y && rm -rf ./node_modules",
-    "token-gallery:dev": "npx lerna run --stream dev --scope @bvalosek/site-token-gallery"
+    "app:dev": "npx lerna run --stream dev --scope @bvalosek/app-tokens",
+    "contracts:build": "npx lerna run --stream build --scope @bvalosek/solidity-contracts",
+    "gallery:dev": "npx lerna run --stream dev --scope @bvalosek/site-token-gallery",
+    "manifest:build": "npx lerna run --stream build --scope @bvalosek/token-manifest"
   },
   "prettier": {
     "semi": true,

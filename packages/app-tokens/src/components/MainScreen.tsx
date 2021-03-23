@@ -1,5 +1,6 @@
 import { Card, Tabs } from '@geist-ui/react';
 import React, { FunctionComponent } from 'react';
+import { Deploy } from './Deploy';
 
 export const MainScreen: FunctionComponent = () => {
   return (
@@ -9,10 +10,7 @@ export const MainScreen: FunctionComponent = () => {
           <p>Tasks</p>
         </Tabs.Item>
         <Tabs.Item label="Deploy BVAL721" value="2">
-          <p>Deploy</p>
-        </Tabs.Item>
-        <Tabs.Item label="Deploy BVAL20" value="3">
-          <p>Deploy</p>
+          <Deploy />
         </Tabs.Item>
       </Tabs>
     </Card>

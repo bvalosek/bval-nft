@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@bvalosek/lib-tokens": "*",
+    "@bvalosek/solidity-contracts": "*",
     "@bvalosek/token-manifest": "*",
     "@geist-ui/react": "2.1.0-canary.2",
     "@geist-ui/react-icons": "1.0.1",
