@@ -60,7 +60,13 @@ interface MetadataEntry {
 
 /** roles up all the information sourced and generated for a specific token */
 export interface TokenManifestEntry {
-  tokenId: string;
+  id: string;
   source: TokenSource;
   metadata: MetadataEntry[];
+}
+
+export interface SequenceManifestEntry {
+  id: number;
+  source: SequenceSource;
+  imageCID: string;
 }

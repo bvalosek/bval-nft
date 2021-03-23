@@ -4,7 +4,7 @@ import { TokenManifestEntry } from './types';
 /** generate the data that should be used to mint tokens */
 export const generateTokenMintData = (entry: TokenManifestEntry): TokenMintData => {
   return {
-    tokenId: entry.tokenId,
+    tokenId: entry.id,
     metadataCIDs: entry.metadata.map((m) => m.cid),
   };
 };

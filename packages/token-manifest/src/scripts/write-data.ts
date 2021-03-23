@@ -7,7 +7,7 @@ import { join } from 'path';
 import { tokens, sequences } from '../tokens';
 import { getAllPins, unpin, uploadFromDisk, uploadJSON } from '../pinata';
 import { generateTokenMetadata } from '../metadata';
-import { TokenManifestEntry } from '../types';
+import { SequenceManifestEntry, TokenManifestEntry } from '../types';
 import { createToken, toHexStringBytes } from '@bvalosek/lib-tokens';
 
 const assetPath = (filename: string): string => join(__dirname, '../assets', filename);
@@ -15,12 +15,11 @@ const assetPath = (filename: string): string => join(__dirname, '../assets', fil
 const PROJECT_TAG = 'bval-nft';
 
 const writeData = async () => {
-  const entries: TokenManifestEntry[] = [];
-
   // a map from a "name" to the CID
   const cidMap = new Map<string, string>();
 
   // generate all token metadata json and upload to IPFS
+  const tokenEntries: TokenManifestEntry[] = [];
   for (const source of tokens) {
     // resolve sequence
     const sequence = sequences.find((s) => s.sequenceNumber === source.token.sequenceNumber);
@@ -29,7 +28,7 @@ const writeData = async () => {
     }
 
     const entry: TokenManifestEntry = {
-      tokenId: toHexStringBytes(createToken(source.token), 32),
+      id: toHexStringBytes(createToken(source.token), 32),
       metadata: [],
       source,
     };
@@ -49,7 +48,19 @@ const writeData = async () => {
 
       entry.metadata.push({ content: metadata, cid: metadataCID });
     }
-    entries.push(entry);
+    tokenEntries.push(entry);
+  }
+
+  // generate all sequence data and ensure assets are uploaded to IPFS
+  const sequenceEntries: SequenceManifestEntry[] = [];
+  for (const source of sequences) {
+    const imageCID = await uploadAsset(source.image);
+    cidMap.set(source.image, imageCID);
+    sequenceEntries.push({
+      id: source.sequenceNumber,
+      source,
+      imageCID,
+    });
   }
 
   // find all extra pinned files that we can now unpin
@@ -64,7 +75,9 @@ const writeData = async () => {
     }
   }
 
-  writeFileSync(join(__dirname, '../../data', 'tokens.json'), JSON.stringify(entries, null, 2));
+  // write all data to disk
+  writeFileSync(join(__dirname, '../../data', 'tokens.json'), JSON.stringify(tokenEntries, null, 2));
+  writeFileSync(join(__dirname, '../../data', 'sequences.json'), JSON.stringify(sequenceEntries, null, 2));
 };
 
 /** upload a static asset from the assets/ directory to IPFS and return the CID */

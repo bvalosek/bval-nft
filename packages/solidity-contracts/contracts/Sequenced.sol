@@ -31,8 +31,8 @@ struct SequenceCreateData {
 // prevent any additional tokens from being minted for that sequence
 abstract contract Sequenced is ISequenced {
 
-    // announce sequence data
-  event SequenceMetadata(uint16 indexed number, string name, string description, string data);
+  // announce sequence data
+  event SequenceMetadata(uint16 indexed number, string name, string description, string image);
 
   // announce sequence complete
   event SequenceComplete(uint16 indexed number);
