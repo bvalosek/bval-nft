@@ -122,6 +122,11 @@ contract CoreERC721 is
     require(tokenId.tokenVersion() > 0, "invalid token version");
     require(getSequenceState(tokenId.tokenSequenceNumber()) == SequenceState.STARTED, "sequence is not active");
 
+    // TODO: add once tests are fixed
+    // uint today = (block.timestamp / 1 days) * 1 days; // round down to today
+    // require(tokenId.tokenMintTimestamp() >= today, "token mint date in future");
+    // require(tokenId.tokenMintTimestamp() < today + 1 days, "token mint date in past");
+
     // create the NFT and persist CID / emit metadata
     _mint(msgSender, tokenId);
     _tokenMetadataCIDs[tokenId] = data.metadataCIDs;
@@ -263,6 +268,7 @@ contract CoreERC721 is
     if (to == address(0)) {
       delete _tokenMetadataCIDs[tokenId];
       delete _tokenMetadataIndexes[tokenId];
+      delete _tokenUnlockTime[tokenId];
     }
 
     super._beforeTokenTransfer(from, to, tokenId);
