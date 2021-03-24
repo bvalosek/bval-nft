@@ -43,9 +43,9 @@ export const generateTokenMetadata = (
 
 "${metadata.description}"${source.summary ? '\n\n' + `${source.summary}` : ''}
 
-This is token #${source.token.tokenNumber} in the @bvalosek NFT Collection, minted on ${
-      source.token.minted
-    }. It is part of the "${sequence.name}" sequence.${atomic}
+This is token #${source.token.tokenNumber} in the @bvalosek NFT Collection. It is part of the "${
+      sequence.name
+    }" sequence.${atomic}
 
 Edition ${source.token.editionNumber} / ${source.token.editionTotal}, minted ${source.token.minted}
 
