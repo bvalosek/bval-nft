@@ -1,6 +1,13 @@
 import { createToken } from '@bvalosek/lib-tokens';
 import { toHexStringBytes } from '@bvalosek/lib-tokens/src/util';
-import { MarketplaceAttribute, SequenceSource, TokenMetadata, TokenSource } from './types';
+import {
+  CollectionMetadata,
+  CollectionSource,
+  MarketplaceAttribute,
+  SequenceSource,
+  TokenMetadata,
+  TokenSource,
+} from './types';
 
 const createSlug = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]+/gi, '-');
 
@@ -61,4 +68,16 @@ ${url}
     short_description: metadata.description,
     attributes,
   };
+};
+
+/** generate the collectionURI metadata */
+export const generateCollectionMetadata = (source: CollectionSource, imageCID: string): CollectionMetadata => {
+  const metadata: CollectionMetadata = {
+    name: source.name,
+    description: source.description,
+    external_link: source.externalLink,
+    image: `ipfs://ipfs/${imageCID}`,
+  };
+
+  return metadata;
 };

@@ -52,6 +52,23 @@ export interface TokenMetadata {
   short_description: string;
 }
 
+/** source information for a collection */
+export interface CollectionSource {
+  name: string;
+  description: string;
+  image: string;
+  externalLink: string;
+  version: number;
+}
+
+/** actual metadata payload for the collectionURI method */
+export interface CollectionMetadata {
+  name: string;
+  description: string;
+  image: string;
+  external_link: string;
+}
+
 /** generated metadata content + corresponding IPFS CID */
 interface MetadataEntry {
   cid: string;
@@ -65,8 +82,17 @@ export interface TokenManifestEntry {
   metadata: MetadataEntry[];
 }
 
+/** information about a sequence written as data */
 export interface SequenceManifestEntry {
-  id: number;
+  number: number;
   source: SequenceSource;
   imageCID: string;
+}
+
+/** information about a collection written as data */
+export interface CollectionManifestEntry {
+  version: number;
+  source: CollectionSource;
+  content: CollectionMetadata;
+  cid: string;
 }

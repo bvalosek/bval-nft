@@ -4,10 +4,10 @@ require('dotenv').config();
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { tokens, sequences } from '../tokens';
+import { tokens, sequences, collections } from '../tokens';
 import { getAllPins, unpin, uploadFromDisk, uploadJSON } from '../pinata';
-import { generateTokenMetadata } from '../metadata';
-import { SequenceManifestEntry, TokenManifestEntry } from '../types';
+import { generateCollectionMetadata, generateTokenMetadata } from '../metadata';
+import { CollectionManifestEntry, SequenceManifestEntry, TokenManifestEntry } from '../types';
 import { createToken, toHexStringBytes } from '@bvalosek/lib-tokens';
 
 const assetPath = (filename: string): string => join(__dirname, '../assets', filename);
@@ -57,9 +57,26 @@ const writeData = async () => {
     const imageCID = await uploadAsset(source.image);
     cidMap.set(source.image, imageCID);
     sequenceEntries.push({
-      id: source.sequenceNumber,
+      number: source.sequenceNumber,
       source,
       imageCID,
+    });
+  }
+
+  // generate all collection data and ensure its uploaded to IPFS
+  const collectionEntries: CollectionManifestEntry[] = [];
+  for (const source of collections) {
+    const imageCID = await uploadAsset(source.image);
+    cidMap.set(source.image, imageCID);
+    const metadata = generateCollectionMetadata(source, imageCID);
+    const metadataName = `collection-v${source.version}.json`;
+    const { IpfsHash: metadataCID } = await uploadJSON(metadata, { name: metadataName, tag: PROJECT_TAG });
+    cidMap.set(metadataName, metadataCID);
+    collectionEntries.push({
+      version: source.version,
+      source,
+      content: metadata,
+      cid: metadataCID,
     });
   }
 
@@ -78,6 +95,7 @@ const writeData = async () => {
   // write all data to disk
   writeFileSync(join(__dirname, '../../data', 'tokens.json'), JSON.stringify(tokenEntries, null, 2));
   writeFileSync(join(__dirname, '../../data', 'sequences.json'), JSON.stringify(sequenceEntries, null, 2));
+  writeFileSync(join(__dirname, '../../data', 'collections.json'), JSON.stringify(collectionEntries, null, 2));
 };
 
 /** upload a static asset from the assets/ directory to IPFS and return the CID */

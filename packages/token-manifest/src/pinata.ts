@@ -29,6 +29,7 @@ export const getAllPins = async (uploadTagFilter?: string): Promise<PinDetail[]>
   if (resp.count > 990) {
     throw new Error('TODO: implement paging');
   }
+
   return resp.rows;
 };
 
@@ -69,11 +70,11 @@ export const uploadFromDisk = async (filename: string, metadata: UploadMetadata)
 export const uploadJSON = async (data: unknown, metadata: UploadMetadata): Promise<PinResponse> => {
   const sdk = getSDK();
   const options = pinOptionsFromMetadata(metadata);
-  const json = JSON.parse(JSON.stringify(data));
-  const resp = await sdk.pinJSONToIPFS(json, options);
+  const resp = await sdk.pinJSONToIPFS(data, options);
   return resp;
 };
 
+/** remove a pinned file */
 export const unpin = async (ipfsHash: string): Promise<void> => {
   const sdk = getSDK();
   await sdk.unpin(ipfsHash);

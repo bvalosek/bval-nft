@@ -1,0 +1,19 @@
+[
+  {
+    "version": 1,
+    "source": {
+      "version": 1,
+      "name": "@bvalosek Collection",
+      "description": "Dynamic NFTs and tokenization experiments created by Brandon Valosek",
+      "externalLink": "https://tokens.bvalosek.com",
+      "image": "collection-v1.png"
+    },
+    "content": {
+      "name": "@bvalosek Collection",
+      "description": "Dynamic NFTs and tokenization experiments created by Brandon Valosek",
+      "external_link": "https://tokens.bvalosek.com",
+      "image": "ipfs://ipfs/QmWyzAb19XSB2ZmyTf8f1fGQnyyWJzA6a5eaGLwc1ERUxZ"
+    },
+    "cid": "QmeqqCxkioTyEeAPsMGXoAoHehcAA1PxyrtgDGod4qB7JK"
+  }
+]
