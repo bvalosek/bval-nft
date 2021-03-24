@@ -9,7 +9,7 @@ export const collections: CollectionSource[] = [
   {
     version: 1,
     name: '@bvalosek Collection',
-    description: 'Dynamic NFTs and tokenization experiments created by Brandon Valosek',
+    description: 'Crypto art and tokenization experiments created by Brandon Valosek',
     externalLink: 'https://tokens.bvalosek.com',
     image: 'collection-v1.png',
   },

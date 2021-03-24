@@ -9,6 +9,6 @@ contract BVAL721 is CoreERC721 {
     name: "@bvalosek",
     symbol: "BVAL-NFT",
     feeBps: 1000,
-    collectionMetadataCID: "TODO"
+    collectionMetadataCID: "QmcDAfrtBsPkjXsWKN8CNUfUupUfrz8SgSKxfHifetxfEM"
   })) { }
 }

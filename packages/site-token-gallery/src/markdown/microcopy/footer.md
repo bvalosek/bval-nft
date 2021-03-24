@@ -15,6 +15,6 @@ socials:
   url: https://snapshot.org/#/bvalosek.eth
 ---
 
-Abstract crypto art and tokenization experiments created by [Brandon Valosek][contact].
+Crypto art and tokenization experiments created by [Brandon Valosek][contact].
 
 [contact]: /contact
