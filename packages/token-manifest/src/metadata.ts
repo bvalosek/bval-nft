@@ -35,26 +35,27 @@ export const generateTokenMetadata = (
   const atomic = sequence.atomic
     ? `
 
-"${sequence.name}" is an atomic sequence-- all tokens for this sequence were minted (and the sequence was completed) in a single Ethereum transaction. New NFTs cannot be minted for completed sequences.`
+"${sequence.name}" is an atomic sequence-- all tokens in this sequence were minted (and the sequence was completed) in a single Ethereum transaction. New NFTs cannot be minted for completed sequences.`
     : '';
 
-  const description = `
+  const description =
+    `
 
-${metadata.description}${source.summary ? '\n\n' + `${source.summary}` : ''}
-
-Edition ${source.token.editionNumber} / ${source.token.editionTotal}
+"${metadata.description}"${source.summary ? '\n\n' + `${source.summary}` : ''}
 
 This is token #${source.token.tokenNumber} in the @bvalosek NFT Collection, minted on ${
-    source.token.minted
-  }. It is part of the "${sequence.name}" sequence.${atomic}
+      source.token.minted
+    }. It is part of the "${sequence.name}" sequence.${atomic}
 
-Original File: ${source.token.width} ✕ ${source.token.height} ${source.token.assetType}, created ${source.token.created}
+Edition ${source.token.editionNumber} / ${source.token.editionTotal}, minted ${source.token.minted}
 
-To view more information or interact with this NFT, go to:
+${source.token.width} ✕ ${source.token.height} ${source.token.assetType}, created ${source.token.created}
+
+To view detailed information or interact with this NFT, go to:
 
 ${url}
 
-`.trim();
+`.trim() + '\n\n';
 
   return {
     name: metadata.name,

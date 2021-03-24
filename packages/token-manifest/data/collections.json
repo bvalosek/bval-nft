@@ -3,17 +3,17 @@
     "version": 1,
     "source": {
       "version": 1,
-      "name": "@bvalosek Collection",
+      "name": "@bvalosek NFT Collection",
       "description": "Crypto art and tokenization experiments created by Brandon Valosek",
       "externalLink": "https://tokens.bvalosek.com",
       "image": "collection-v1.png"
     },
     "content": {
-      "name": "@bvalosek Collection",
+      "name": "@bvalosek NFT Collection",
       "description": "Crypto art and tokenization experiments created by Brandon Valosek",
       "external_link": "https://tokens.bvalosek.com",
       "image": "ipfs://ipfs/QmWyzAb19XSB2ZmyTf8f1fGQnyyWJzA6a5eaGLwc1ERUxZ"
     },
-    "cid": "QmcDAfrtBsPkjXsWKN8CNUfUupUfrz8SgSKxfHifetxfEM"
+    "cid": "QmUqjFKbvZa3JzBWcGFuCt6UzRQukPKiySRgjVrPK2pskY"
   }
 ]
