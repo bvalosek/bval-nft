@@ -22,6 +22,18 @@ Compile and build all contracts:
 $ npm run build
 ```
 
+Verify NFT contract on Rinkeby:
+
+```
+$ npx truffle --network testnet run verify BVAL721@$CONTRACT_ADDRESS
+```
+
+Verify NFT contract on mainnet:
+
+```
+$ npx truffle --network mainnet run verify BVAL721@$CONTRACT_ADDRESS
+```
+
 ## Deployment
 
 The following env vars must be set (`.env` in this directory will be sourced if present):
