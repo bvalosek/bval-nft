@@ -256,6 +256,23 @@ contract('CoreERC721', (accounts) => {
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
     });
   });
+  describe('royalty recipient change', () => {
+    it('should revert if non-admin tries to change recipient', async () => {
+      const [, a2] = accounts;
+      const instance = await factory();
+      const task = instance.setRoyaltyRecipient(a2, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
+    });
+    it('should allow ADMIN to change recipient', async () => {
+      const [, a2] = accounts;
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(instance, tokenId);
+      await instance.setRoyaltyRecipient(a2);
+      const [recipient] = await instance.getFeeRecipients(tokenId);
+      assert.equal(recipient, a2);
+    });
+  });
   describe('minting', () => {
     it('should allow owner to mint', async () => {
       const instance = await factory();
