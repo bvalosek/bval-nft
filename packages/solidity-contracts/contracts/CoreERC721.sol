@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./@openzeppelin/AccessControlEnumerable.sol";
-import "./@openzeppelin/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 import "./interfaces/IOpenSeaContractURI.sol";
 import "./interfaces/IRaribleRoyalties.sol";

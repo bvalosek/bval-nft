@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./@openzeppelin/AccessControlEnumerable.sol";
-import "./@openzeppelin/ERC20Pausable.sol";
+import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 
 // Core ERC-20 contract for the BVAL-NFT project. Generalized ERC-20 with RBAC
 // to allow for initial flexibility initially while having a method to renounce
