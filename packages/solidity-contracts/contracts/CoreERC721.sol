@@ -11,6 +11,12 @@ import "./interfaces/IERC2981.sol";
 import "./Sequenced.sol";
 import "./TokenID.sol";
 
+// a contract that can resolve the specific metadata index for a given token
+interface IMetadataIndexResolver is IERC165 {
+  // should return the metadata index for a specific token
+  function metadataIndex(uint256 tokenId) external view returns (uint);
+}
+
 // constructor options
 struct CollectionOptions {
   string name;
@@ -65,11 +71,11 @@ contract CoreERC721 is
   // token metadata CIDs
   mapping (uint256 => string[]) private _tokenMetadataCIDs;
 
-  // token metadata index
-  mapping (uint256 => uint) private _tokenMetadataIndexes;
-
   // timestamp when a token should be considered unlocked
   mapping (uint256 => uint) private _tokenUnlockTime;
+
+  // mapping from a sequence number to a metadata index resolver contract
+  mapping (uint16 => IMetadataIndexResolver) private _metadataIndexResolvers;
 
   constructor (CollectionOptions memory options) ERC721(options.name, options.symbol) {
     address msgSender = _msgSender();
@@ -163,6 +169,15 @@ contract CoreERC721 is
     _completeSequence(number);
   }
 
+  // set the metadata index resolver for a specific sequence
+  function setMetadataIndexResolver(uint16 sequenceNumber, IMetadataIndexResolver resolver) external {
+    require(hasRole(MINTER_ROLE, _msgSender()), "requires MINTER_ROLE");
+    require(getSequenceState(sequenceNumber) == SequenceState.STARTED, "sequence is not active");
+    require(address(_metadataIndexResolvers[sequenceNumber]) == address(0), "metadata index resolver already set");
+    require(resolver.supportsInterface(type(IMetadataIndexResolver).interfaceId) == true, "resolver does not implement IMetadataIndexResolver");
+    _metadataIndexResolvers[sequenceNumber] = resolver;
+  }
+
   // ---
   // Metadata
   // ---
@@ -170,7 +185,17 @@ contract CoreERC721 is
   // token metadata URI
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     require(_exists(tokenId), "invalid token");
-    string memory cid = _tokenMetadataCIDs[tokenId][_tokenMetadataIndexes[tokenId]];
+
+    // metadata index defaults to zero, but can be resolved by an external
+    // contract if registered
+    uint index = 0;
+    IMetadataIndexResolver resolver = _metadataIndexResolvers[tokenId.tokenSequenceNumber()];
+    if (address(resolver) != address(0)) {
+      index = resolver.metadataIndex(tokenId);
+      index = index > _tokenMetadataCIDs[tokenId].length ? 0 : index; // default to 0 if out of bounds
+    }
+
+    string memory cid = _tokenMetadataCIDs[tokenId][index];
     return string(abi.encodePacked(_ipfsBaseURI, cid));
   }
 
@@ -267,7 +292,6 @@ contract CoreERC721 is
     // clean up on burn
     if (to == address(0)) {
       delete _tokenMetadataCIDs[tokenId];
-      delete _tokenMetadataIndexes[tokenId];
       delete _tokenUnlockTime[tokenId];
     }
 

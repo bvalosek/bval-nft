@@ -3,6 +3,7 @@ const truffleAssert = require('truffle-assertions');
 const timeMachine = require('ganache-time-traveler');
 
 const CoreERC721 = artifacts.require('CoreERC721');
+const MockMetadataIndexResolver = artifacts.require('MockMetadataIndexResolver');
 const SYMBOL = 'BVAL';
 const NAME = '@bvalosek Collection';
 
@@ -441,6 +442,76 @@ contract('CoreERC721', (accounts) => {
       await simpleMint(instance, tokenId);
       await instance.unlockToken(tokenId);
       assert.isFalse(await instance.isTokenLocked(tokenId));
+    });
+  });
+  describe.only('resolving metadata index', () => {
+    it('should allow setting a metadata resolver', async () => {
+      const instance = await factory();
+      const resolver = await MockMetadataIndexResolver.new();
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await instance.setMetadataIndexResolver(1, resolver.address); // does not revert
+    });
+    it('should delegate metadata index resolution to registered resolver', async () => {
+      const instance = await factory();
+      const resolver = await MockMetadataIndexResolver.new();
+      const tokenId = TOKENS[0];
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await instance.mint({ tokenId, metadataCIDs: ['cid1', 'cid2'] });
+      await instance.setMetadataIndexResolver(1, resolver.address);
+
+      assert.equal(await instance.tokenURI(tokenId), 'ipfs://ipfs/cid1'); // default
+      await resolver.setIndex(1);
+      assert.equal(await instance.tokenURI(tokenId), 'ipfs://ipfs/cid2');
+    });
+    it('should fallback to index=0 if resolved index is out of bounds', async () => {
+      const instance = await factory();
+      const resolver = await MockMetadataIndexResolver.new();
+      const tokenId = TOKENS[0];
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await instance.mint({ tokenId, metadataCIDs: ['cid1', 'cid2'] });
+      await instance.setMetadataIndexResolver(1, resolver.address);
+      await resolver.setIndex(500); // out of bounds
+      assert.equal(await instance.tokenURI(tokenId), 'ipfs://ipfs/cid1');
+    });
+    it('should revert if setting a metadata resolver that does not implement the correct interface', async () => {
+      const instance = await factory();
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      const task = instance.setMetadataIndexResolver(1, instance.address);
+      await truffleAssert.fails(
+        task,
+        truffleAssert.ErrorType.REVERT,
+        'resolver does not implement IMetadataIndexResolver'
+      );
+    });
+    it('should revert if sequence hasnt started', async () => {
+      const instance = await factory();
+      const resolver = await MockMetadataIndexResolver.new();
+      const task = instance.setMetadataIndexResolver(1, resolver.address);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'sequence is not active');
+    });
+    it('should revert if sequence has completed', async () => {
+      const instance = await factory();
+      const resolver = await MockMetadataIndexResolver.new();
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await instance.completeSequence(1);
+      const task = instance.setMetadataIndexResolver(1, resolver.address);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'sequence is not active');
+    });
+    it('should should revert if resolver is already set', async () => {
+      const instance = await factory();
+      const resolver = await MockMetadataIndexResolver.new();
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await instance.setMetadataIndexResolver(1, resolver.address);
+      const task = instance.setMetadataIndexResolver(1, resolver.address);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'metadata index resolver already set');
+    });
+    it('should revert if caller does not have MINTER role', async () => {
+      const [, a2] = accounts;
+      const instance = await factory();
+      const resolver = await MockMetadataIndexResolver.new();
+      await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      const task = instance.setMetadataIndexResolver(1, resolver.address, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires MINTER_ROLE');
     });
   });
 });
