@@ -444,7 +444,7 @@ contract('CoreERC721', (accounts) => {
       assert.isFalse(await instance.isTokenLocked(tokenId));
     });
   });
-  describe.only('resolving metadata index', () => {
+  describe('resolving metadata index', () => {
     it('should allow setting a metadata resolver', async () => {
       const instance = await factory();
       const resolver = await MockMetadataIndexResolver.new();
