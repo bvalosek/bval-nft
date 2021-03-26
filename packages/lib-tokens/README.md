@@ -17,7 +17,9 @@ This is used to allow for NFT token IDs to store "intrinsic information" about t
 * asset type - 1 byte @ byte 17
 * width - 2 bytes @ byte 15
 * height - 2 bytes @ byte 13
-* reserved - 11 bytes @ byte 2
+* output multiplier - 2 bytes @ 11
+* input multiplier - 2 bytes @ 9
+* reserved - 7 bytes @ byte 2
 * token number - 2 bytes @ byte 0
 
 Notes:

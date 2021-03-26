@@ -15,6 +15,8 @@ const createData = (): TokenData => {
     assetType: 'PNG',
     width: 2400,
     height: 2400,
+    output: 100,
+    input: 100,
   };
 };
 
@@ -22,7 +24,7 @@ describe('token encoding', () => {
   it('should encode at token', () => {
     const token = createToken({ ...createData() });
     expect(toHexStringBytes(token)).toMatchInlineSnapshot(
-      `"0x01bc00010001491348a500010001010960096000000000000000000000000001"`
+      `"0x016900010001491348a500010001010960096000640064000000000000000001"`
     );
   });
   it('should throw if token version is not 1', () => {
@@ -45,6 +47,8 @@ describe('token parsing', () => {
       assetType: 'PNG',
       width: 8000,
       height: 6000,
+      output: 1234,
+      input: 5678,
     };
     const token = createToken(data);
     expect(parseToken(token)).toEqual(data);

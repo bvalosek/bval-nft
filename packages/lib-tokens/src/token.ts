@@ -23,6 +23,8 @@ export const createToken = (tokenData: TokenData): BigNumber => {
   token = token.or(toBN(assetTypeIndex(tokenData.assetType)).shl(bytes(17)));
   token = token.or(toUint(tokenData.width, 2, 'width').shl(bytes(15)));
   token = token.or(toUint(tokenData.height, 2, 'height').shl(bytes(13)));
+  token = token.or(toUint(tokenData.output, 2, 'output').shl(bytes(11)));
+  token = token.or(toUint(tokenData.input, 2, 'input').shl(bytes(9)));
 
   // token number is last
   token = token.or(toUint(tokenData.tokenNumber, 2, 'tokenNumber').shl(bytes(0)));
@@ -52,6 +54,8 @@ export const parseToken = (token: Numberish): TokenData => {
   const assetType = assetTypeName(t.shr(bytes(17)).mask(bytes(1)).toNumber());
   const width = t.shr(bytes(15)).mask(bytes(2)).toNumber();
   const height = t.shr(bytes(13)).mask(bytes(2)).toNumber();
+  const output = t.shr(bytes(11)).mask(bytes(2)).toNumber();
+  const input = t.shr(bytes(9)).mask(bytes(2)).toNumber();
   const tokenNumber = t.shr(bytes(0)).mask(bytes(2)).toNumber();
 
   return {
@@ -66,6 +70,8 @@ export const parseToken = (token: Numberish): TokenData => {
     assetType,
     width,
     height,
+    output,
+    input,
   };
 };
 

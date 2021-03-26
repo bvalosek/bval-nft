@@ -34,6 +34,12 @@ export interface TokenData {
 
   /** uint16 */
   width: number;
+
+  /** uint16 */
+  output: number;
+
+  /** uint16 */
+  input: number;
 }
 
 /** information required to mint a token */
