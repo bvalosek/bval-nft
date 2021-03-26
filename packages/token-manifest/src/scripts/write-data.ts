@@ -9,6 +9,7 @@ import { getAllPins, unpin, uploadFromDisk, uploadJSON } from '../pinata';
 import { generateCollectionMetadata, generateTokenMetadata } from '../metadata';
 import { CollectionManifestEntry, SequenceManifestEntry, TokenManifestEntry } from '../types';
 import { createToken, toHexStringBytes } from '@bvalosek/lib-tokens';
+import { writeResampledImage } from '../images';
 
 const assetPath = (filename: string): string => join(__dirname, '../assets', filename);
 
@@ -39,8 +40,15 @@ const writeData = async () => {
       const assetCID = await uploadAsset(meta.image);
       cidMap.set(meta.image, assetCID);
 
+      // resize and upload to IPFS
+      console.log('resampling asset and uploading to ipfs...');
+      const resampled = await writeResampledImage(meta.image);
+      const resampledName = `${meta.image}-resampled`;
+      const { IpfsHash: resampledCID } = await uploadFromDisk(resampled, { name: resampledName, tag: PROJECT_TAG });
+      cidMap.set(resampledName, resampledCID);
+
       // generate and upload the metadata to IPFS
-      const metadata = generateTokenMetadata(source, sequence, idx, assetCID);
+      const metadata = generateTokenMetadata(source, sequence, idx, assetCID, resampledCID);
       const metadataName = `${metadata.token_id}.json[${idx}]`;
       console.log(`uploading ${metadataName} metadata to IPFS...`);
       const { IpfsHash: metadataCID } = await uploadJSON(metadata, { name: metadataName, tag: PROJECT_TAG });

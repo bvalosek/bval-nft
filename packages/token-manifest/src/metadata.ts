@@ -16,7 +16,8 @@ export const generateTokenMetadata = (
   source: TokenSource,
   sequence: SequenceSource,
   metadataIndex: number,
-  assetCid: string
+  assetCid: string,
+  resampledCID: string
 ): TokenMetadata => {
   const metadata = source.metadata[metadataIndex];
   const slug = createSlug(metadata.name);
@@ -61,7 +62,13 @@ ${url}
     name: metadata.name,
     slug,
     description,
-    image: `ipfs://ipfs/${assetCid}`,
+    image: `ipfs://ipfs/${resampledCID}`,
+    assets: [
+      {
+        name: 'Original File',
+        asset: `ipfs://ipfs/${assetCid}`,
+      },
+    ],
     external_url: url,
     token_id: toHexStringBytes(createToken(source.token), 32),
     edition_number: source.token.editionNumber,

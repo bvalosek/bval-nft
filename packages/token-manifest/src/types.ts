@@ -33,6 +33,12 @@ export interface MarketplaceAttribute {
   value: string;
 }
 
+/** additional assets contained in metadata */
+export interface AdditionalAsset {
+  name: string;
+  asset: string;
+}
+
 /** The actual metadata that will be generated for each token */
 export interface TokenMetadata {
   // standard fields
@@ -50,6 +56,7 @@ export interface TokenMetadata {
   slug: string;
   token_id: string;
   short_description: string;
+  assets: AdditionalAsset[];
 }
 
 /** source information for a collection */

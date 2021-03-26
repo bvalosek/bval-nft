@@ -39,7 +39,7 @@ export const assert = (exp: unknown, msg: string): void => {
 /** convert a numberish to a specific unit size, throwing if truncation occurs  */
 export const toUint = (val: Numberish, sizeInBytes: number, label: string): BigNumber => {
   const number = toBN(val);
-  assert(number.gt(0), `${label} must be greater than 0`);
+  assert(number.gte(0), `${label} must positive`);
   const masked = number.mask(bytes(sizeInBytes));
   assert(masked.eq(number), `${label} must fit within ${sizeInBytes} bytes`);
   return masked;

@@ -3,12 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "mkdir -p ./data && ts-node -T -P ../../tsconfig.json ./src/scripts/write-data.ts",
+    "build": "mkdir -p ./data/processed && ts-node -T -P ../../tsconfig.json ./src/scripts/write-data.ts",
     "clean": "rm -rf ./data"
   },
   "dependencies": {
     "@bvalosek/lib-tokens": "*",
     "@pinata/sdk": "1.1.13",
-    "dotenv": "8.2.0"
+    "@types/mkdirp": "1.0.1",
+    "@types/sharp": "0.27.2",
+    "dotenv": "8.2.0",
+    "mkdirp": "1.0.4",
+    "sharp": "0.27.2"
   }
 }

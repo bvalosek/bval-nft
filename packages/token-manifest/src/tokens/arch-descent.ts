@@ -11,6 +11,8 @@ const tokenBase = {
   assetType: 'PNG' as AssetType,
   width: 2400,
   height: 2400,
+  input: 0,
+  output: 1000,
 };
 
 export const archDescentSequence: SequenceSource = {
