@@ -7,9 +7,6 @@ export const writeResampledImage = async (inputAssetPath: string): Promise<strin
   const inputPath = join(__dirname, './assets', inputAssetPath);
   const outputPath = join(__dirname, '../data/processed', inputAssetPath.replace(/\.png$/, '.resampled.jpg'));
   await mkdirp(dirname(outputPath));
-  await sharp(inputPath)
-    .resize({ height: 2160, width: 2160, fit: 'inside' })
-    .jpeg({ quality: 80, chromaSubsampling: '4:4:4' })
-    .toFile(outputPath);
+  await sharp(inputPath).jpeg({ quality: 85, chromaSubsampling: '4:4:4' }).toFile(outputPath);
   return outputPath;
 };
