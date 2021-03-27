@@ -16,7 +16,6 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }) => 
     actions.createNode({
       id: createNodeId(token.tokenId),
       ...token,
-      slug: createSlug(token.source.metadata[0].name),
       sequence___NODE: sequenceNodeId(token.source.token.sequenceNumber),
       parent: null,
       children: [],
@@ -32,7 +31,6 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }) => 
     actions.createNode({
       id: sequenceNodeId(seq.sequenceNumber),
       ...seq,
-      slug: createSlug(seq.source.name),
       collection___NODE: collectionNodeId(seq.source.collectionVersion),
       parent: null,
       children: [],
