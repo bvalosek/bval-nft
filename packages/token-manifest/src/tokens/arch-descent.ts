@@ -3,7 +3,7 @@ import { SequenceSource, TokenSource } from '../types';
 
 const tokenBase = {
   version: 1,
-  collectionVersion: 1,
+  collectionNumber: 1,
   sequenceNumber: 1,
   editionTotal: 1,
   editionNumber: 1,
@@ -27,6 +27,7 @@ export const archDescentSequence: SequenceSource = {
 
 export const archDescentTokens: TokenSource[] = [
   {
+    name: 'INIT SPACE',
     metadata: [
       {
         name: 'INIT SPACE',
@@ -37,6 +38,7 @@ export const archDescentTokens: TokenSource[] = [
     token: { ...tokenBase, tokenNumber: 1, created: '2020-11-29' },
   },
   {
+    name: 'ROTATE SET',
     metadata: [
       {
         name: 'ROTATE SET',
@@ -47,6 +49,7 @@ export const archDescentTokens: TokenSource[] = [
     token: { ...tokenBase, tokenNumber: 2, created: '2020-11-30' },
   },
   {
+    name: 'REF LOCK',
     metadata: [
       {
         name: 'REF LOCK',
@@ -57,6 +60,7 @@ export const archDescentTokens: TokenSource[] = [
     token: { ...tokenBase, tokenNumber: 3, created: '2020-12-01' },
   },
   {
+    name: 'ISO BRANCH',
     metadata: [
       {
         name: 'ISO BRANCH',
@@ -67,6 +71,7 @@ export const archDescentTokens: TokenSource[] = [
     token: { ...tokenBase, tokenNumber: 4, created: '2020-12-02' },
   },
   {
+    name: 'OP DRIFT',
     metadata: [
       {
         name: 'OP DRIFT',
@@ -77,6 +82,7 @@ export const archDescentTokens: TokenSource[] = [
     token: { ...tokenBase, tokenNumber: 5, created: '2020-12-03' },
   },
   {
+    name: 'SYNC GATE',
     metadata: [
       {
         name: 'SYNC GATE',
@@ -87,6 +93,7 @@ export const archDescentTokens: TokenSource[] = [
     token: { ...tokenBase, tokenNumber: 6, created: '2020-12-04' },
   },
   {
+    name: 'LOAD CELL',
     metadata: [
       {
         name: 'LOAD CELL',
@@ -97,6 +104,7 @@ export const archDescentTokens: TokenSource[] = [
     token: { ...tokenBase, tokenNumber: 7, created: '2020-12-05' },
   },
   {
+    name: 'EXT KEY',
     metadata: [
       {
         name: 'EXT KEY',
@@ -107,6 +115,7 @@ export const archDescentTokens: TokenSource[] = [
     token: { ...tokenBase, tokenNumber: 8, created: '2020-12-06' },
   },
   {
+    name: 'OUT PHASE',
     metadata: [
       {
         name: 'OUT PHASE',

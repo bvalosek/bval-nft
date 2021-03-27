@@ -1,5 +1,4 @@
-import { createToken } from '@bvalosek/lib-tokens';
-import { toHexStringBytes } from '@bvalosek/lib-tokens/src/util';
+import { createSlug } from './strings';
 import {
   CollectionMetadata,
   CollectionSource,
@@ -8,8 +7,6 @@ import {
   TokenMetadata,
   TokenSource,
 } from './types';
-
-const createSlug = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]+/gi, '-');
 
 /** create the ERC721Metadata spec compat metadata information for a given token */
 export const generateTokenMetadata = (
@@ -20,8 +17,7 @@ export const generateTokenMetadata = (
   resampledCID: string
 ): TokenMetadata => {
   const metadata = source.metadata[metadataIndex];
-  const slug = createSlug(metadata.name);
-  const url = `https://tokens.bvalosek.com/tokens/${slug}`;
+  const url = `https://tokens.bvalosek.com/tokens/${createSlug(source.name)}`;
 
   const attributes: MarketplaceAttribute[] = [
     { trait_type: 'Sequence', value: sequence.name },
@@ -60,7 +56,6 @@ ${url}
 
   return {
     name: metadata.name,
-    slug,
     description,
     image: `ipfs://ipfs/${resampledCID}`,
     assets: [
@@ -70,10 +65,8 @@ ${url}
       },
     ],
     external_url: url,
-    token_id: toHexStringBytes(createToken(source.token), 32),
     edition_number: source.token.editionNumber,
     edition_total: source.token.editionTotal,
-    short_description: metadata.description,
     attributes,
   };
 };

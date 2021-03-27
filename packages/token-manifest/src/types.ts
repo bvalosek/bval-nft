@@ -12,6 +12,11 @@ export interface Metadata {
  * processed and transformed
  */
 export interface TokenSource {
+  /**
+   * canonical name, different from metadata.name which may vary across
+   * metadata variations
+   */
+  name: string;
   token: TokenData;
   summary?: string;
   metadata: Metadata[];
@@ -28,6 +33,7 @@ export interface SequenceSource {
   atomic: boolean;
 }
 
+/** ERC721 marketplace attribute */
 export interface MarketplaceAttribute {
   trait_type: string;
   value: string;
@@ -53,9 +59,6 @@ export interface TokenMetadata {
   edition_total: number;
 
   // my fields
-  slug: string;
-  token_id: string;
-  short_description: string;
   assets: AdditionalAsset[];
 }
 
@@ -85,6 +88,7 @@ interface MetadataEntry {
 /** roles up all the information sourced and generated for a specific token */
 export interface TokenManifestEntry {
   tokenId: string;
+  slug: string;
   source: TokenSource;
   metadata: MetadataEntry[];
 }
@@ -92,6 +96,7 @@ export interface TokenManifestEntry {
 /** information about a sequence written as data */
 export interface SequenceManifestEntry {
   sequenceNumber: number;
+  slug: string;
   source: SequenceSource;
   imageCID: string;
 }

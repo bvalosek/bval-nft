@@ -1,6 +1,7 @@
 [
   {
     "sequenceNumber": 1,
+    "slug": "arch-descent",
     "source": {
       "name": "ARCH DESCENT",
       "sequenceNumber": 1,
@@ -10,6 +11,6 @@
       "completed": true,
       "atomic": true
     },
-    "imageCID": "QmNSLGT1Q56KkuBqWEFZXxat3KFdmC14UTVDaTxkXQg9SZ"
+    "imageCID": "1 image CID"
   }
 ]

@@ -6,7 +6,7 @@ export interface TokenData {
   version: number;
 
   /** uint16 */
-  collectionVersion: number;
+  collectionNumber: number;
 
   /** uint16 */
   sequenceNumber: number;
