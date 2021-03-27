@@ -21,7 +21,7 @@ export interface TokenSource {
 export interface SequenceSource {
   name: string;
   sequenceNumber: number;
-  collectionNumber: number;
+  collectionVersion: number;
   description: string;
   image: string;
   completed: boolean;
@@ -84,21 +84,21 @@ interface MetadataEntry {
 
 /** roles up all the information sourced and generated for a specific token */
 export interface TokenManifestEntry {
-  id: string;
+  tokenId: string;
   source: TokenSource;
   metadata: MetadataEntry[];
 }
 
 /** information about a sequence written as data */
 export interface SequenceManifestEntry {
-  number: number;
+  sequenceNumber: number;
   source: SequenceSource;
   imageCID: string;
 }
 
 /** information about a collection written as data */
 export interface CollectionManifestEntry {
-  version: number;
+  collectionVersion: number;
   source: CollectionSource;
   content: CollectionMetadata;
   cid: string;

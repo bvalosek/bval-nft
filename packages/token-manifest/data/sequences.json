@@ -1,10 +1,10 @@
 [
   {
-    "number": 1,
+    "sequenceNumber": 1,
     "source": {
       "name": "ARCH DESCENT",
       "sequenceNumber": 1,
-      "collectionNumber": 1,
+      "collectionVersion": 1,
       "description": "Journey Through a Fractaled Space",
       "image": "ARCH-DESCENT/ARCH-DESCENT.png",
       "completed": true,

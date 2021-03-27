@@ -8,7 +8,7 @@ library TokenID {
     return uint8(tokenId >> 31*8);
   }
 
-  function tokenCollectionNumber(uint256 tokenId) internal pure returns (uint16) {
+  function tokencollectionVersion(uint256 tokenId) internal pure returns (uint16) {
     return uint16(tokenId >> 28*8);
   }
 

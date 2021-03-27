@@ -3,7 +3,7 @@ import { SequenceSource, TokenSource } from '../types';
 
 const tokenBase = {
   version: 1,
-  collectionNumber: 1,
+  collectionVersion: 1,
   sequenceNumber: 1,
   editionTotal: 1,
   editionNumber: 1,
@@ -18,7 +18,7 @@ const tokenBase = {
 export const archDescentSequence: SequenceSource = {
   name: 'ARCH DESCENT',
   sequenceNumber: 1,
-  collectionNumber: 1,
+  collectionVersion: 1,
   description: 'Journey Through a Fractaled Space',
   image: 'ARCH-DESCENT/ARCH-DESCENT.png',
   completed: true,

@@ -5,7 +5,7 @@ import { toHexStringBytes } from './util';
 const createData = (): TokenData => {
   return {
     version: 1,
-    collectionNumber: 1,
+    collectionVersion: 1,
     sequenceNumber: 1,
     tokenNumber: 1,
     minted: '2021-03-21',
@@ -37,7 +37,7 @@ describe('token parsing', () => {
   it('should parse an encoded token', () => {
     const data: TokenData = {
       version: 1,
-      collectionNumber: 3451,
+      collectionVersion: 3451,
       sequenceNumber: 3534,
       tokenNumber: 34151,
       minted: '2021-03-21',

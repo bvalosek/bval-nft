@@ -12,17 +12,22 @@ module.exports = {
     // catch local links in markdown to prevent page refresh
     'gatsby-plugin-catch-links',
 
+    // local plugin to source token info
+    {
+      resolve: 'gatsby-plugin-source-tokens',
+    },
+
     // generate robots.txt
     {
       resolve: 'gatsby-plugin-robots-txt',
       options: { policy: [{ userAgent: '*', allow: '/' }] },
     },
 
-    // source generated data from token manifest
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: { path: `./node_modules/@bvalosek/token-manifest/data` },
-    },
+    // // source generated data from token manifest
+    // {
+    //   resolve: `gatsby-source-filesystem`,
+    //   options: { path: `./node_modules/@bvalosek/token-manifest/data` },
+    // },
 
     // source all markdown files
     {
@@ -40,14 +45,14 @@ module.exports = {
     'gatsby-transformer-json',
 
     // resolve remote images
-    {
-      resolve: `gatsby-plugin-remote-images`,
-      options: {
-        nodeType: 'TokensJsonMetadataContent',
-        imagePath: 'image',
-        prepareUrl: (url) => url.replace('ipfs://', 'https://gateway.pinata.cloud/'),
-      },
-    },
+    // {
+    //   resolve: `gatsby-plugin-remote-images`,
+    //   options: {
+    //     nodeType: 'TokensJsonMetadataContent',
+    //     imagePath: 'image',
+    //     prepareUrl: (url) => url.replace('ipfs://', 'https://gateway.pinata.cloud/'),
+    //   },
+    // },
 
     // process images
     'gatsby-transformer-sharp',

@@ -14,7 +14,7 @@ export const createToken = (tokenData: TokenData): BigNumber => {
 
   // add in encoded token data
   token = token.or(toUint(tokenData.version, 1, 'version').shl(bytes(31)));
-  token = token.or(toUint(tokenData.collectionNumber, 2, 'collectionNumber').shl(bytes(28)));
+  token = token.or(toUint(tokenData.collectionVersion, 2, 'collectionVersion').shl(bytes(28)));
   token = token.or(toUint(tokenData.sequenceNumber, 2, 'sequenceNumber').shl(bytes(26)));
   token = token.or(serializeDate(tokenData.minted).shl(bytes(24)));
   token = token.or(serializeDate(tokenData.created).shl(bytes(22)));
@@ -45,7 +45,7 @@ export const parseToken = (token: Numberish): TokenData => {
   assert(isTokenValid(t), 'malformed token');
   const version = t.shr(bytes(31)).mask(bytes(1)).toNumber();
   assert(version === 1, 'invalid token version');
-  const collectionNumber = t.shr(bytes(28)).mask(bytes(2)).toNumber();
+  const collectionVersion = t.shr(bytes(28)).mask(bytes(2)).toNumber();
   const sequenceNumber = t.shr(bytes(26)).mask(bytes(2)).toNumber();
   const minted = parseDate(t.shr(bytes(24)).mask(bytes(2)));
   const created = parseDate(t.shr(bytes(22)).mask(bytes(2)));
@@ -60,7 +60,7 @@ export const parseToken = (token: Numberish): TokenData => {
 
   return {
     version,
-    collectionNumber,
+    collectionVersion,
     sequenceNumber,
     tokenNumber,
     minted,
