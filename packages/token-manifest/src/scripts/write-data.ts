@@ -47,8 +47,7 @@ const writeData = async () => {
       console.log('resampling asset and uploading to ipfs...');
       const resampled = await writeResampledImage(meta.image);
       const resampledName = `${meta.image}-resampled`;
-      // const { IpfsHash: resampledCID } = await uploadFromDisk(resampled, { name: resampledName, tag: PROJECT_TAG });
-      const resampledCID = `${meta.image} resampled CID`; // TODO: remove car hack
+      const { IpfsHash: resampledCID } = await uploadFromDisk(resampled, { name: resampledName, tag: PROJECT_TAG });
       cidMap.set(resampledName, resampledCID);
 
       // generate and upload the metadata to IPFS
@@ -66,8 +65,7 @@ const writeData = async () => {
   // generate all sequence data and ensure assets are uploaded to IPFS
   const sequenceEntries: SequenceManifestEntry[] = [];
   for (const source of sequences) {
-    // const imageCID = await uploadAsset(source.image);
-    const imageCID = `${source.sequenceNumber} image CID`; // TODO: remove car hack
+    const imageCID = await uploadAsset(source.image);
     cidMap.set(source.image, imageCID);
     sequenceEntries.push({
       sequenceNumber: source.sequenceNumber,

@@ -4,6 +4,12 @@ The source files and build/upload steps for managing the token asset and metadat
 
 Uses Pinata for IPFS pinning.
 
+## Overview
+
+This package contains the "source data" for my NFTs. This allows me to define and store all data/assets that are transformed into the actual NFT outputs (such as processed images and prepared metadata).
+
+No re-processing will occur for tokens that already exists, and generated files are checked into the repo intentionally. This is because the asset generation / preparation steps and functionality will evolve over time, but I want a concrete record of the actual minted information that is immutable on-chain.
+
 ## Building
 
 The following env vars must be set (`.env` in this directory will be sourced if present):
