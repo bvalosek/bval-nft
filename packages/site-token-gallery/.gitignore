@@ -1,6 +1,7 @@
 # gatsby output
 public
 .cache
+graphql-types.ts
 
 # source data
 src/data/sequences.json

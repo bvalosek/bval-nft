@@ -16,6 +16,11 @@ module.exports = {
       resolve: 'gatsby-plugin-source-tokens',
     },
 
+    // generate typescript types for the static graphql queries
+    {
+      resolve: 'gatsby-plugin-graphql-codegen',
+    },
+
     // generate robots.txt
     {
       resolve: 'gatsby-plugin-robots-txt',

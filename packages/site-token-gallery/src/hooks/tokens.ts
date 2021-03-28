@@ -1,27 +1,36 @@
 import { useStaticQuery, graphql } from 'gatsby';
+import { UseTokensQueryQuery } from '../../graphql-types';
 
-export const useTokens = (): unknown => {
-  // const data = useStaticQuery(graphql`
-  //   query {
-  //     tokens: allTokensJson {
-  //       nodes {
-  //         id
-  //       }
-  //     }
-  //   }
+/** get access to all token data */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const useTokens = () => {
+  const data: UseTokensQueryQuery = useStaticQuery(graphql`
+    query UseTokensQuery {
+      tokens: allToken {
+        nodes {
+          name
+          slug
+          tokenId
+          metadata {
+            content {
+              name
+            }
+            remoteImage {
+              ...FluidImage
+            }
+          }
+        }
+      }
+    }
 
-  //   # fragment FluidImage on File {
-  //   #   childImageSharp {
-  //   #     fluid(maxWidth: 1600, quality: 60) {
-  //   #       ...GatsbyImageSharpFluid_withWebp
-  //   #     }
-  //   #   }
-  //   # }
-  // `);
+    fragment FluidImage on File {
+      childImageSharp {
+        fluid(maxWidth: 1600, quality: 60) {
+          ...GatsbyImageSharpFluid_withWebp
+        }
+      }
+    }
+  `);
 
-  // console.log(data);
-
-  return false;
-
-  // return data;
+  return data.tokens.nodes;
 };
