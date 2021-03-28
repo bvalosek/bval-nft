@@ -2,8 +2,7 @@ module.exports = {
   siteMetadata: {
     title: 'Brandon Valosek - @bvalosek NFT Collection',
     siteUrl: 'https://tokens.bvalosek.com',
-    description:
-      'Dynamic and interactive non-fungible tokens (NFTs) on the Ethereum blockchain featuring the abstract digital art of Austin, Texas crypto artist Brandon Valosek.',
+    description: 'Crypto art and tokenization experiments created by Brandon Valosek',
   },
   plugins: [
     // bake in <head> during build

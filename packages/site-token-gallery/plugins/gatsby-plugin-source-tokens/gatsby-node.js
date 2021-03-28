@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+// const { createRemoteFileNode } = require('gatsby-source-filesystem');
 
 const allTokenData = require('@bvalosek/token-manifest/data/tokens.json');
 const allSequenceData = require('@bvalosek/token-manifest/data/sequences.json');
 const allCollectionData = require('@bvalosek/token-manifest/data/collections.json');
 
+/** given a uri with the IPFS protocol, return a http URL */
 // const ipfsGatewayUrl = (ipfsUri) => ipfsUri.replace('ipfs://', 'https://gateway.pinata.cloud');
 
 /** gatsby plugin to generate nodes from the token data */

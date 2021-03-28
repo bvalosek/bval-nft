@@ -5,12 +5,11 @@ import { HomeHero } from '../components/HomeHero';
 import { PageSection } from '../components/PageSection';
 import { PageWithFooter } from '../components/PageWithFooter';
 
-/** details / info about a sequence */
-export const SequencePage: FunctionComponent = (props) => {
+export const ContentPage: FunctionComponent = (props) => {
   return (
     <Application>
-      <HeadTags />
       <PageWithFooter>
+        <HeadTags />
         <HomeHero />
         <PageSection>
           <pre>{JSON.stringify(props, null, 2)}</pre>
@@ -20,4 +19,4 @@ export const SequencePage: FunctionComponent = (props) => {
   );
 };
 
-export default SequencePage;
+export default ContentPage;
