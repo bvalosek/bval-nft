@@ -22,12 +22,6 @@ module.exports = {
       options: { policy: [{ userAgent: '*', allow: '/' }] },
     },
 
-    // // source generated data from token manifest
-    // {
-    //   resolve: `gatsby-source-filesystem`,
-    //   options: { path: `./node_modules/@bvalosek/token-manifest/data` },
-    // },
-
     // source all markdown files
     {
       resolve: `gatsby-source-filesystem`,
@@ -42,16 +36,6 @@ module.exports = {
 
     // process JSON files
     'gatsby-transformer-json',
-
-    // resolve remote images
-    // {
-    //   resolve: `gatsby-plugin-remote-images`,
-    //   options: {
-    //     nodeType: 'TokensJsonMetadataContent',
-    //     imagePath: 'image',
-    //     prepareUrl: (url) => url.replace('ipfs://', 'https://gateway.pinata.cloud/'),
-    //   },
-    // },
 
     // process images
     'gatsby-transformer-sharp',

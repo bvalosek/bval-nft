@@ -21,7 +21,7 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
         type: '[Metadata]',
         // in sourceNodes, we set metadata to an array of metadata node IDs.
         // this will "hydrate" those IDs in the entire node
-        resolve(source, args, context, info) {
+        resolve(source, args, context) {
           return context.nodeModel.getNodesByIds({ ids: source.metadata, type: 'Metadata' });
         },
       },
