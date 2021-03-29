@@ -10,13 +10,13 @@ import { usePages } from '../hooks/content';
 
 interface Props {
   pageContext: {
-    frontmatter__slug: string;
+    slug: string;
   };
 }
 
 export const ContentPage: FunctionComponent<Props> = (props) => {
   const { getPage } = usePages();
-  const page = getPage(props.pageContext.frontmatter__slug);
+  const page = getPage(props.pageContext.slug);
 
   return (
     <Application>

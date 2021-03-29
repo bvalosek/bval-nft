@@ -131,3 +131,42 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getCa
     });
   }
 };
+
+/**
+ * gatsby hook to create all pages from content
+ */
+exports.createPages = async ({ actions, graphql, reporter }) => {
+  const resp = await graphql(`
+    query Pages {
+      # filter out slug == null for non-page markdown content
+      pages: allMarkdownRemark(filter: { frontmatter: { slug: { ne: null } } }) {
+        nodes {
+          frontmatter {
+            slug
+            title
+            subtitle
+          }
+          html
+          excerpt
+        }
+      }
+    }
+  `);
+
+  if (resp.errors) {
+    reporter.panicOnBuild(`Error while running GraphQL query.`);
+    return;
+  }
+
+  const ContentPage = require.resolve('./src/page-components/ContentPage.tsx');
+
+  for (const page of resp.data.pages.nodes) {
+    actions.createPage({
+      path: page.frontmatter.slug,
+      component: ContentPage,
+      context: {
+        slug: page.frontmatter.slug,
+      },
+    });
+  }
+};
