@@ -68,7 +68,6 @@ export const TokenDetails: FunctionComponent<Props> = (props) => {
         <Info title="Edition" info={`${ts.editionNumber} / ${ts.editionTotal}`} />
         <Info title="Original File" info={`${ts.width} x ${ts.height} ${ts.assetType}`} />
         <Info title="Token Number" info={`#${ts.tokenNumber}`} />
-        <Info title="Multiplier" info={`${ts.output}x`} />
       </div>
     </div>
   );
