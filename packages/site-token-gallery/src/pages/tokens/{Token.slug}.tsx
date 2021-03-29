@@ -18,7 +18,11 @@ export const TokenPage: FunctionComponent<Props> = (props) => {
 
   return (
     <Application>
-      <HeadTags title={token.source.name} description={token.source.description} />
+      <HeadTags
+        title={token.source.name}
+        description={token.source.description}
+        socialImage={token.metadata[0].socialImage.childImageSharp.resize}
+      />
       <PageWithFooter>
         <MenuBar />
         <TokenInfo tokenId={token.tokenId} />

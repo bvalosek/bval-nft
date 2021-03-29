@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Img from 'gatsby-image';
-import { FluidImageFragment } from '../../graphql-types';
 
 import { ThemeConfig } from '../Theme';
 
@@ -9,7 +8,8 @@ interface Props {
   title: React.ReactNode;
   vibe?: React.ReactNode;
   subtitle?: React.ReactNode;
-  fluidImage: FluidImageFragment;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fluidImage?: any;
 }
 
 const useStyles = makeStyles((theme: ThemeConfig) => {

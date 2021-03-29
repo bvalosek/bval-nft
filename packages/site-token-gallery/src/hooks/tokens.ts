@@ -51,6 +51,9 @@ export const useTokens = (): GatsbyTokenData[] => {
             remoteImage {
               ...FluidImage
             }
+            socialImage: remoteImage {
+              ...SocialImage
+            }
           }
           metadata {
             content {
@@ -58,6 +61,9 @@ export const useTokens = (): GatsbyTokenData[] => {
             }
             remoteImage {
               ...FluidImage
+            }
+            socialImage: remoteImage {
+              ...SocialImage
             }
           }
         }
@@ -68,6 +74,14 @@ export const useTokens = (): GatsbyTokenData[] => {
       childImageSharp {
         fluid(maxWidth: 1600, quality: 80) {
           ...GatsbyImageSharpFluid_withWebp
+        }
+      }
+    }
+
+    fragment SocialImage on File {
+      childImageSharp {
+        resize(toFormat: PNG, quality: 100, width: 1200, height: 628, fit: CONTAIN) {
+          src
         }
       }
     }

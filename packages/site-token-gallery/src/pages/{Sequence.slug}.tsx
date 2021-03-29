@@ -25,6 +25,10 @@ export const query = graphql`
         # defined in hooks/tokens.ts
         ...FluidImage
       }
+      socialImage: remoteImage {
+        # defined in hooks/tokens.ts
+        ...SocialImage
+      }
       source {
         name
         description
@@ -40,11 +44,19 @@ export const SequencePage: FunctionComponent<Props> = (props) => {
   const { sequence } = props.data;
   return (
     <Application>
-      <HeadTags title={sequence.source.name} description={sequence.source.description} />
+      <HeadTags
+        title={sequence.source.name}
+        description={sequence.source.description}
+        socialImage={sequence.socialImage.childImageSharp.resize}
+      />
       <PageWithFooter>
         <MenuBar />
         <PageSection>
-          <Title title={sequence.source.name} subtitle={sequence.source.description} />
+          <Title
+            title={sequence.source.name}
+            subtitle={sequence.source.description}
+            fluidImage={sequence.remoteImage.childImageSharp.fluid}
+          />
         </PageSection>
         <Sequence sequence={sequence} />
       </PageWithFooter>
