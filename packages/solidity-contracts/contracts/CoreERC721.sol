@@ -39,6 +39,7 @@ struct TokenMintData {
 // - RBAC via AccessControlEnumerable
 // - tokenID parsing/validation
 // - sequenced functionality
+// - dynamically resolved metadata variations
 contract CoreERC721 is
   // openzep bases
   AccessControlEnumerable, ERC721Enumerable,
@@ -125,10 +126,9 @@ contract CoreERC721 is
     require(tokenId.tokenVersion() > 0, "invalid token version");
     require(getSequenceState(tokenId.tokenSequenceNumber()) == SequenceState.STARTED, "sequence is not active");
 
-    // TODO: add once tests are fixed
-    // uint today = (block.timestamp / 1 days) * 1 days; // round down to today
-    // require(tokenId.tokenMintTimestamp() >= today, "token mint date in future");
-    // require(tokenId.tokenMintTimestamp() < today + 1 days, "token mint date in past");
+    uint today = (block.timestamp / 1 days) * 1 days; // round down to today
+    require(tokenId.tokenMintTimestamp() >= today, "token mint date in future");
+    require(tokenId.tokenMintTimestamp() < today + 1 days, "token mint date in past");
 
     // create the NFT and persist CID / emit metadata
     _mint(msgSender, tokenId);

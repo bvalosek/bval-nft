@@ -20,7 +20,7 @@ afterEach(async () => {
   await timeMachine.revertToSnapshot(snapshotId);
 });
 
-contract('CoreERC721', (accounts) => {
+contract('TokenLockManager', (accounts) => {
   describe('erc165 checks', () => {
     it('should implement ERC-165', async () => {
       const instance = await MockTokenLockManager.new();

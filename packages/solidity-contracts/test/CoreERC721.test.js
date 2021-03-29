@@ -27,15 +27,16 @@ const MAX_ANNOUNCE_GAS = 60000;
 
 // decimal tokens , generated with token ID encoder util
 const TOKENS = [
-  // 1 - 1
-  '784480123722078113148356789948666198514632284540374567697738922716045508609',
-  // 2 - 10
-  '575992170078640138396857986371540555942628522335297214605797785929353527306',
+  // 1 - 1 @ 2021-03-21
+  '0x016900010001491348a500010001010960096000640064000000000000000001',
+  // 2 - 10 @ 2021-03-21
+  '0x014900010002491348a50001000101096009600064006400000000000000000a',
 ];
 
 // start a sequence and mint
 const simpleMint = async (instance, tokenId = TOKENS[0]) => {
   await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+  await setNetworkTime('2021-03-21');
   const res = await instance.mint({
     tokenId,
     metadataCIDs: ['cid'],
@@ -77,6 +78,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       const res = await instance.mint({
         tokenId,
         metadataCIDs: ['QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU'],
@@ -88,6 +90,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       const res = await instance.mint({
         tokenId,
         metadataCIDs: [
@@ -107,44 +110,46 @@ contract('CoreERC721', (accounts) => {
         description: 'Journey Through a Fractaled Space',
         image: 'QmY7Yh4UquoXHLPFo2XbhXkhBvFoPwmQUSa92pxnxjQuPU',
       };
+      // tokens from seq 1, tokens 1 - 9, minted 2021-03-28
       const tokens = [
         {
-          tokenId: '0x018500010001490548a300010001010960096000000000000000000000000001',
+          tokenId: '0x012e00010001491a48a300010001010960096003e80000000000000000000001',
           metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
         },
         {
-          tokenId: '0x017a00010001490548a400010001010960096000000000000000000000000002',
+          tokenId: '0x01b800010001491a48a400010001010960096003e80000000000000000000002',
           metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
         },
         {
-          tokenId: '0x019300010001490548a500010001010960096000000000000000000000000003',
+          tokenId: '0x017300010001491a48a500010001010960096003e80000000000000000000003',
           metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
         },
         {
-          tokenId: '0x01e800010001490548a600010001010960096000000000000000000000000004',
+          tokenId: '0x01d200010001491a48a600010001010960096003e80000000000000000000004',
           metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
         },
         {
-          tokenId: '0x012c00010001490548a700010001010960096000000000000000000000000005',
+          tokenId: '0x016900010001491a48a700010001010960096003e80000000000000000000005',
           metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
         },
         {
-          tokenId: '0x017200010001490548a800010001010960096000000000000000000000000006',
+          tokenId: '0x012700010001491a48a800010001010960096003e80000000000000000000006',
           metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
         },
         {
-          tokenId: '0x016200010001490548a900010001010960096000000000000000000000000007',
+          tokenId: '0x018d00010001491a48a900010001010960096003e80000000000000000000007',
           metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
         },
         {
-          tokenId: '0x016200010001490548aa00010001010960096000000000000000000000000008',
+          tokenId: '0x011400010001491a48aa00010001010960096003e80000000000000000000008',
           metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
         },
         {
-          tokenId: '0x017f00010001490548ab00010001010960096000000000000000000000000009',
+          tokenId: '0x010f00010001491a48ab00010001010960096003e80000000000000000000009',
           metadataCIDs: ['QmXHdB2P9CJJKXFCtCs4w1wFtjxD4W65nCJsFvH6sFvimg'],
         },
       ];
+      await setNetworkTime('2021-03-28');
       const res = await instance.atomicMint(seq, tokens);
       assert.isBelow(res.receipt.gasUsed, MAX_MUTATION_GAS * 9);
       console.log('atomic mint w/ 9 tokens', res.receipt.gasUsed);
@@ -283,6 +288,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       const task = instance.mint(
         {
           tokenId,
@@ -294,6 +300,7 @@ contract('CoreERC721', (accounts) => {
     });
     it('should revert if minting before starting first sequence', async () => {
       const instance = await factory();
+      await setNetworkTime('2021-03-21');
       const task = instance.mint({
         tokenId: TOKENS[0],
         metadataCIDs: ['cid'],
@@ -303,6 +310,7 @@ contract('CoreERC721', (accounts) => {
     it('should revert if minted with wrong sequence number', async () => {
       const instance = await factory();
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       const task = instance.mint({
         tokenId: TOKENS[1],
         metadataCIDs: ['cid'],
@@ -314,10 +322,11 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       const res = await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       truffleAssert.eventEmitted(res, 'SecondarySaleFees', (event) => {
         return (
-          event.tokenId.toString() === tokenId &&
+          event.tokenId.toString() === '637831817345472213792943097387003961700951121130647167392428401845757542401' &&
           event.recipients[0].toString() === a1.toString() &&
           event.bps[0].toNumber() === 1000
         );
@@ -374,6 +383,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       const fee = await instance.getFeeBps(tokenId);
       assert.isNumber(fee[0].toNumber());
@@ -384,6 +394,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       const rec = await instance.getFeeRecipients(tokenId);
       assert.equal(rec[0], a1);
@@ -396,6 +407,7 @@ contract('CoreERC721', (accounts) => {
       const instance = await factory();
       const tokenId = TOKENS[0];
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       await instance.mint({ tokenId, metadataCIDs: ['cid'] });
       const rec = await instance.royaltyInfo(tokenId);
       assert.equal(rec[0].toString(), a1);
@@ -414,6 +426,7 @@ contract('CoreERC721', (accounts) => {
       const resolver = await MockMetadataIndexResolver.new();
       const tokenId = TOKENS[0];
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       await instance.mint({ tokenId, metadataCIDs: ['cid1', 'cid2'] });
       await instance.setMetadataIndexResolver(1, resolver.address);
 
@@ -426,6 +439,7 @@ contract('CoreERC721', (accounts) => {
       const resolver = await MockMetadataIndexResolver.new();
       const tokenId = TOKENS[0];
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+      await setNetworkTime('2021-03-21');
       await instance.mint({ tokenId, metadataCIDs: ['cid1', 'cid2'] });
       await instance.setMetadataIndexResolver(1, resolver.address);
       await resolver.setIndex(500); // out of bounds
