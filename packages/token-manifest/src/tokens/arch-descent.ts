@@ -3,11 +3,11 @@ import { SequenceSource, TokenSource } from '../types';
 
 const tokenBase = {
   version: 1,
-  collectionNumber: 1,
+  collectionVersion: 1,
   sequenceNumber: 1,
   editionTotal: 1,
   editionNumber: 1,
-  minted: '2021-03-28',
+  minted: '2021-03-29',
   assetType: 'PNG' as AssetType,
   width: 2400,
   height: 2400,
