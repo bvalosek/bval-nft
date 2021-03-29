@@ -12,7 +12,7 @@ export const HomePage: FunctionComponent = () => {
       <PageWithFooter>
         <HomeHero />
         <PageSection>
-          <h1>Token Gallery</h1>
+          <h1>Recently Minted</h1>
         </PageSection>
       </PageWithFooter>
     </Application>

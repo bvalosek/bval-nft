@@ -7,6 +7,7 @@ import Img from 'gatsby-image';
 import { Link } from 'gatsby';
 import { Title } from './Title';
 import { defaultMetadata, useTokens } from '../hooks/tokens';
+import { TokenDetails } from './TokenDetails';
 // import { TokenDetails } from './TokenDetails';
 
 interface Props {
@@ -50,7 +51,9 @@ export const TokenInfo: FunctionComponent<Props> = (props) => {
           vibe={<Link to={`/${token.sequence.slug}`}>{token.sequence.source.name}</Link>}
         />
       </PageSection>
-      <PageSection>{/* <TokenDetails token={token} /> */}</PageSection>
+      <PageSection>
+        <TokenDetails token={token} />
+      </PageSection>
     </>
   );
 };
