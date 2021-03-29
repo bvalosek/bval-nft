@@ -1,8 +1,9 @@
 import React, { FunctionComponent, ReactNode } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { GatsbyTokenData } from '../hooks/tokens';
+import { defaultMetadata, GatsbyTokenData } from '../hooks/tokens';
 import { ThemeConfig } from '../Theme';
 import { Content } from './Content';
+import { ExternalLink } from './ExternalLink';
 
 interface Props {
   token: GatsbyTokenData;
@@ -21,6 +22,9 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
         fontWeight: 'bold',
         fontSize: theme.scaledSpacing(5),
       },
+      display: 'grid',
+      gridTemplateColumns: '1fr',
+      gap: theme.scaledSpacing(16),
     },
     info: {
       marginTop: theme.scaledSpacing(4),
@@ -57,18 +61,30 @@ export const TokenDetails: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
   const { token } = props;
   const ts = token.source.token;
+  const metadata = defaultMetadata(token);
+
   return (
     <div className={classes.container}>
       <Content>
         <h2>Token Details</h2>
+        <div className={classes.info}>
+          <Info title="Token Number" info={`#${ts.tokenNumber}`} />
+          <Info title="Edition" info={`${ts.editionNumber} / ${ts.editionTotal}`} />
+          <Info title="Minted" info={ts.minted} />
+          <Info title="Completed" info={ts.created} />
+          <Info title="Original File" info={`${ts.width} x ${ts.height} ${ts.assetType}`} />
+        </div>
       </Content>
-      <div className={classes.info}>
-        <Info title="Token Number" info={`#${ts.tokenNumber}`} />
-        <Info title="Edition" info={`${ts.editionNumber} / ${ts.editionTotal}`} />
-        <Info title="Minted" info={ts.minted} />
-        <Info title="Completed" info={ts.created} />
-        <Info title="Original File" info={`${ts.width} x ${ts.height} ${ts.assetType}`} />
-      </div>
+      <Content>
+        <h2>Token Assets</h2>
+        <ul>
+          {metadata.assets.map((asset) => (
+            <li>
+              {asset.name} - <ExternalLink url={asset.ipfsGatewayUrl}>Download from IPFS</ExternalLink>
+            </li>
+          ))}
+        </ul>
+      </Content>
     </div>
   );
 };

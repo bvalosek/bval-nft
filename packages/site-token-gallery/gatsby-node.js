@@ -18,7 +18,7 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
     name: 'Token',
     fields: {
       metadata: {
-        type: '[Metadata]',
+        type: '[Metadata!]!',
         // in sourceNodes, we set metadata to an array of metadata node IDs.
         // this will "hydrate" those IDs in the entire node
         resolve(source, args, context) {
@@ -29,7 +29,21 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
     interfaces: ['Node'],
   });
 
-  actions.createTypes([TokenType]);
+  // same approach as TokenType, just for metadata
+  const MetadataType = schema.buildObjectType({
+    name: 'Metadata',
+    fields: {
+      assets: {
+        type: '[Asset!]!',
+        resolve(source, args, context) {
+          return context.nodeModel.getNodesByIds({ ids: source.assets, type: 'Asset' });
+        },
+      },
+    },
+    interfaces: ['Node'],
+  });
+
+  actions.createTypes([TokenType, MetadataType]);
 };
 
 /**
@@ -41,11 +55,43 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getCa
   const collectionNodeId = (version) => createNodeId(`collection ${version}`);
 
   for (const token of allTokenData) {
+    const tokenNodeId = createNodeId(`token ${token.tokenId}`);
+
     // create all metadata nodes for this token
     const metadataNodeIds = [];
     for (const metadata of token.metadata) {
-      const id = createNodeId(`metadata ${metadata.cid}`);
-      metadataNodeIds.push(id);
+      const metadataId = createNodeId(`metadata ${metadata.cid}`);
+      metadataNodeIds.push(metadataId);
+
+      // create an asset file for all additional assets for this metadata
+      const assetNodeIds = [];
+      for (const file of metadata.content.assets) {
+        const id = createNodeId(`asset ${file.asset}`);
+        assetNodeIds.push(id);
+        const url = ipfsGatewayUrl(file.asset);
+        // dont need this for now since i'm linking directly to IPFS, likely
+        // wont ever need it since I dont imagine i'll need any procesing /
+        // image pipeline stuff for the metadata assets
+        // const fileNode = await createRemoteFileNode({
+        //   url,
+        //   getCache,
+        //   createNode: actions.createNode,
+        //   createNodeId,
+        //   parentNodeId: id,
+        // });
+        actions.createNode({
+          id,
+          name: file.name,
+          ipfsUri: file.asset,
+          ipfsGatewayUrl: url,
+          // remoteFile___NODE: fileNode.id,
+          metadata___NODE: metadataId,
+          internal: {
+            type: 'Asset',
+            contentDigest: createContentDigest(JSON.stringify(file)),
+          },
+        });
+      }
 
       // create a "remote file node" referencing the IPFS image so we can
       // leverage all the image processing gatsy stuff for each metadata node
@@ -54,14 +100,16 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getCa
         getCache,
         createNode: actions.createNode,
         createNodeId,
-        parentNodeId: id,
+        parentNodeId: metadataId,
       });
 
       actions.createNode({
-        id,
+        id: metadataId,
         cid: metadata.cid,
         content: metadata.content,
         remoteImage___NODE: imageNode.id,
+        token___NODE: tokenNodeId,
+        assets: assetNodeIds,
         internal: {
           type: 'Metadata',
           contentDigest: createContentDigest(JSON.stringify(metadata)),
@@ -71,7 +119,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getCa
 
     // create the actual token node
     actions.createNode({
-      id: createNodeId(token.tokenId),
+      id: tokenNodeId,
       tokenId: token.tokenId,
       slug: token.slug,
       metadata: metadataNodeIds,

@@ -56,8 +56,10 @@ export const useTokens = (): GatsbyTokenData[] => {
             }
           }
           metadata {
-            content {
+            assets {
               name
+              ipfsGatewayUrl
+              ipfsUri
             }
             remoteImage {
               ...FluidImage
