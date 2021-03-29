@@ -2,21 +2,32 @@ import React, { FunctionComponent } from 'react';
 import { Application } from '../Application';
 import { Content } from '../components/Content';
 import { HeadTags } from '../components/HeadTags';
-import { HomeHero } from '../components/HomeHero';
+import { MenuBar } from '../components/MenuBar';
 import { PageSection } from '../components/PageSection';
 import { PageWithFooter } from '../components/PageWithFooter';
+import { Title } from '../components/Title';
 import { usePages } from '../hooks/content';
 
-export const ContentPage: FunctionComponent = (props) => {
-  const { pages } = usePages();
-  console.log(pages);
+interface Props {
+  pageContext: {
+    frontmatter__slug: string;
+  };
+}
+
+export const ContentPage: FunctionComponent<Props> = (props) => {
+  const { getPage } = usePages();
+  const page = getPage(props.pageContext.frontmatter__slug);
+
   return (
     <Application>
       <PageWithFooter>
         <HeadTags />
-        <HomeHero />
+        <MenuBar />
         <PageSection>
-          <Content html="" />
+          <Title title={page.title} />
+        </PageSection>
+        <PageSection>
+          <Content html={page.html} />
         </PageSection>
       </PageWithFooter>
     </Application>

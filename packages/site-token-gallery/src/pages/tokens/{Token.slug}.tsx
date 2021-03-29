@@ -1,8 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Application } from '../../Application';
 import { HeadTags } from '../../components/HeadTags';
-import { HomeHero } from '../../components/HomeHero';
-import { PageSection } from '../../components/PageSection';
+import { MenuBar } from '../../components/MenuBar';
 import { PageWithFooter } from '../../components/PageWithFooter';
 import { TokenInfo } from '../../components/TokenInfo';
 import { useTokens } from '../../hooks/tokens';
@@ -19,11 +18,10 @@ export const TokenPage: FunctionComponent<Props> = (props) => {
 
   return (
     <Application>
+      <HeadTags title={token.source.name} description={token.source.description} />
       <PageWithFooter>
-        <HeadTags title={token.source.name} description={token.source.description} />
-        <PageSection>
-          <TokenInfo tokenId={token.tokenId} />
-        </PageSection>
+        <MenuBar />
+        <TokenInfo tokenId={token.tokenId} />
       </PageWithFooter>
     </Application>
   );
