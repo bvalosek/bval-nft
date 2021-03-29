@@ -244,6 +244,15 @@ contract CoreERC721 is
   }
 
   // ---
+  // additional interop
+  // ---
+
+  // opensea and rarible expect this to assert collection ownership
+  function owner() external view returns (address) {
+    return _royaltyRecipient;
+  }
+
+  // ---
   // openzep Hooks
   // ---
 

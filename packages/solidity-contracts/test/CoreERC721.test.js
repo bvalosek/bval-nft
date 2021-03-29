@@ -215,7 +215,6 @@ contract('CoreERC721', (accounts) => {
       assert.isTrue(await instance.supportsInterface('0xcef6d368'));
     });
   });
-
   describe('ERC721 Metadata', () => {
     it('should have a name', async () => {
       const instance = await factory();
@@ -276,6 +275,17 @@ contract('CoreERC721', (accounts) => {
       await instance.setRoyaltyRecipient(a2);
       const [recipient] = await instance.getFeeRecipients(tokenId);
       assert.equal(recipient, a2);
+    });
+  });
+  describe('owner', () => {
+    it('should return royality recipient as owner', async () => {
+      const [, a2] = accounts;
+      const instance = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(instance, tokenId);
+      await instance.setRoyaltyRecipient(a2);
+      const owner = await instance.owner();
+      assert.equal(owner, a2);
     });
   });
   describe('minting', () => {
