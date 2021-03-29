@@ -71,9 +71,6 @@ contract CoreERC721 is
   // token metadata CIDs
   mapping (uint256 => string[]) private _tokenMetadataCIDs;
 
-  // timestamp when a token should be considered unlocked
-  mapping (uint256 => uint) private _tokenUnlockTime;
-
   // mapping from a sequence number to a metadata index resolver contract
   mapping (uint16 => IMetadataIndexResolver) private _metadataIndexResolvers;
 
@@ -234,43 +231,6 @@ contract CoreERC721 is
   }
 
   // ---
-  // Locking functionality
-  // ---
-
-  // the timestamp that a token unlocks at
-  function tokenUnlocksAt(uint256 tokenId) external view returns (uint) {
-    require(_exists(tokenId), "invalid token");
-    return _tokenUnlockTime[tokenId];
-  }
-
-  // true if a token is currently locked
-  function isTokenLocked(uint256 tokenId) external view returns (bool) {
-    require(_exists(tokenId), "invalid token");
-    return _tokenUnlockTime[tokenId] >= block.timestamp;
-  }
-
-  // lock a token for (up to) 30 days - a token can be traded while locked, but
-  // future BVAL-NFT functionality (such as stateful interaction or reward
-  // pools) cannot be exercised while a token is locked in order to prevent rugs
-  // while trading
-  function lockToken(uint256 tokenId) external returns (uint) {
-    require(_isApprovedOrOwner(_msgSender(), tokenId), "not token owner");
-    uint unlockAt = block.timestamp + 30 days;
-    _tokenUnlockTime[tokenId] = unlockAt;
-    return unlockAt;
-  }
-
-  // unlock token (shorten unlock time down to 1 day at most)
-  function unlockToken(uint256 tokenId) external returns (uint) {
-    require(_isApprovedOrOwner(_msgSender(), tokenId), "not token owner");
-    uint max = block.timestamp + 1 days;
-    uint current = _tokenUnlockTime[tokenId];
-    uint unlockAt = current > max ? max : current;
-    _tokenUnlockTime[tokenId] = unlockAt;
-    return unlockAt;
-  }
-
-  // ---
   // introspection
   // ---
 
@@ -292,7 +252,6 @@ contract CoreERC721 is
     // clean up on burn
     if (to == address(0)) {
       delete _tokenMetadataCIDs[tokenId];
-      delete _tokenUnlockTime[tokenId];
     }
 
     super._beforeTokenTransfer(from, to, tokenId);

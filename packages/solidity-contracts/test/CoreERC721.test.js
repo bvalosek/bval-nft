@@ -402,65 +402,6 @@ contract('CoreERC721', (accounts) => {
       assert.equal(rec[1].toNumber(), 100000);
     });
   });
-  describe('token locking', () => {
-    it('should start tokens unlocked', async () => {
-      const instance = await factory();
-      const tokenId = TOKENS[0];
-      await simpleMint(instance, tokenId);
-      assert.isFalse(await instance.isTokenLocked(tokenId));
-    });
-    it('should lock a token', async () => {
-      const instance = await factory();
-      const tokenId = TOKENS[0];
-      await simpleMint(instance, tokenId);
-      await instance.lockToken(tokenId);
-      assert.isTrue(await instance.isTokenLocked(tokenId));
-    });
-    it('should automatically unlock after 30 days', async () => {
-      const instance = await factory();
-      const tokenId = TOKENS[0];
-      await simpleMint(instance, tokenId);
-      await setNetworkTime('2021-01-01');
-      await instance.lockToken(tokenId);
-      assert.isTrue(await instance.isTokenLocked(tokenId));
-      await setNetworkTime('2021-01-31T00:00:05'); /// 5s buffer to account for test lag
-      assert.isFalse(await instance.isTokenLocked(tokenId));
-    });
-    it('should unlock after 1 day after calling unlock()', async () => {
-      const instance = await factory();
-      const tokenId = TOKENS[0];
-      await simpleMint(instance, tokenId);
-      await setNetworkTime('2021-01-01');
-      await instance.lockToken(tokenId);
-      await instance.unlockToken(tokenId);
-      await setNetworkTime('2021-01-02T00:00:05'); // 5s buffer to account for test lag
-      assert.isFalse(await instance.isTokenLocked(tokenId));
-    });
-    it('should revert of non-owner attempts to lock', async () => {
-      const [, a2] = accounts;
-      const instance = await factory();
-      const tokenId = TOKENS[0];
-      await simpleMint(instance, tokenId);
-      const task = instance.lockToken(tokenId, { from: a2 });
-      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not token owner');
-    });
-    it('should revert of non-owner attempts to unlock', async () => {
-      const [, a2] = accounts;
-      const instance = await factory();
-      const tokenId = TOKENS[0];
-      await simpleMint(instance, tokenId);
-      await instance.lockToken(tokenId);
-      const task = instance.unlockToken(tokenId, { from: a2 });
-      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not token owner');
-    });
-    it('should not re-lock if unlocking an unlocked token', async () => {
-      const instance = await factory();
-      const tokenId = TOKENS[0];
-      await simpleMint(instance, tokenId);
-      await instance.unlockToken(tokenId);
-      assert.isFalse(await instance.isTokenLocked(tokenId));
-    });
-  });
   describe('resolving metadata index', () => {
     it('should allow setting a metadata resolver', async () => {
       const instance = await factory();
