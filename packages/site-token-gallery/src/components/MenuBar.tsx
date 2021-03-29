@@ -49,9 +49,8 @@ export const MenuBar: FunctionComponent = () => {
             </Link>
           </div>
           <div className={classes.title}>
-            <Link to="/">Tokenized Crypto Art Collection</Link>
+            <Link to="/">Experiments in Tokenization</Link>
           </div>
-          <div className={classes.link}>{/* <WalletBalance /> */}</div>
         </div>
       </PageSection>
     </>

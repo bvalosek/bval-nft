@@ -3,6 +3,8 @@ import { UseTokensQueryQuery } from '../../graphql-types';
 
 export type GatsbyTokenData = UseTokensQueryQuery['tokens']['nodes'][0];
 
+export type GatsbySequenceData = NonNullable<GatsbyTokenData['sequence']>;
+
 /** get access to all token data */
 export const useTokens = (): GatsbyTokenData[] => {
   const data: UseTokensQueryQuery = useStaticQuery(graphql`

@@ -11,6 +11,8 @@ socials:
   url: https://instagram.com/bvalosek
 - name: GitHub
   url: https://github.com/bvalosek
+- name: Discord
+  url: https://discord.gg/qDrsjcGR2F
 - name: Snapshot
   url: https://snapshot.org/#/bvalosek.eth
 ---
