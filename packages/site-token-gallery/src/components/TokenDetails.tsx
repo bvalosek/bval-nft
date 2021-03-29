@@ -63,11 +63,11 @@ export const TokenDetails: FunctionComponent<Props> = (props) => {
         <h2>Token Details</h2>
       </Content>
       <div className={classes.info}>
+        <Info title="Token Number" info={`#${ts.tokenNumber}`} />
+        <Info title="Edition" info={`${ts.editionNumber} / ${ts.editionTotal}`} />
         <Info title="Minted" info={ts.minted} />
         <Info title="Completed" info={ts.created} />
-        <Info title="Edition" info={`${ts.editionNumber} / ${ts.editionTotal}`} />
         <Info title="Original File" info={`${ts.width} x ${ts.height} ${ts.assetType}`} />
-        <Info title="Token Number" info={`#${ts.tokenNumber}`} />
       </div>
     </div>
   );
