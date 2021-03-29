@@ -1,0 +1,3 @@
+[build]
+  # re-install package-local deps in the monorepo
+  command = "npm i"
