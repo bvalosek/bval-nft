@@ -9,16 +9,42 @@ export const useTokens = (): GatsbyTokenData[] => {
     query UseTokensQuery {
       tokens: allToken {
         nodes {
-          name
-          slug
           tokenId
+          slug
+          source {
+            name
+            description
+            token {
+              assetType
+              height
+              width
+              minted
+              created
+              editionTotal
+              editionNumber
+              tokenNumber
+              input
+              output
+            }
+          }
           sequence {
-            slug
             sequenceNumber
+            slug
             source {
               name
+              description
               completed
               atomic
+            }
+            collection {
+              collectionVersion
+              source {
+                name
+                description
+              }
+              remoteImage {
+                ...FluidImage
+              }
             }
             remoteImage {
               ...FluidImage

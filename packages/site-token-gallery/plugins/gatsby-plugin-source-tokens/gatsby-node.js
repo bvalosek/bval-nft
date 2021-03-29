@@ -73,10 +73,9 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getCa
     actions.createNode({
       id: createNodeId(token.tokenId),
       tokenId: token.tokenId,
-      tokenPayload: token.source.token,
-      name: token.source.name,
       slug: token.slug,
       metadata: metadataNodeIds,
+      source: token.source,
       sequence___NODE: sequenceNodeId(token.source.token.sequenceNumber),
       internal: {
         type: 'Token',

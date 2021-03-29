@@ -4,7 +4,7 @@ import { HeadTags } from '../../components/HeadTags';
 import { HomeHero } from '../../components/HomeHero';
 import { PageSection } from '../../components/PageSection';
 import { PageWithFooter } from '../../components/PageWithFooter';
-import { defaultMetadata, useTokens } from '../../hooks/tokens';
+import { useTokens } from '../../hooks/tokens';
 
 interface Props {
   // from gatsby filesystem API
@@ -15,12 +15,11 @@ interface Props {
 export const TokenPage: FunctionComponent<Props> = (props) => {
   const tokens = useTokens();
   const token = tokens.find((t) => t.slug === props.pageContext.slug);
-  const metdata = defaultMetadata(token)
 
   return (
     <Application>
       <PageWithFooter>
-        <HeadTags title={token.name} description={metdata.content./>
+        <HeadTags title={token.source.name} description={token.source.description} />
         <HomeHero />
         <PageSection></PageSection>
       </PageWithFooter>
