@@ -1,3 +1,4 @@
+import { graphql, useStaticQuery } from 'gatsby';
 import React, { FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import { useSiteMetadata, useAbsoluteUrl } from '../hooks/site-metadata';
@@ -13,8 +14,19 @@ interface Props {
 export const HeadTags: FunctionComponent<Props> = (props) => {
   const metadata = useSiteMetadata();
   const { absoluteUrl } = useAbsoluteUrl();
+  const resp = useStaticQuery(graphql`
+    query DefaultSocialImage {
+      file(relativePath: { eq: "social.png" }) {
+        id
+        # defined in hooks/tokens
+        ...SocialImage
+      }
+    }
+  `);
 
   const { title = metadata.title, description = metadata.description, socialImage } = props;
+
+  const socialImageSrc = socialImage ? absoluteUrl(socialImage.src) : absoluteUrl(resp.file.childImageSharp.resize.src);
 
   return (
     <Helmet>
@@ -24,14 +36,14 @@ export const HeadTags: FunctionComponent<Props> = (props) => {
       <meta property="og:url" content={metadata.siteUrl} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      {socialImage && <meta property="og:image" content={absoluteUrl(socialImage.src)} />}
+      <meta property="og:image" content={socialImageSrc} />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@bvalosek" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image:alt" content={description} />
-      {socialImage && <meta property="twitter:image" content={absoluteUrl(socialImage.src)} />}
+      <meta property="twitter:image" content={socialImageSrc} />
     </Helmet>
   );
 };
