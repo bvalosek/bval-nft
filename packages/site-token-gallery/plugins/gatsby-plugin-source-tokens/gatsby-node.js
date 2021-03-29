@@ -87,12 +87,21 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getCa
 
   // create all sequences
   for (const seq of allSequenceData) {
+    const id = sequenceNodeId(seq.sequenceNumber);
+
+    const imageNode = await createRemoteFileNode({
+      url: ipfsGatewayUrl(`ipfs://ipfs/${seq.imageCID}`),
+      getCache,
+      createNode: actions.createNode,
+      createNodeId,
+      parentNodeId: id,
+    });
+
     actions.createNode({
-      id: sequenceNodeId(seq.sequenceNumber),
+      id,
       ...seq,
       collection___NODE: collectionNodeId(seq.source.collectionVersion),
-      parent: null,
-      children: [],
+      remoteImage___NODE: imageNode.id,
       internal: {
         type: 'Sequence',
         contentDigest: createContentDigest(JSON.stringify(seq)),
@@ -102,11 +111,20 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getCa
 
   // create all collections
   for (const collection of allCollectionData) {
+    const id = collectionNodeId(collection.collectionVersion);
+
+    const imageNode = await createRemoteFileNode({
+      url: ipfsGatewayUrl(collection.content.image),
+      getCache,
+      createNode: actions.createNode,
+      createNodeId,
+      parentNodeId: id,
+    });
+
     actions.createNode({
-      id: collectionNodeId(collection.collectionVersion),
+      id,
       ...collection,
-      parent: null,
-      children: [],
+      remoteImage___NODE: imageNode.id,
       internal: {
         type: 'Collection',
         contentDigest: createContentDigest(JSON.stringify(collection)),

@@ -39,8 +39,7 @@ const writeData = async () => {
     // upload each variation of metadata
     for (const [idx, meta] of source.metadata.entries()) {
       // upload the primary asset to IPFS
-      // const assetCID = await uploadAsset(meta.image);
-      const assetCID = `${meta.image} CID`; // TODO: remove car hack
+      const assetCID = await uploadAsset(meta.image);
       cidMap.set(meta.image, assetCID);
 
       // resize and upload to IPFS

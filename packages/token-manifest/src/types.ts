@@ -2,8 +2,10 @@ import { TokenData } from '@bvalosek/lib-tokens';
 
 /** standard metadata information */
 export interface Metadata {
-  name: string;
-  description: string;
+  /** if not provided, defaults to token canonical name */
+  name?: string;
+  /** if not provided, defaults to token canonical description */
+  description?: string;
   image: string;
 }
 
@@ -17,6 +19,11 @@ export interface TokenSource {
    * metadata variations
    */
   name: string;
+  /**
+   * canonical description, different from metadata.description which may vary across
+   * metadata variations
+   */
+  description: string;
   token: TokenData;
   summary?: string;
   metadata: Metadata[];

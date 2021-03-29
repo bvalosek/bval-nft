@@ -38,7 +38,7 @@ export const generateTokenMetadata = (
   const description =
     `
 
-"${metadata.description}"${source.summary ? '\n\n' + `${source.summary}` : ''}
+"${metadata.description ?? source.description}"${source.summary ? '\n\n' + `${source.summary}` : ''}
 
 This is token #${source.token.tokenNumber} in the @bvalosek NFT Collection. It is part of the "${
       sequence.name
@@ -55,7 +55,7 @@ ${url}
 `.trim() + '\n\n';
 
   return {
-    name: metadata.name,
+    name: metadata.name ?? source.name,
     description,
     image: `ipfs://ipfs/${resampledCID}`,
     assets: [

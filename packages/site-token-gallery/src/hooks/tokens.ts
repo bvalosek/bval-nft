@@ -1,9 +1,10 @@
 import { useStaticQuery, graphql } from 'gatsby';
 import { UseTokensQueryQuery } from '../../graphql-types';
 
+export type GatsbyTokenData = UseTokensQueryQuery['tokens']['nodes'][0];
+
 /** get access to all token data */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const useTokens = () => {
+export const useTokens = (): GatsbyTokenData[] => {
   const data: UseTokensQueryQuery = useStaticQuery(graphql`
     query UseTokensQuery {
       tokens: allToken {
@@ -11,6 +12,18 @@ export const useTokens = () => {
           name
           slug
           tokenId
+          sequence {
+            slug
+            sequenceNumber
+            source {
+              name
+              completed
+              atomic
+            }
+            remoteImage {
+              ...FluidImage
+            }
+          }
           metadata {
             content {
               name
@@ -25,7 +38,7 @@ export const useTokens = () => {
 
     fragment FluidImage on File {
       childImageSharp {
-        fluid(maxWidth: 1600, quality: 60) {
+        fluid(maxWidth: 1600, quality: 80) {
           ...GatsbyImageSharpFluid_withWebp
         }
       }
@@ -33,4 +46,14 @@ export const useTokens = () => {
   `);
 
   return data.tokens.nodes;
+};
+
+/** given token data, extract the default metadata */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const defaultMetadata = (token: GatsbyTokenData) => {
+  const metadata = token.metadata?.[0];
+  if (!metadata) {
+    throw new Error();
+  }
+  return metadata;
 };
