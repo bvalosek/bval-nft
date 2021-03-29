@@ -34,9 +34,9 @@ const TOKENS = [
 ];
 
 // start a sequence and mint
-const simpleMint = async (instance, tokenId = TOKENS[0]) => {
+const simpleMint = async (instance, tokenId = TOKENS[0], date = '2021-03-21') => {
   await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
-  await setNetworkTime('2021-03-21');
+  await setNetworkTime(date);
   const res = await instance.mint({
     tokenId,
     metadataCIDs: ['cid'],
@@ -484,6 +484,18 @@ contract('CoreERC721', (accounts) => {
       await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
       const task = instance.setMetadataIndexResolver(1, resolver.address, { from: a2 });
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires MINTER_ROLE');
+    });
+  });
+  describe('mint date check', () => {
+    it('should revert if mint date is in the past', async () => {
+      const instance = await factory();
+      const task = simpleMint(instance, TOKENS[0], '2022-01-01');
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'token mint date in the past');
+    });
+    it('should revert if mint date is in the future', async () => {
+      const instance = await factory();
+      const task = simpleMint(instance, TOKENS[0], '2020-01-01');
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'token mint date in the future');
     });
   });
 });

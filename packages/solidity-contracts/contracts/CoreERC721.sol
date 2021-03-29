@@ -127,8 +127,8 @@ contract CoreERC721 is
     require(getSequenceState(tokenId.tokenSequenceNumber()) == SequenceState.STARTED, "sequence is not active");
 
     uint today = (block.timestamp / 1 days) * 1 days; // round down to today
-    require(tokenId.tokenMintTimestamp() >= today, "token mint date in future");
-    require(tokenId.tokenMintTimestamp() < today + 1 days, "token mint date in past");
+    require(tokenId.tokenMintTimestamp() >= today, "token mint date in the past");
+    require(tokenId.tokenMintTimestamp() < today + 1 days, "token mint date in the future");
 
     // create the NFT and persist CID / emit metadata
     _mint(msgSender, tokenId);
