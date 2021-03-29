@@ -68,7 +68,7 @@ export const Footer: FunctionComponent = () => {
     <PageSection>
       <footer className={classes.container}>
         <div>
-          <h4 className={classes.header}>@bvalosek Collection</h4>
+          <h4 className={classes.header}>@bvalosek NFT Collection</h4>
           <div className={classes.about} dangerouslySetInnerHTML={{ __html: data.about.html }} />
         </div>
         <div>
