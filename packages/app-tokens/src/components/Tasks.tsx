@@ -11,13 +11,13 @@ export const Tasks: FunctionComponent = () => {
   const { library } = useWeb3Strict();
 
   const tokens = allTokens.filter((t) => t.source.token.sequenceNumber === 1);
-  const sequence = allSequences.find((s) => s.number === 1);
+  const sequence = allSequences.find((s) => s.sequenceNumber === 1);
 
   // TODO: allow storing of contract address in local storage by chainID
-  const contractAddress = '0xa00DF1626f3110E74412197b270515C95Bac2705';
+  const contractAddress = '0x5511746Bac4303acc61dD7E5d035147fdCB47690';
 
   const sdata: SequenceCreateData = {
-    sequenceNumber: sequence.number,
+    sequenceNumber: sequence.sequenceNumber,
     name: sequence.source.name,
     description: sequence.source.description,
     image: `ipfs://ipfs/${sequence.imageCID}`,
@@ -25,12 +25,10 @@ export const Tasks: FunctionComponent = () => {
 
   const tdata = tokens.map<TokenMintData>((t) => {
     return {
-      tokenId: t.id,
+      tokenId: t.tokenId,
       metadataCIDs: t.metadata.map((m) => m.cid),
     };
   });
-
-  console.log(sdata, tdata);
 
   return (
     <Container>
