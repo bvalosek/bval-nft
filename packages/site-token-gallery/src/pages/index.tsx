@@ -4,8 +4,11 @@ import { HeadTags } from '../components/HeadTags';
 import { HomeHero } from '../components/HomeHero';
 import { PageSection } from '../components/PageSection';
 import { PageWithFooter } from '../components/PageWithFooter';
+import { TokenGrid } from '../components/TokenGrid';
+import { useTokens } from '../hooks/tokens';
 
 export const HomePage: FunctionComponent = () => {
+  const tokens = useTokens();
   return (
     <Application>
       <HeadTags />
@@ -13,6 +16,9 @@ export const HomePage: FunctionComponent = () => {
         <HomeHero />
         <PageSection>
           <h1>Recently Minted</h1>
+        </PageSection>
+        <PageSection>
+          <TokenGrid tokens={tokens} />
         </PageSection>
       </PageWithFooter>
     </Application>
