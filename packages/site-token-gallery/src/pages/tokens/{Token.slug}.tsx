@@ -4,6 +4,7 @@ import { HeadTags } from '../../components/HeadTags';
 import { HomeHero } from '../../components/HomeHero';
 import { PageSection } from '../../components/PageSection';
 import { PageWithFooter } from '../../components/PageWithFooter';
+import { TokenInfo } from '../../components/TokenInfo';
 import { useTokens } from '../../hooks/tokens';
 
 interface Props {
@@ -20,8 +21,9 @@ export const TokenPage: FunctionComponent<Props> = (props) => {
     <Application>
       <PageWithFooter>
         <HeadTags title={token.source.name} description={token.source.description} />
-        <HomeHero />
-        <PageSection></PageSection>
+        <PageSection>
+          <TokenInfo tokenId={token.tokenId} />
+        </PageSection>
       </PageWithFooter>
     </Application>
   );
