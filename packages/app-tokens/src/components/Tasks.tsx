@@ -14,7 +14,7 @@ export const Tasks: FunctionComponent = () => {
   const sequence = allSequences.find((s) => s.sequenceNumber === 1);
 
   // TODO: allow storing of contract address in local storage by chainID
-  const contractAddress = '0x5511746Bac4303acc61dD7E5d035147fdCB47690';
+  const contractAddress = '0x02D91986F0C2B02830bDfC022f0dA83529B78334';
 
   const sdata: SequenceCreateData = {
     sequenceNumber: sequence.sequenceNumber,
