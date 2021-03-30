@@ -5,6 +5,8 @@ pages:
 - bval-token
 - contact
 socials:
+- name: OpenSea
+  url: https://opensea.io/assets/bvalosek-nft-collection?search[resultModel]=ASSETS&search[sortAscending]=false&search[sortBy]=CREATED_DATE
 - name: Twitter
   url: https://twitter.com/bvalosek
 - name: Instagram
