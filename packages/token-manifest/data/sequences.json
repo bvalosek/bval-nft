@@ -12,5 +12,19 @@
       "atomic": true
     },
     "imageCID": "QmNSLGT1Q56KkuBqWEFZXxat3KFdmC14UTVDaTxkXQg9SZ"
+  },
+  {
+    "sequenceNumber": 2,
+    "slug": "cascade-trial-717",
+    "source": {
+      "name": "Cascade: Trial 717",
+      "sequenceNumber": 2,
+      "collectionVersion": 1,
+      "description": "",
+      "image": "seq2/seq2.png",
+      "completed": true,
+      "atomic": true
+    },
+    "imageCID": "QmRZgbqK1V4yaiutMgy5aocwryrgKpkPNmSxBcrgFXqVJb"
   }
 ]
