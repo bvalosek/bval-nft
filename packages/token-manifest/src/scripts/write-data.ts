@@ -12,17 +12,42 @@ import { createToken, toHexStringBytes } from '@bvalosek/lib-tokens';
 import { writeResampledImage } from '../images';
 import { createSlug } from '../strings';
 
-const assetPath = (filename: string): string => join(__dirname, '../assets', filename);
+// a lil hacky lol
+import existingTokenEntries from '../../data/tokens.json';
+import existingSequenceEntries from '../../data/sequences.json';
+import existingCollectionEntries from '../../data/collections.json';
 
 const PROJECT_TAG = 'bval-nft';
+
+/**
+ * any sequence in here will be updated on token manifest build, even if it
+ * already exists in the data files. used during token asset preperation to
+ * make my life a lil easier
+ */
+const LIVE_SEQUENCES: number[] = [2];
+const isLiveSequence = (n: number): boolean => LIVE_SEQUENCES.includes(n);
+
+const assetPath = (filename: string): string => join(__dirname, '../assets', filename);
+
+const dataFilePath = (filename: string): string => join(__dirname, '../../data', filename);
+
+// extract the ipfs hash from a gateway URL
+const extractHash = (ipfsGatewayUrl: string): string => ipfsGatewayUrl.replace('ipfs://ipfs/', '');
 
 const writeData = async () => {
   // a map from a "name" to the CID
   const cidMap = new Map<string, string>();
 
   // generate all token metadata json and upload to IPFS
-  const tokenEntries: TokenManifestEntry[] = [];
+  const tokenEntries: TokenManifestEntry[] = existingTokenEntries.filter(
+    (t) => !isLiveSequence(t.source.token.sequenceNumber)
+  ) as TokenManifestEntry[]; // casting as inferred TS type from JSON is lossy;
   for (const source of tokens) {
+    if (tokenEntries.find((t) => t.source.token.tokenNumber === source.token.tokenNumber)) {
+      console.log(`skipping token ${source.token.tokenNumber}`);
+      continue;
+    }
+
     // resolve sequence
     const sequence = sequences.find((s) => s.sequenceNumber === source.token.sequenceNumber);
     if (!sequence) {
@@ -62,8 +87,15 @@ const writeData = async () => {
   }
 
   // generate all sequence data and ensure assets are uploaded to IPFS
-  const sequenceEntries: SequenceManifestEntry[] = [];
+  const sequenceEntries: SequenceManifestEntry[] = existingSequenceEntries.filter(
+    (s) => !isLiveSequence(s.sequenceNumber)
+  );
   for (const source of sequences) {
+    if (sequenceEntries.find((s) => s.sequenceNumber === source.sequenceNumber)) {
+      console.log(`skipping sequence ${source.sequenceNumber}`);
+      continue;
+    }
+
     const imageCID = await uploadAsset(source.image);
     cidMap.set(source.image, imageCID);
     sequenceEntries.push({
@@ -75,8 +107,13 @@ const writeData = async () => {
   }
 
   // generate all collection data and ensure its uploaded to IPFS
-  const collectionEntries: CollectionManifestEntry[] = [];
+  const collectionEntries: CollectionManifestEntry[] = existingCollectionEntries;
   for (const source of collections) {
+    if (collectionEntries.find((c) => c.collectionVersion === source.version)) {
+      console.log(`skipping collection ${source.version}`);
+      continue;
+    }
+
     const imageCID = await uploadAsset(source.image);
     cidMap.set(source.image, imageCID);
     const metadata = generateCollectionMetadata(source, imageCID);
@@ -91,22 +128,31 @@ const writeData = async () => {
     });
   }
 
+  const hashes = [
+    ...collectionEntries.map((c) => c.cid),
+    ...collectionEntries.map((c) => extractHash(c.content.image)),
+    ...sequenceEntries.map((s) => s.imageCID),
+    ...tokenEntries.flatMap((t) => t.metadata.map((m) => m.cid)),
+    ...tokenEntries.flatMap((t) => t.metadata.map((m) => extractHash(m.content.image))),
+  ];
+
   // find all extra pinned files that we can now unpin
   const existing = await getAllPins(PROJECT_TAG);
+  const current = new Set(hashes);
   console.log('checking for outdated pins...');
   for (const pinned of existing) {
-    const { name = '' } = pinned.metadata;
-    const uploaded = cidMap.get(name);
-    if (uploaded !== pinned.ipfs_pin_hash) {
-      console.log(`unpinning out of date hash for ${name}: ${pinned.ipfs_pin_hash}`);
-      await unpin(pinned.ipfs_pin_hash);
+    const hash = pinned.ipfs_pin_hash;
+    if (!current.has(hash)) {
+      console.log(`pinned hash not in current list of hashes: ${hash}`);
+      // TODO: uncomment when i know this for sure works
+      // await unpin(hash);
     }
   }
 
   // write all data to disk
-  writeFileSync(join(__dirname, '../../data', 'tokens.json'), JSON.stringify(tokenEntries, null, 2));
-  writeFileSync(join(__dirname, '../../data', 'sequences.json'), JSON.stringify(sequenceEntries, null, 2));
-  writeFileSync(join(__dirname, '../../data', 'collections.json'), JSON.stringify(collectionEntries, null, 2));
+  writeFileSync(dataFilePath('tokens.json'), JSON.stringify(tokenEntries, null, 2));
+  writeFileSync(dataFilePath('sequences.json'), JSON.stringify(sequenceEntries, null, 2));
+  writeFileSync(dataFilePath('collections.json'), JSON.stringify(collectionEntries, null, 2));
 };
 
 /** upload a static asset from the assets/ directory to IPFS and return the CID */
