@@ -58,7 +58,7 @@ export const seq2Tokens: TokenSource[] = [
   },
   {
     name: 'Interlink',
-    description: "Entanglment's locked... we're fucked",
+    description: "Entanglement's locked... we're fucked",
     metadata: [{ image: 'seq2/s2-06.png' }],
     token: { ...tokenBase, tokenNumber: 15, created: '2021-01-24' },
   },
