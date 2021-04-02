@@ -7,7 +7,7 @@ const tokenBase = {
   sequenceNumber: 2,
   editionTotal: 1,
   editionNumber: 1,
-  minted: '2021-03-31',
+  minted: '2021-04-01',
   assetType: 'PNG' as AssetType,
   width: 3600,
   height: 3600,
