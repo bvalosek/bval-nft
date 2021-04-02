@@ -34,13 +34,13 @@ export const seq2Tokens: TokenSource[] = [
   },
   {
     name: 'Primer',
-    description: 'Strategy: exploit flaws in spacetime encryption',
+    description: 'Loopholes always exists, even in information space',
     metadata: [{ image: 'seq2/s2-02.png' }],
     token: { ...tokenBase, tokenNumber: 11, created: '2021-01-21' },
   },
   {
     name: 'Convolver',
-    description: "It's just a bunch of numbers, how dangerous could it be?",
+    description: 'Traverse folded paths to sequester new infinities',
     metadata: [{ image: 'seq2/s2-03.png' }],
     token: { ...tokenBase, tokenNumber: 12, created: '2021-01-05' },
   },
@@ -57,8 +57,8 @@ export const seq2Tokens: TokenSource[] = [
     token: { ...tokenBase, tokenNumber: 14, created: '2021-01-03' },
   },
   {
-    name: 'Interlink',
-    description: "Entanglement's locked... we're fucked",
+    name: 'Breakdown',
+    description: 'Entanglement only gets us so far',
     metadata: [{ image: 'seq2/s2-06.png' }],
     token: { ...tokenBase, tokenNumber: 15, created: '2021-01-24' },
   },
@@ -76,7 +76,7 @@ export const seq2Tokens: TokenSource[] = [
   },
   {
     name: 'Emergence',
-    description: 'The finality of singularity... all is as it was',
+    description: 'The stormy finality of singularity',
     metadata: [{ image: 'seq2/s2-09.png' }],
     token: { ...tokenBase, tokenNumber: 18, created: '2020-12-28' },
   },
