@@ -1,9 +1,10 @@
 import React, { FunctionComponent, ReactNode } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { defaultMetadata, GatsbyTokenData } from '../hooks/tokens';
+import { defaultMetadata, GatsbyTokenData, useContractAddresses } from '../hooks/tokens';
 import { ThemeConfig } from '../Theme';
 import { Content } from './Content';
 import { ExternalLink } from './ExternalLink';
+import { openseaUrl, etherscanUrl } from '../util/strings';
 
 interface Props {
   token: GatsbyTokenData;
@@ -11,6 +12,11 @@ interface Props {
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
+    outer: {
+      display: 'grid',
+      gridTemplateColumns: '1fr auto',
+      gap: theme.scaledSpacing(15),
+    },
     container: {
       '& dt': {
         fontSize: theme.scaledSpacing(3.5),
@@ -59,32 +65,52 @@ const Info: FunctionComponent<{ title: ReactNode; info: ReactNode }> = (props) =
 
 export const TokenDetails: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
+  const { collection } = useContractAddresses();
   const { token } = props;
   const ts = token.source.token;
   const metadata = defaultMetadata(token);
 
   return (
-    <div className={classes.container}>
-      <Content>
-        <h2>Token Details</h2>
-        <div className={classes.info}>
-          <Info title="Token Number" info={`#${ts.tokenNumber}`} />
-          <Info title="Edition" info={`${ts.editionNumber} / ${ts.editionTotal}`} />
-          <Info title="Minted" info={ts.minted} />
-          <Info title="Completed" info={ts.created} />
-          <Info title="Original File" info={`${ts.width} x ${ts.height} ${ts.assetType}`} />
-        </div>
-      </Content>
-      <Content>
-        <h2>Token Assets</h2>
-        <ul>
-          {metadata.assets.map((asset) => (
+    <div className={classes.outer}>
+      <div className={classes.container}>
+        <Content>
+          <h2>Token Details</h2>
+          <div className={classes.info}>
+            <Info title="Token Number" info={`#${ts.tokenNumber}`} />
+            <Info title="Edition" info={`${ts.editionNumber} / ${ts.editionTotal}`} />
+            <Info title="Minted" info={ts.minted} />
+            <Info title="Completed" info={ts.created} />
+            <Info title="Original File" info={`${ts.width} x ${ts.height} ${ts.assetType}`} />
+            <Info title="Yield Multiplier" info={`${ts.output}x`} />
+          </div>
+        </Content>
+        <Content>
+          <h2>Token Assets</h2>
+          <ul>
+            {metadata.assets.map((asset) => (
+              <li key={asset.name}>
+                {asset.name} - <ExternalLink url={asset.ipfsGatewayUrl}>Download from IPFS</ExternalLink>
+              </li>
+            ))}
             <li>
-              {asset.name} - <ExternalLink url={asset.ipfsGatewayUrl}>Download from IPFS</ExternalLink>
+              ERC-721 Metadata - <ExternalLink url={metadata.ipfsGatewayUrl}>Download from IPFS</ExternalLink>
             </li>
-          ))}
-        </ul>
-      </Content>
+          </ul>
+        </Content>
+      </div>
+      <div>
+        <Content>
+          <h2>External Links</h2>
+          <ul>
+            <li>
+              <ExternalLink url={openseaUrl(collection, token.tokenId)}>View on OpenSea</ExternalLink>
+            </li>
+            <li>
+              <ExternalLink url={etherscanUrl(collection, token.tokenId)}>View on Etherscan</ExternalLink>
+            </li>
+          </ul>
+        </Content>
+      </div>
     </div>
   );
 };

@@ -5,6 +5,19 @@ export type GatsbyTokenData = UseTokensQueryQuery['tokens']['nodes'][0];
 
 export type GatsbySequenceData = NonNullable<GatsbyTokenData['sequence']>;
 
+interface ContractAddresses {
+  token: string;
+  collection: string;
+}
+
+/** get the contract addresses. eventually should switch on chainId */
+export const useContractAddresses = (): ContractAddresses => {
+  return {
+    token: '0x27525344bbba0dDb182251387AEdd0Bde7d466B2',
+    collection: '0x02D91986F0C2B02830bDfC022f0dA83529B78334',
+  };
+};
+
 /** get access to all token data */
 export const useTokens = (): GatsbyTokenData[] => {
   const data: UseTokensQueryQuery = useStaticQuery(graphql`
@@ -56,6 +69,7 @@ export const useTokens = (): GatsbyTokenData[] => {
             }
           }
           metadata {
+            ipfsGatewayUrl
             assets {
               name
               ipfsGatewayUrl

@@ -58,7 +58,7 @@ export const TokenGrid: FunctionComponent<Props> = (props) => {
   return (
     <div className={classes.container}>
       {tokens.map((token) => (
-        <div className={classes.token}>
+        <div key={token.tokenId} className={classes.token}>
           <div>
             <Link to={to(token)}>
               <Img fluid={token.metadata[0].remoteImage.childImageSharp.fluid} />

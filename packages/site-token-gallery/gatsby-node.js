@@ -106,6 +106,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest, getCa
       actions.createNode({
         id: metadataId,
         cid: metadata.cid,
+        ipfsGatewayUrl: `https://gateway.pinata.cloud/ipfs/${metadata.cid}`,
         content: metadata.content,
         remoteImage___NODE: imageNode.id,
         token___NODE: tokenNodeId,
