@@ -91,11 +91,11 @@ export const TokenDetails: FunctionComponent<Props> = (props) => {
           <ul>
             {metadata.assets.map((asset) => (
               <li key={asset.name}>
-                {asset.name} - <ExternalLink url={asset.ipfsGatewayUrl}>Download from IPFS</ExternalLink>
+                <ExternalLink url={asset.ipfsGatewayUrl}>{asset.name}</ExternalLink> (IPFS)
               </li>
             ))}
             <li>
-              ERC-721 Metadata - <ExternalLink url={metadata.ipfsGatewayUrl}>Download from IPFS</ExternalLink>
+              <ExternalLink url={metadata.ipfsGatewayUrl}>ERC-721 Metadata</ExternalLink> (IPFS)
             </li>
           </ul>
         </Content>
