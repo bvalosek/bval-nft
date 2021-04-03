@@ -14,8 +14,10 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     outer: {
       display: 'grid',
-      gridTemplateColumns: '1fr auto',
       gap: theme.scaledSpacing(15),
+      '@media(min-width: 800px)': {
+        gridTemplateColumns: '1fr auto',
+      },
     },
     container: {
       '& dt': {
