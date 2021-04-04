@@ -30,6 +30,20 @@ contract.only('ClaimPool', (accounts) => {
       assert.equal(await pool.poolReserve(), 600);
     });
   });
+  describe('balanceOf', () => {
+    it('should reflect balance of claimable tokens for an address', async () => {
+      const [, a2, a3] = accounts;
+      const { pool, token } = await factory();
+      await pool.addClaims([{ payee: a2, amount: 300 }]);
+      await pool.addClaims([{ payee: a3, amount: 400 }]);
+      assert.equal(await pool.balanceOf(a2), 300);
+      assert.equal(await pool.balanceOf(a3), 400);
+      await token.mintTo(pool.address, 1000);
+      await pool.claim({ from: a2 });
+      assert.equal(await pool.balanceOf(a2), 0);
+      assert.equal(await pool.balanceOf(a3), 400);
+    });
+  });
   describe('claim', () => {
     it('should revert if nothing to claim', async () => {
       const { pool } = await factory();
@@ -45,6 +59,14 @@ contract.only('ClaimPool', (accounts) => {
       assert.equal(await token.balanceOf(a1), 200);
       assert.equal(await pool.poolReserve(), 0);
       assert.equal(await pool.totalOutstandingClaims(), 800);
+    });
+  });
+  describe('addClaims', () => {
+    it('should revert if lacking role to add claim', async () => {
+      const [a1, a2] = accounts;
+      const { pool } = await factory();
+      const task = pool.addClaims([{ payee: a1, amount: 1000 }], { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires CLAIM_GRANTER');
     });
   });
 });

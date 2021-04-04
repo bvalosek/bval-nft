@@ -58,20 +58,22 @@ contract ClaimPool is AccessControlEnumerable {
 
   // claim up to the max balance for msg sender
   function claim() external returns (uint256) {
-    address sender = msg.sender;
+    uint256 claimable = _sendBalance(_msgSender());
+    return claimable;
+  }
 
-    // determine if the sender gets their full balance or just whatever we have
-    // avail in the pool
-    uint256 balance = _balances[sender];
+  // flush as much of the "to" address's balance as we can from the pool
+  function _sendBalance(address to) public returns (uint256) {
+    uint256 balance = _balances[to];
     uint256 available = _token.balanceOf(address(this));
     uint256 claimable = balance > available ? available : balance;
     require(claimable > 0, "nothing to claim");
 
     // deduct from our storage and transfer
-    _balances[sender] -= claimable;
+    _balances[to] -= claimable;
     _outstandingClaims -= claimable;
-    _token.transfer(sender, claimable);
-    emit Claim(sender, claimable);
+    _token.transfer(to, claimable);
+    emit Claim(to, claimable);
 
     return claimable;
   }
