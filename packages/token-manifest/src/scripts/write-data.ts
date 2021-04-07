@@ -24,7 +24,7 @@ const PROJECT_TAG = 'bval-nft';
  * already exists in the data files. used during token asset preperation to
  * make my life a lil easier
  */
-const LIVE_SEQUENCES: number[] = [2];
+const LIVE_SEQUENCES: number[] = [3];
 const isLiveSequence = (n: number): boolean => LIVE_SEQUENCES.includes(n);
 
 const assetPath = (filename: string): string => join(__dirname, '../assets', filename);
@@ -132,8 +132,12 @@ const writeData = async () => {
     ...collectionEntries.map((c) => c.cid),
     ...collectionEntries.map((c) => extractHash(c.content.image)),
     ...sequenceEntries.map((s) => s.imageCID),
+    // metadata json cid
     ...tokenEntries.flatMap((t) => t.metadata.map((m) => m.cid)),
+    // main image cid (resampled)
     ...tokenEntries.flatMap((t) => t.metadata.map((m) => extractHash(m.content.image))),
+    // all assets cids
+    ...tokenEntries.flatMap((t) => t.metadata.flatMap((m) => m.content.assets.map((a) => extractHash(a.asset)))),
   ];
 
   // find all extra pinned files that we can now unpin
@@ -144,8 +148,15 @@ const writeData = async () => {
     const hash = pinned.ipfs_pin_hash;
     if (!current.has(hash)) {
       console.log(`pinned hash not in current list of hashes: ${hash}`);
-      // TODO: uncomment when i know this for sure works
-      // await unpin(hash);
+      await unpin(hash);
+    }
+  }
+
+  console.log('checking for missing pins');
+  for (const expected of hashes) {
+    const found = existing.find((p) => p.ipfs_pin_hash === expected);
+    if (!found) {
+      console.log(`WARNING: pin not found: ${expected}`);
     }
   }
 
