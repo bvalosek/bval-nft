@@ -28,20 +28,20 @@ export const seq3Sequence: SequenceSource = {
 export const seq3Tokens: TokenSource[] = [
   {
     name: 'Ego Basis',
-    description: 'The brief alignment of selves',
+    description: 'A brief alignment of selves',
     metadata: [{ image: 'seq3/s3-01.png' }],
-    token: { ...tokenBase, tokenNumber: 20, created: '2020-12-27', height: 3417, width: 3417 },
+    token: { ...tokenBase, tokenNumber: 20, created: '2020-12-14', height: 3417, width: 3417 },
   },
   {
     name: 'Storm Collapse',
     description: 'Emptiness follows chaos freed',
     metadata: [{ image: 'seq3/s3-02.png' }],
-    token: { ...tokenBase, tokenNumber: 21, created: '2021-01-21' },
+    token: { ...tokenBase, tokenNumber: 21, created: '2020-12-21' },
   },
   {
     name: 'Amalgam Mind',
-    description: 'Awareness held for a fleeting moment',
+    description: 'Shattered faceted sentience',
     metadata: [{ image: 'seq3/s3-03.png' }],
-    token: { ...tokenBase, tokenNumber: 22, created: '2021-01-05' },
+    token: { ...tokenBase, tokenNumber: 22, created: '2020-12-15' },
   },
 ];
