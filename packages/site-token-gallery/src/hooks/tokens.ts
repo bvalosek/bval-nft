@@ -70,6 +70,9 @@ export const useTokens = (): GatsbyTokenData[] => {
           }
           metadata {
             ipfsGatewayUrl
+            content {
+              image
+            }
             assets {
               name
               ipfsGatewayUrl

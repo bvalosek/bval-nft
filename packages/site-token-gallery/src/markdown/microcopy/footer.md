@@ -3,6 +3,7 @@ ref: footer-about
 pages:
 - artist-statement
 - bval-token
+- project
 - contact
 socials:
 - name: OpenSea

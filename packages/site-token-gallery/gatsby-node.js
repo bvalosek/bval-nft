@@ -194,6 +194,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             slug
             title
             subtitle
+            pageComponent
           }
           html
           excerpt
@@ -207,12 +208,11 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     return;
   }
 
-  const ContentPage = require.resolve('./src/page-components/ContentPage.tsx');
-
   for (const page of resp.data.pages.nodes) {
+    const componentName = page.frontmatter.pageComponent || 'ContentPage.tsx';
     actions.createPage({
       path: page.frontmatter.slug,
-      component: ContentPage,
+      component: require.resolve(`./src/page-components/${componentName}`),
       context: {
         slug: page.frontmatter.slug,
       },

@@ -3,6 +3,7 @@ import { graphql, useStaticQuery } from 'gatsby';
 interface Page {
   slug: string;
   title: string;
+  subtitle?: string;
   html: string;
   excerpt: string;
 }
@@ -16,6 +17,7 @@ export const usePages = () => {
           frontmatter {
             slug
             title
+            subtitle
           }
           html
           excerpt
@@ -29,6 +31,7 @@ export const usePages = () => {
     return {
       slug: d.frontmatter.slug,
       title: d.frontmatter.title,
+      subtitle: d.frontmatter.subtitle ?? undefined,
       html: d.html,
       excerpt: d.excerpt,
     };

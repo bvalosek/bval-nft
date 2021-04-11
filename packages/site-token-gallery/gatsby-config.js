@@ -11,11 +11,6 @@ module.exports = {
     // catch local links in markdown to prevent page refresh
     'gatsby-plugin-catch-links',
 
-    // local plugin to source token info
-    {
-      resolve: 'gatsby-plugin-source-tokens',
-    },
-
     // generate typescript types for the static graphql queries
     {
       resolve: 'gatsby-plugin-graphql-codegen',
