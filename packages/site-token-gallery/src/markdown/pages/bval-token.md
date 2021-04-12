@@ -14,6 +14,4 @@ We are absolutely doing this shit live.
 
 Things are accelerating faster than ever before. Where's the fun in trying to keep up?
 
-`0x27525344bbba0dDb182251387AEdd0Bde7d466B2`
-
 [art]: /artist-statement

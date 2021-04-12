@@ -14,6 +14,9 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
         marginBottom: theme.scaledSpacing(8),
         color: theme.palette.foreground.light,
       },
+      '& ul': {
+        marginBottom: theme.scaledSpacing(8),
+      },
       '& p:last-child': {
         marginBottom: theme.scaledSpacing(0),
       },
@@ -46,7 +49,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       },
       '& code': {
         color: theme.palette.foreground.main,
-        fontSize: theme.scaledSpacing(2.7),
+        fontSize: theme.scaledSpacing(2.5),
       },
     },
   };

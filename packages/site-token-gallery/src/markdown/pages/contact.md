@@ -3,6 +3,8 @@ slug: contact
 title: Contact Me
 ---
 
-You can contact me via email at [bvalosek@gmail.com](bvalosek@gmail.com), or reach out on any of my social profiles.
+The fastest ways to get in contact will likely be via Twitter ([@bvalosek](https://twitter.com/bvalosek)) or via [my project's Discord server](https://discord.gg/qDrsjcGR2F).
+
+If you prefer email, you can reach me at [bvalosek@gmail.com](bvalosek@gmail.com).
 
 <!-- snip -->

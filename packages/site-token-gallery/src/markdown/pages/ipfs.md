@@ -9,11 +9,11 @@ My NFT collection has all token metadata, images, and other assets stored on [IP
 
 <!-- snip -->
 
-This page provides some info on IPFS, as well as lists all CIDs associated with the progress for others who may which to pin my files on their nodes.
+This page provides some info on IPFS, as well as lists all CIDs associated with the project for others who may which to pin my files on their nodes. For more general information, see the [Project Info](/project) page.
 
 ## IPFS CIDs and Data Integrity
 
-IPFS uses content addressing, which means that the identifier for a specific file is derived from its contents. This is a powerful feature, since consumers can verify that the contents have not been tampered with by re-computing the CID (content identifier) locally after receiving the file from the network.
+IPFS uses content addressing, which means that the identifier for a specific file is derived from its contents. This is a powerful feature, since clients can verify that the contents have not been tampered with by re-computing the CID (content identifier) locally after receiving the file from the network.
 
 My [NFT smart contract](https://etherscan.io/address/0x02d91986f0c2b02830bdfc022f0da83529b78334) stores the IPFS hash of the metadata associated with each token I mint. This not only allows my contract to point marketplaces to the location of the metadata, but creates an on-chain assertion about their contents.
 
