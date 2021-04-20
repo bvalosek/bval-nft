@@ -40,5 +40,19 @@
       "atomic": true
     },
     "imageCID": "QmeSs3ffMmrNe24K2pGf1hzNppSsd8CdoB9Y1Yg2jK99hW"
+  },
+  {
+    "sequenceNumber": 4,
+    "slug": "hydroflections-pt-1",
+    "source": {
+      "name": "Hydroflections Pt. 1",
+      "description": "Emersion",
+      "sequenceNumber": 4,
+      "collectionVersion": 1,
+      "image": "seq4/seq4.png",
+      "completed": true,
+      "atomic": true
+    },
+    "imageCID": "Qmen89a3owEkHqTNn5EyLpC38ykjGSdT3xJQJfqDFBqR7q"
   }
 ]

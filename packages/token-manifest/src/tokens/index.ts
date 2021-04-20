@@ -2,10 +2,11 @@ import { CollectionSource } from '../types';
 import { archDescentSequence, archDescentTokens } from './arch-descent';
 import { seq2Sequence, seq2Tokens } from './seq2';
 import { seq3Sequence, seq3Tokens } from './seq3';
+import { seq4Sequence, seq4Tokens } from './seq4';
 
-export const tokens = [...archDescentTokens, ...seq2Tokens, ...seq3Tokens];
+export const tokens = [...archDescentTokens, ...seq2Tokens, ...seq3Tokens, ...seq4Tokens];
 
-export const sequences = [archDescentSequence, seq2Sequence, seq3Sequence];
+export const sequences = [archDescentSequence, seq2Sequence, seq3Sequence, seq4Sequence];
 
 export const collections: CollectionSource[] = [
   {

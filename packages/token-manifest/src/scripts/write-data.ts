@@ -24,7 +24,7 @@ const PROJECT_TAG = 'bval-nft';
  * already exists in the data files. used during token asset preperation to
  * make my life a lil easier
  */
-const LIVE_SEQUENCES: number[] = [3];
+const LIVE_SEQUENCES: number[] = [4];
 const isLiveSequence = (n: number): boolean => LIVE_SEQUENCES.includes(n);
 
 const assetPath = (filename: string): string => join(__dirname, '../assets', filename);
