@@ -9,24 +9,16 @@ import { useTokens } from '../hooks/tokens';
 
 export const HomePage: FunctionComponent = () => {
   const tokens = useTokens();
-  const sequences = new Set(tokens.map((t) => t.sequence.sequenceNumber));
-  const grouped = [...sequences].map((s) => tokens.filter((t) => t.sequence.sequenceNumber === s)).reverse();
 
   return (
     <Application>
       <HeadTags />
       <PageWithFooter>
         <HomeHero />
-        {grouped.map((tokens) => (
-          <>
-            <PageSection>
-              <h1>{tokens[0].sequence.source.name}</h1>
-            </PageSection>
-            <PageSection>
-              <TokenGrid tokens={tokens} />
-            </PageSection>
-          </>
-        ))}
+        <PageSection>
+          <h1>Recent Tokens</h1>
+          <TokenGrid tokens={[...tokens.reverse()]} />
+        </PageSection>
       </PageWithFooter>
     </Application>
   );
