@@ -54,5 +54,19 @@
       "atomic": true
     },
     "imageCID": "Qmen89a3owEkHqTNn5EyLpC38ykjGSdT3xJQJfqDFBqR7q"
+  },
+  {
+    "sequenceNumber": 5,
+    "slug": "realmgate",
+    "source": {
+      "name": "Realmgate",
+      "description": "Ingress",
+      "sequenceNumber": 5,
+      "collectionVersion": 1,
+      "image": "seq5/seq5.png",
+      "completed": true,
+      "atomic": true
+    },
+    "imageCID": "QmTJuhW8VjdgdkEbFHWsx2hmdutZNfrGxFZVdsS4zwqbY7"
   }
 ]
