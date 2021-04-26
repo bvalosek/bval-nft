@@ -19,7 +19,7 @@ export const HomePage: FunctionComponent = () => {
           <h1>Recent Tokens</h1>
         </PageSection>
         <PageSection>
-          <TokenGrid tokens={[...tokens.reverse()]} />
+          <TokenGrid tokens={[...tokens].reverse()} />
         </PageSection>
       </PageWithFooter>
     </Application>
