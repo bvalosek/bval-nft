@@ -44,9 +44,9 @@ This is token #${source.token.tokenNumber} in the @bvalosek NFT Collection. It i
       sequence.name
     }" sequence.${atomic}
 
-Edition ${source.token.editionNumber} / ${source.token.editionTotal}, minted ${source.token.minted}
+Edition ${source.token.editionNumber} / ${source.token.editionTotal}, minted ${source.token.minted}.
 
-${source.token.width} ✕ ${source.token.height} ${source.token.assetType}, created ${source.token.created}
+${source.token.width} ✕ ${source.token.height} ${source.token.assetType}, created ${source.token.created}.
 
 To view detailed information or interact with this NFT, go to:
 
