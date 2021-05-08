@@ -11,7 +11,7 @@ export const Tasks: FunctionComponent = () => {
   const { library } = useWeb3Strict();
 
   // TODO: something better than this!
-  const sequenceNumber = 5;
+  const sequenceNumber = 6;
   const tokens = allTokens.filter((t) => t.source.token.sequenceNumber === sequenceNumber);
   const sequence = allSequences.find((s) => s.sequenceNumber === sequenceNumber);
 
