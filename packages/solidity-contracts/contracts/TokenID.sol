@@ -16,6 +16,10 @@ library TokenID {
     return uint16(tokenId >> 26*8);
   }
 
+  function tokenOutput(uint256 tokenId) internal pure returns (uint16) {
+    return uint16(tokenId >> 11*8);
+  }
+
   function tokenMintTimestamp(uint256 tokenId) internal pure returns (uint) {
     uint16 daystamp = uint16(tokenId >> 24*8);
     return uint(daystamp) * 60 * 60 * 24;

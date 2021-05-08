@@ -9,7 +9,7 @@ const factory = async () => {
   return { token, pool };
 };
 
-contract.only('ClaimPool', (accounts) => {
+contract('ClaimPool', (accounts) => {
   describe('poolReserve', () => {
     it('start at zero', async () => {
       const { pool } = await factory();
