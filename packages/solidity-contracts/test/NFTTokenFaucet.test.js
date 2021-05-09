@@ -30,11 +30,14 @@ afterEach(async () => {
 const TOKENS = [
   // token #1, sequence 1, minted 2021-03-29, 1000x output mult
   '0x013d00010001491b48a300010001010960096003e80000000000000000000001',
+  // token #29, sequence 6, minted 2021-05-01, 1000x output mult
+  '0x01aa00010006493c492e00010001010e100e1003e8000000000000000000001d',
 ];
 
 // start a sequence and mint
 const simpleMint = async (instance, tokenId = TOKENS[0], date = '2021-03-29') => {
   await instance.startSequence({ sequenceNumber: '1', name: 'name', description: 'desc', image: 'data' });
+  await instance.startSequence({ sequenceNumber: '6', name: 'name', description: 'desc', image: 'data' });
   await setNetworkTime(date);
   const res = await instance.mint({
     tokenId,
@@ -84,6 +87,7 @@ contract.only('NFTTokenFaucet', (accounts) => {
       const { nft, faucet } = await factory();
       const tokenId = TOKENS[0];
       await simpleMint(nft, tokenId);
+      assert.equal(await faucet.tokenBalance(tokenId), 0);
 
       await setNetworkTime('2021-03-30'); // 1 day later
       assert.equal(await faucet.tokenBalance(tokenId), BN(1000));
@@ -98,6 +102,21 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await simpleMint(nft, tokenId);
       await setNetworkTime('2022-03-29'); // 1 year later
       assert.equal(await faucet.tokenBalance(tokenId), BN(10000));
+    });
+  });
+  describe('ownerBalance', () => {
+    it('should compute owner balance', async () => {
+      const [a1] = accounts;
+      const { nft, faucet } = await factory();
+      const tokenId1 = TOKENS[0];
+      const tokenId2 = TOKENS[1];
+      await simpleMint(nft, tokenId1);
+
+      await setNetworkTime('2021-05-01'); // token 2 mint date
+      await nft.mint({ tokenId: tokenId2, metadataCIDs: ['cid'] });
+
+      await setNetworkTime('2021-05-02'); // 1 day layer
+      assert.equal(await faucet.ownerBalance(a1), BN(1000 + 10000 /* 1 day + max */));
     });
   });
   describe('claim', () => {

@@ -105,6 +105,17 @@ contract NFTTokenFaucet is AccessControlEnumerable {
     return claimable < _maxClaimAllowed ? claimable : _maxClaimAllowed;
   }
 
+  // total amount of currently staked tokens within all NFTs owned by `owner`
+  function ownerBalance(address owner) public view returns (uint256) {
+    uint count = _nft.balanceOf(owner);
+    uint256 claimable = 0;
+    for (uint i; i < count; i++) {
+      uint256 tokenId = _nft.tokenOfOwnerByIndex(owner, i);
+      claimable += tokenBalance(tokenId);
+    }
+    return claimable;
+  }
+
   // how much of the reserve token is left in the contract
   function reserveBalance() external view returns (uint256) {
     return _token.balanceOf(address(this));
@@ -127,6 +138,7 @@ contract NFTTokenFaucet is AccessControlEnumerable {
 
       require(isReclaimer || owner == claimer, "not token owner nor CLAIMER");
       require(reclaimBps <= 10000, "invalid reclaimBps");
+      require(reclaimBps >= _minReclaimBps, "reclaimBps too low");
       require(amount > 0 && amount <= _maxClaimAllowed, "invalid amount");
       require(amount <= claimable, "not enough claimable");
 
