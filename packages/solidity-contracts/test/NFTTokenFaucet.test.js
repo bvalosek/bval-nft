@@ -173,6 +173,18 @@ contract.only('NFTTokenFaucet', (accounts) => {
       const task = faucet.claim([{ tokenId, amount: BN(10), to: a2, reclaimBps: 0 }], { from: a2 });
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not token owner');
     });
+    it('should let CLAIMER role claim', async () => {
+      const [, a2] = accounts;
+      const tokenId = TOKENS[0];
+      const { nft, faucet, token } = await factory();
+      await token.mintTo(faucet.address, BN(100000));
+      await faucet.grantRole(await faucet.CLAIMER_ROLE(), a2);
+
+      await simpleMint(nft, tokenId);
+      await setNetworkTime('2021-03-30'); // 1 day later
+      await faucet.claim([{ tokenId, amount: BN(1000), to: a2, reclaimBps: 0 }], { from: a2 });
+      // doesnt throw
+    });
     it('should revert with invalid reclaim bps', async () => {
       const [a1] = accounts;
       const { nft, faucet } = await factory();
@@ -189,6 +201,39 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await simpleMint(nft, tokenId);
       const task = faucet.claim([{ tokenId, amount: BN(10), to: a1, reclaimBps: 0 }]);
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'reclaimBps too low');
+    });
+    it('should revert when claim amount is 0', async () => {
+      const [a1] = accounts;
+      const tokenId = TOKENS[0];
+      const { nft, faucet, token } = await factory();
+      await token.mintTo(faucet.address, BN(100000));
+
+      await simpleMint(nft, tokenId);
+      await setNetworkTime('2021-03-30'); // 1 day later
+      const task = faucet.claim([{ tokenId, amount: 0, to: a1, reclaimBps: 0 }]);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'invalid amount');
+    });
+    it('should revert when claim amount is greater than max claim', async () => {
+      const [a1] = accounts;
+      const tokenId = TOKENS[0];
+      const { nft, faucet, token } = await factory();
+      await token.mintTo(faucet.address, BN(100000));
+
+      await simpleMint(nft, tokenId);
+      await setNetworkTime('2021-03-30'); // 1 day later
+      const task = faucet.claim([{ tokenId, amount: BN(11000), to: a1, reclaimBps: 0 }]);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'invalid amount');
+    });
+    it('should revert when attempting to claim too much', async () => {
+      const [a1] = accounts;
+      const tokenId = TOKENS[0];
+      const { nft, faucet, token } = await factory();
+      await token.mintTo(faucet.address, BN(100000));
+
+      await simpleMint(nft, tokenId);
+      await setNetworkTime('2021-03-30'); // 1 day later
+      const task = faucet.claim([{ tokenId, amount: BN(2000), to: a1, reclaimBps: 0 }]);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not enough claimable');
     });
   });
   describe('access control', () => {

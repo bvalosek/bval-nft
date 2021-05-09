@@ -148,10 +148,11 @@ contract NFTTokenFaucet is AccessControlEnumerable {
     uint timestamp = block.timestamp;
 
     for (uint i = 0; i < claims.length; i++) {
-      uint256 tokenId = claims[i].tokenId;
-      uint256 amount = claims[i].amount;
-      uint256 reclaimBps = claims[i].reclaimBps;
-      address to = claims[i].to;
+      TokenClaim memory entry = claims[i];
+      uint256 tokenId = entry.tokenId;
+      uint256 amount = entry.amount;
+      uint256 reclaimBps = entry.reclaimBps;
+      address to = entry.to;
       address owner = _nft.ownerOf(tokenId);
       uint256 claimable = tokenBalance(tokenId);
 
