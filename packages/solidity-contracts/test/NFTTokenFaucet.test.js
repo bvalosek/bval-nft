@@ -14,6 +14,9 @@ const setNetworkTime = async (date) => {
   await timeMachine.advanceBlockAndSetTime(timestamp);
 };
 
+// lol... just want a large number so we dont underflow during division
+const BN = (amount) => `${amount}000000000000000000`;
+
 // helps keeps tests more consistent when messing with network time
 let snapshotId;
 beforeEach(async () => {
@@ -45,29 +48,98 @@ const factory = async () => {
   const token = await BVAL20.new();
   const lock = await MockTokenLockManager.new();
   const faucet = await NFTTokenFaucet.new(token.address, nft.address, lock.address);
-  await faucet.setBaseDailyRate(1); // token has a 1000x multiplier
-  await faucet.setMaxClaimAllowed(10000);
+  await faucet.setBaseDailyRate(BN(1)); // token has a 1000x multiplier
+  await faucet.setMaxClaimAllowed(BN(10000));
   return { nft, token, lock, faucet };
 };
 
+// gas
+const MAX_DEPLOYMENT_GAS = 1500000;
+const MAX_MUTATION_GAS = 100000;
+
 contract.only('NFTTokenFaucet', (accounts) => {
-  describe('basic funcionality', () => {
+  describe('gas constraints', () => {
+    it('should deploy with less than target deployment gas', async () => {
+      const { faucet } = await factory();
+      let { gasUsed } = await web3.eth.getTransactionReceipt(faucet.transactionHash);
+      assert.isBelow(gasUsed, MAX_DEPLOYMENT_GAS);
+      console.log('deployment', gasUsed);
+    });
+    it('should claim with less than target mutation gas', async () => {
+      const [a1] = accounts;
+      const tokenId = TOKENS[0];
+      const { nft, faucet, token } = await factory();
+
+      await token.mintTo(faucet.address, BN(100000));
+      await simpleMint(nft, tokenId);
+
+      await setNetworkTime('2021-03-30'); // 1 day later
+      const resp = await faucet.claim([{ tokenId, amount: BN(1000), to: a1, reclaimBps: 0 }]);
+      assert.isBelow(resp.receipt.gasUsed, MAX_MUTATION_GAS);
+      console.log('claim', resp.receipt.gasUsed);
+    });
+  });
+  describe('tokenBalance', () => {
     it('should return a balance for minted tokens', async () => {
       const { nft, faucet } = await factory();
       const tokenId = TOKENS[0];
       await simpleMint(nft, tokenId);
+
       await setNetworkTime('2021-03-30'); // 1 day later
-      const resp = await faucet.tokenBalance(tokenId);
-      console.log(resp.toNumber());
-      assert.equal(resp, 1000);
+      assert.equal(await faucet.tokenBalance(tokenId), BN(1000));
+
+      await setNetworkTime('2021-03-31'); // 1 day later
+      assert.equal(await faucet.tokenBalance(tokenId), BN(2000));
     });
     it('should return max allowed balance if token has mined max', async () => {
-      const { nft, faucet } = await factory();
       const tokenId = TOKENS[0];
+      const { nft, faucet } = await factory();
+
       await simpleMint(nft, tokenId);
       await setNetworkTime('2022-03-29'); // 1 year later
-      const resp = await faucet.tokenBalance(tokenId);
-      assert.equal(resp, 10000);
+      assert.equal(await faucet.tokenBalance(tokenId), BN(10000));
+    });
+  });
+  describe('claim', () => {
+    it('should claim tokens', async () => {
+      const [a1] = accounts;
+      const tokenId = TOKENS[0];
+      const { nft, faucet, token } = await factory();
+
+      await token.mintTo(faucet.address, BN(100000));
+      await simpleMint(nft, tokenId);
+
+      await setNetworkTime('2021-03-30'); // 1 day later
+      await faucet.claim([{ tokenId, amount: BN(1000), to: a1, reclaimBps: 0 }]);
+      assert.equal(await token.balanceOf(a1), BN(1000));
+      assert.equal(await faucet.tokenBalance(tokenId), 0);
+      assert.equal(await faucet.reserveBalance(), BN(99000));
+
+      await setNetworkTime('2021-03-31'); // 1 day later
+      await faucet.claim([{ tokenId, amount: BN(1000), to: a1, reclaimBps: 0 }]);
+      assert.equal(await token.balanceOf(a1), BN(2000));
+      assert.equal(await faucet.tokenBalance(tokenId), 0);
+      assert.equal(await faucet.reserveBalance(), BN(98000));
+    });
+    it('should factor in reclaim bps', async () => {
+      const [a1] = accounts;
+      const tokenId = TOKENS[0];
+      const { nft, faucet, token } = await factory();
+
+      await token.mintTo(faucet.address, BN(100000));
+      await simpleMint(nft, tokenId);
+
+      await setNetworkTime('2021-03-30'); // 1 day later
+      await faucet.claim([{ tokenId, amount: BN(1000), to: a1, reclaimBps: 5000 /* 50% */ }]);
+      assert.equal(await token.balanceOf(a1), BN(500));
+      assert.equal(await faucet.tokenBalance(tokenId), 0); // token should be fully farmed out still
+      assert.equal(await faucet.reserveBalance(), BN(99500) /* faucet balance decreased */);
+
+      await setNetworkTime('2021-03-31'); // 1 day later
+      await faucet.claim([{ tokenId, amount: BN(1000), to: a1, reclaimBps: 10000 /* 100% */ }]);
+      assert.equal(await token.balanceOf(a1), BN(500));
+      assert.equal(await faucet.tokenBalance(tokenId), 0); // token should be fully farmed out still
+      assert.equal(await faucet.reserveBalance(), BN(99500) /* reserve balance not impacted */);
     });
   });
 });
