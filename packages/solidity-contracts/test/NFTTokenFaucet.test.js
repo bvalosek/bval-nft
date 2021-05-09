@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const truffleAssert = require('truffle-assertions');
 const timeMachine = require('ganache-time-traveler');
-const { isAssertionExpression } = require('typescript');
 
 const MockTokenLockManager = artifacts.require('MockTokenLockManager');
 const BVAL20 = artifacts.require('BVAL20');
@@ -159,6 +158,63 @@ contract.only('NFTTokenFaucet', (accounts) => {
       assert.equal(await token.balanceOf(a1), BN(500));
       assert.equal(await faucet.tokenBalance(tokenId), 0); // token should be fully farmed out still
       assert.equal(await faucet.reserveBalance(), BN(99500) /* reserve balance not impacted */);
+    });
+  });
+  describe('access control', () => {
+    it('should require DEFAULT_ADMIN_ROLE for setBaseDailyRate', async () => {
+      const [, a2] = accounts;
+      const { faucet } = await factory();
+      const task = faucet.setBaseDailyRate(100, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
+      await faucet.grantRole(await faucet.DEFAULT_ADMIN_ROLE(), a2);
+      await faucet.setBaseDailyRate(100, { from: a2 }); // no revert
+    });
+    it('should require DEFAULT_ADMIN_ROLE for setMaxClaimAllowed', async () => {
+      const [, a2] = accounts;
+      const { faucet } = await factory();
+      const task = faucet.setMaxClaimAllowed(100, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
+      await faucet.grantRole(await faucet.DEFAULT_ADMIN_ROLE(), a2);
+      await faucet.setMaxClaimAllowed(100, { from: a2 }); // no revert
+    });
+    it('should require DEFAULT_ADMIN_ROLE for setMinReclaimBps', async () => {
+      const [, a2] = accounts;
+      const { faucet } = await factory();
+      const task = faucet.setMinReclaimBps(100, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
+      await faucet.grantRole(await faucet.DEFAULT_ADMIN_ROLE(), a2);
+      await faucet.setMinReclaimBps(100, { from: a2 }); // no revert
+    });
+    it('should require DEFAULT_ADMIN_ROLE for setLockManager', async () => {
+      const [, a2] = accounts;
+      const { faucet } = await factory();
+      const { lock } = await factory();
+      const task = faucet.setLockManager(lock.address, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
+      await faucet.grantRole(await faucet.DEFAULT_ADMIN_ROLE(), a2);
+      await faucet.setLockManager(lock.address, { from: a2 }); // no revert
+    });
+  });
+  describe('admin', () => {
+    it('should require reclaim bps <= 10000', async () => {
+      const { faucet } = await factory();
+      await faucet.setMinReclaimBps(0); // no revert
+      await faucet.setMinReclaimBps(10000); // no revert
+      const task = faucet.setMinReclaimBps(10001);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'invalid bps');
+    });
+    it('should config as expected', async () => {
+      const { faucet } = await factory();
+      const { lock } = await factory();
+      await faucet.setMaxClaimAllowed(123);
+      await faucet.setBaseDailyRate(456);
+      await faucet.setMinReclaimBps(789);
+      await faucet.setLockManager(lock.address);
+      const config = await faucet.getFaucetConfig();
+      assert.equal(config.maxClaimAllowed, 123);
+      assert.equal(config.baseDailyRate, 456);
+      assert.equal(config.minReclaimBps, 789);
+      assert.equal(config.lock, lock.address);
     });
   });
 });

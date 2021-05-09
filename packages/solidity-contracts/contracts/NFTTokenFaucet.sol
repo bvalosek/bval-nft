@@ -16,6 +16,14 @@ struct TokenClaim {
   uint16 reclaimBps;
 }
 
+// info about the config of the contract
+struct FaucetConfig {
+  uint256 maxClaimAllowed;
+  uint256 baseDailyRate;
+  uint16 minReclaimBps;
+  ITokenLockManager lock;
+}
+
 // mint ERC20s to allow NFTs to "generate" tokens over time, based on a
 // mint-date encoded into the tokenID
 contract NFTTokenFaucet is AccessControlEnumerable {
@@ -64,6 +72,16 @@ contract NFTTokenFaucet is AccessControlEnumerable {
     _setupRole(DEFAULT_ADMIN_ROLE, msgSender);
   }
 
+  // get info about the contract
+  function getFaucetConfig() external view returns (FaucetConfig memory) {
+    return FaucetConfig({
+      maxClaimAllowed: _maxClaimAllowed,
+      baseDailyRate: _baseDailyRate,
+      minReclaimBps: _minReclaimBps,
+      lock: _lock
+    });
+  }
+
   // ---
   // Admin
   // ---
@@ -79,6 +97,7 @@ contract NFTTokenFaucet is AccessControlEnumerable {
   }
 
   function setMinReclaimBps(uint16 min) external {
+    require(min <= 10000, "invalid bps");
     require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "requires DEFAULT_ADMIN_ROLE");
     _minReclaimBps = min;
   }
