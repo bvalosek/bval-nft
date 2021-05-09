@@ -94,6 +94,12 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await setNetworkTime('2021-03-31'); // 1 day later
       assert.equal(await faucet.tokenBalance(tokenId), BN(2000));
     });
+    it('should revert with a bad tokenId', async () => {
+      const { faucet } = await factory();
+      const tokenId = '0x123';
+      const task = faucet.tokenBalance(tokenId);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'nonexistent token');
+    });
     it('should return max allowed balance if token has mined max', async () => {
       const tokenId = TOKENS[0];
       const { nft, faucet } = await factory();
@@ -158,6 +164,31 @@ contract.only('NFTTokenFaucet', (accounts) => {
       assert.equal(await token.balanceOf(a1), BN(500));
       assert.equal(await faucet.tokenBalance(tokenId), 0); // token should be fully farmed out still
       assert.equal(await faucet.reserveBalance(), BN(99500) /* reserve balance not impacted */);
+    });
+    it('should not allow claiming for non owned tokens', async () => {
+      const [, a2] = accounts;
+      const tokenId = TOKENS[0];
+      const { nft, faucet } = await factory();
+      await simpleMint(nft, tokenId);
+      const task = faucet.claim([{ tokenId, amount: BN(10), to: a2, reclaimBps: 0 }], { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not token owner');
+    });
+    it('should revert with invalid reclaim bps', async () => {
+      const [a1] = accounts;
+      const { nft, faucet } = await factory();
+      const tokenId = TOKENS[0];
+      await simpleMint(nft, tokenId);
+      const task = faucet.claim([{ tokenId, amount: BN(10), to: a1, reclaimBps: 50000 }]);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'invalid reclaimBps');
+    });
+    it('should revert with too low reclaim bps', async () => {
+      const [a1] = accounts;
+      const { nft, faucet } = await factory();
+      const tokenId = TOKENS[0];
+      await faucet.setMinReclaimBps(1000); // 10%
+      await simpleMint(nft, tokenId);
+      const task = faucet.claim([{ tokenId, amount: BN(10), to: a1, reclaimBps: 0 }]);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'reclaimBps too low');
     });
   });
   describe('access control', () => {
