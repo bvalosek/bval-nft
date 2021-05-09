@@ -56,7 +56,7 @@ const factory = async () => {
 };
 
 // gas
-const MAX_DEPLOYMENT_GAS = 1500000;
+const MAX_DEPLOYMENT_GAS = 1600000;
 const MAX_MUTATION_GAS = 100000;
 
 contract.only('NFTTokenFaucet', (accounts) => {
