@@ -7,6 +7,7 @@ import "./CoreERC721.sol";
 import "./TokenLockManager.sol";
 import "./TokenID.sol";
 
+// a claim request entry
 struct TokenClaim {
   uint256 tokenId;
   uint256 amount;
@@ -14,7 +15,6 @@ struct TokenClaim {
   // basis points to reclaim back to the pool, eg 1000 = 10% reclaim
   uint16 reclaimBps;
 }
-
 
 // mint ERC20s to allow NFTs to "generate" tokens over time, based on a
 // mint-date encoded into the tokenID
@@ -52,7 +52,7 @@ contract NFTTokenFaucet is AccessControlEnumerable {
     address indexed to,
     address tokenOwner,
     uint256 amount,
-    uint256 reclaimBps);
+    uint16 reclaimBps);
 
   constructor(CoreERC20 token, CoreERC721 nft, ITokenLockManager lock) {
     _token = token;
@@ -115,6 +115,7 @@ contract NFTTokenFaucet is AccessControlEnumerable {
     require(claims.length > 0, "no claims");
     address claimer = _msgSender();
     bool isReclaimer = hasRole(CLAIMER_ROLE, claimer);
+    uint timestamp = block.timestamp;
 
     for (uint i = 0; i < claims.length; i++) {
       uint256 tokenId = claims[i].tokenId;
@@ -122,33 +123,27 @@ contract NFTTokenFaucet is AccessControlEnumerable {
       uint256 reclaimBps = claims[i].reclaimBps;
       address to = claims[i].to;
       address owner = _nft.ownerOf(tokenId);
+      uint256 claimable = tokenBalance(tokenId);
 
       require(isReclaimer || owner == claimer, "not token owner nor CLAIMER");
       require(reclaimBps <= 10000, "invalid reclaimBps");
+      require(amount > 0 && amount <= _maxClaimAllowed, "invalid amount");
+      require(amount <= claimable, "not enough claimable");
 
-      // move up the last claim time accordingly
-      _advanceLastClaim(tokenId, amount);
+      // claim only as far up as we need to get our amount... basically "advances"
+      // the lastClaim timestamp the exact amount needed to provide the amount
+      uint256 ratePerSecond = _baseDailyRate * tokenId.tokenOutput() / 1 days;
+      uint claimAt = timestamp - (claimable - amount) / ratePerSecond;
+
+      _lastClaim[tokenId] = claimAt;
 
       // if reclaimBps == 10,000 == 100%, then we don't transfer anything at all
       if (reclaimBps < 10_000) {
         _token.transfer(to, amount * (10_000 - reclaimBps) / 10_000);
       }
 
-      emit Claim(claimer, tokenId, to, owner, amount, reclaimBps);
+      emit Claim(claimer, tokenId, to, owner, amount, uint16(reclaimBps));
     }
-  }
-
-  function _advanceLastClaim(uint256 tokenId, uint256 amount) public {
-    require(amount > 0, "must claim > 0");
-    uint256 claimable = tokenBalance(tokenId);
-    require(amount <= claimable, "not enough claimable");
-
-    // claim only as far up as we need to get our amount... basically "advances"
-    // the lastClaim timestamp the exact amount needed to provide the amount
-    uint256 ratePerSecond = _baseDailyRate * tokenId.tokenOutput() / 1 days;
-    uint claimAt = block.timestamp - (claimable - amount) / ratePerSecond;
-
-    _lastClaim[tokenId] = claimAt;
   }
 
 }
