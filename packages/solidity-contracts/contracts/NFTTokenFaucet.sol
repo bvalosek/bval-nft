@@ -156,6 +156,11 @@ contract NFTTokenFaucet is AccessControlEnumerable {
       address owner = _nft.ownerOf(tokenId);
       uint256 claimable = tokenBalance(tokenId);
 
+      // ensure token isnt locked
+      if (_lock != ITokenLockManager(address(0))) {
+        require(_lock.isTokenLocked(tokenId) == false, "token is locked");
+      }
+
       require(isReclaimer || owner == claimer, "not token owner nor CLAIMER");
       require(reclaimBps <= 10000, "invalid reclaimBps");
       require(reclaimBps >= _minReclaimBps, "reclaimBps too low");
