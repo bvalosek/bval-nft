@@ -235,6 +235,18 @@ contract.only('NFTTokenFaucet', (accounts) => {
       const task = faucet.claim([{ tokenId, amount: BN(2000), to: a1, reclaimBps: 0 }]);
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not enough claimable');
     });
+    it('should revert if token is locked and attempting to claim', async () => {
+      const [a1] = accounts;
+      const tokenId = TOKENS[0];
+      const { nft, faucet, token, lock } = await factory();
+      await token.mintTo(faucet.address, BN(100000));
+
+      await simpleMint(nft, tokenId);
+      await lock.lockToken(tokenId);
+      await setNetworkTime('2021-03-30'); // 1 day later
+      const task = faucet.claim([{ tokenId, amount: BN(1000), to: a1, reclaimBps: 0 }]);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'token is locked');
+    });
   });
   describe('access control', () => {
     it('should require DEFAULT_ADMIN_ROLE for setBaseDailyRate', async () => {
