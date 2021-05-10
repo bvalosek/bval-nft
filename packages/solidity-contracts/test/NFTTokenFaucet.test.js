@@ -49,7 +49,7 @@ const factory = async () => {
   const nft = await BVAL721.new();
   const token = await BVAL20.new();
   const lock = await MockTokenLockManager.new();
-  const faucet = await NFTTokenFaucet.new(token.address, nft.address, lock.address);
+  const faucet = await NFTTokenFaucet.new({ token: token.address, nft: nft.address, lock: lock.address });
   await faucet.setBaseDailyRate(BN(1)); // token has a 1000x multiplier
   await faucet.setMaxClaimAllowed(BN(10000));
   return { nft, token, lock, faucet };

@@ -24,6 +24,12 @@ struct FaucetConfig {
   ITokenLockManager lock;
 }
 
+struct FaucetOptions {
+  CoreERC20 token;
+  CoreERC721 nft;
+  ITokenLockManager lock;
+}
+
 // mint ERC20s to allow NFTs to "generate" tokens over time, based on a
 // mint-date encoded into the tokenID
 contract NFTTokenFaucet is AccessControlEnumerable {
@@ -62,10 +68,10 @@ contract NFTTokenFaucet is AccessControlEnumerable {
     uint256 amount,
     uint16 reclaimBps);
 
-  constructor(CoreERC20 token, CoreERC721 nft, ITokenLockManager lock) {
-    _token = token;
-    _lock = lock;
-    _nft = nft;
+  constructor(FaucetOptions memory options) {
+    _token = options.token;
+    _lock = options.lock;
+    _nft = options.nft;
 
     // contract deployer gets roles
     address msgSender = _msgSender();
