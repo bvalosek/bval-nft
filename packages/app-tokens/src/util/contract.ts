@@ -1,13 +1,14 @@
 import { Contract, ContractFactory, Signer } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 
-import { BVAL721, BVAL_WELLSPRING } from '@bvalosek/solidity-contracts';
+import { BVAL721, BVAL_WELLSPRING, LOCK_MANAGER } from '@bvalosek/solidity-contracts';
 import { SequenceCreateData, TokenMintData } from '../../../token-manifest/node_modules/@bvalosek/lib-tokens';
 import { useNetworkName } from './web3';
 
 interface Contracts {
-  nft: string;
   token: string;
+  nft: string;
+  lock: string;
   faucet: string;
 }
 
@@ -18,12 +19,14 @@ export const useContracts = (): Contracts => {
       return {
         token: '0x27525344bbba0dDb182251387AEdd0Bde7d466B2',
         nft: '0x02D91986F0C2B02830bDfC022f0dA83529B78334',
+        lock: '0x0',
         faucet: '0x0',
       };
     case 'rinkeby':
       return {
         token: '0x6ca2B366f63730052a6dAE39981E65F0641B9DbA',
         nft: '0x826DDe34365ec31edFbEaCcC732fA6c0813eF7DA',
+        lock: '0xDa55929a39993bA4c70a850489b43AeF081ac5f0',
         faucet: '0x0',
       };
   }
@@ -32,6 +35,12 @@ export const useContracts = (): Contracts => {
 export const deployBVAL721 = async (signer: Signer): Promise<Contract> => {
   const factory = new ContractFactory(BVAL721.abi, BVAL721.bytecode, signer);
   const contract = await factory.deploy();
+  return contract;
+};
+
+export const deployTokenLockManager = async (signer: Signer, nft: string): Promise<Contract> => {
+  const factory = new ContractFactory(LOCK_MANAGER.abi, LOCK_MANAGER.bytecode, signer);
+  const contract = await factory.deploy(nft);
   return contract;
 };
 

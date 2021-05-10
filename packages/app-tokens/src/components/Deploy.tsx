@@ -2,7 +2,7 @@ import { Button, Text } from '@geist-ui/react';
 import React, { FunctionComponent } from 'react';
 
 import { Container } from './Container';
-import { deployBVAL721, deployBVALWellspring, useContracts } from '../util/contract';
+import { deployBVAL721, deployBVALWellspring, deployTokenLockManager, useContracts } from '../util/contract';
 import { useWeb3Strict } from '../util/web3';
 
 export const Deploy: FunctionComponent = () => {
@@ -17,12 +17,22 @@ export const Deploy: FunctionComponent = () => {
     await deployBVALWellspring(library.getSigner(), contracts);
   };
 
+  const deployLock = async () => {
+    deployTokenLockManager(library.getSigner(), contracts.nft);
+  };
+
   return (
     <Container>
       <Text h2>Deploy BVAL721</Text>
       <div>
         <Button type="success" onClick={() => deployNft()}>
           Deploy Collection
+        </Button>
+      </div>
+      <Text h2>Deploy TokenLockManager</Text>
+      <div>
+        <Button type="success" onClick={() => deployLock()}>
+          Deploy Lock
         </Button>
       </div>
       <Text h2>Deploy BVALWellspring</Text>
