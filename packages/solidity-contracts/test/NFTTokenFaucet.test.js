@@ -48,7 +48,7 @@ const simpleMint = async (instance, tokenId = TOKENS[0], date = '2021-03-29') =>
 const factory = async () => {
   const nft = await BVAL721.new();
   const token = await BVAL20.new();
-  const lock = await MockTokenLockManager.new();
+  const lock = await MockTokenLockManager.new(nft.address);
   const faucet = await NFTTokenFaucet.new({ token: token.address, nft: nft.address, lock: lock.address });
   await faucet.setBaseDailyRate(BN(1)); // token has a 1000x multiplier
   await faucet.setMaxClaimAllowed(BN(10000));
@@ -59,7 +59,7 @@ const factory = async () => {
 const MAX_DEPLOYMENT_GAS = 1600000;
 const MAX_MUTATION_GAS = 110000;
 
-contract.only('NFTTokenFaucet', (accounts) => {
+contract('NFTTokenFaucet', (accounts) => {
   describe('gas constraints', () => {
     it('should deploy with less than target deployment gas', async () => {
       const { faucet } = await factory();
