@@ -51,7 +51,7 @@ const simpleMint = async (instance, tokenId = TOKENS[0], date = '2021-03-29') =>
 const MAX_DEPLOYMENT_GAS = 400000;
 const MAX_MUTATION_GAS = 50000;
 
-contract('TokenLockManager', (accounts) => {
+contract.only('TokenLockManager', (accounts) => {
   describe('gas constraints', () => {
     it('should deploy with less than target deployment gas', async () => {
       const { lock } = await factory();
@@ -119,6 +119,37 @@ contract('TokenLockManager', (accounts) => {
       const tokenId = TOKENS[0];
       await lock.unlockToken(tokenId);
       assert.isFalse(await lock.isTokenLocked(tokenId));
+    });
+  });
+  describe('access control', () => {
+    it('should not allow locking unowned token', async () => {
+      const [, a2] = accounts;
+      const { lock } = await factory();
+      const tokenId = TOKENS[0];
+      {
+        const task = lock.lockToken(tokenId, { from: a2 });
+        await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'cannot manage token');
+      }
+      {
+        const task = lock.unlockToken(tokenId, { from: a2 });
+        await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'cannot manage token');
+      }
+    });
+    it('should allow an approved operator to lock / unlock token', async () => {
+      const [, a2] = accounts;
+      const { lock, nft } = await factory();
+      const tokenId = TOKENS[0];
+      await nft.approve(a2, tokenId);
+      await lock.lockToken(tokenId, { from: a2 }); // doesnt throw
+      assert.isTrue(await lock.isTokenLocked(tokenId));
+    });
+    it('should allow an approved-for-all operator to lock / unlock token', async () => {
+      const [, a2] = accounts;
+      const { lock, nft } = await factory();
+      const tokenId = TOKENS[0];
+      await nft.setApprovalForAll(a2, true);
+      await lock.lockToken(tokenId, { from: a2 }); // doesnt throw
+      assert.isTrue(await lock.isTokenLocked(tokenId));
     });
   });
 });
