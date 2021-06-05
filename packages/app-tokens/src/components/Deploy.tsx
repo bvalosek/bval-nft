@@ -25,7 +25,7 @@ export const Deploy: FunctionComponent = () => {
   };
 
   const deployLock = async () => {
-    deployTokenLockManager(library.getSigner(), contracts.nft);
+    deployTokenLockManager(library.getSigner(), contracts.ssw);
   };
 
   const deployL2Token = async () => {
@@ -40,18 +40,20 @@ export const Deploy: FunctionComponent = () => {
           Deploy Collection
         </Button>
       </div>
-      <Text h2>Deploy TokenLockManager</Text>
-      <div>
-        <Button type="success" onClick={() => deployLock()}>
-          Deploy Lock
-        </Button>
-      </div>
+      */}
+      {/*
       <Text h2>Deploy BVALWellspring</Text>
       <div>
         <Button type="success" onClick={() => deployFaucet()}>
           Deploy Faucet
         </Button>
       </div> */}
+      <Text h2>Deploy TokenLockManager</Text>
+      <div>
+        <Button type="success" onClick={() => deployLock()}>
+          Deploy Lock
+        </Button>
+      </div>
       <Text h2>Deploy Vibes</Text>
       <div>
         <Button type="success" onClick={() => deployL2Token()}>
@@ -71,7 +73,7 @@ export const Deploy: FunctionComponent = () => {
             )
           }
         >
-          Deploy $VIBES
+          Mint 10mm VIBES
         </Button>
       </div>
     </Container>

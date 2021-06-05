@@ -11,6 +11,7 @@ interface Contracts {
   lock: string;
   faucet: string;
   vibes: string;
+  ssw: string;
 }
 
 export const useContracts = (): Contracts => {
@@ -23,6 +24,7 @@ export const useContracts = (): Contracts => {
         lock: '0x0',
         faucet: '0x0',
         vibes: '0x0',
+        ssw: '0x0',
       };
     case 'rinkeby':
       return {
@@ -31,14 +33,16 @@ export const useContracts = (): Contracts => {
         lock: '0xDa55929a39993bA4c70a850489b43AeF081ac5f0',
         faucet: '0x0',
         vibes: '0x0',
+        ssw: '0x0',
       };
     case 'polygon':
       return {
         token: '0x0',
         nft: '0x0',
-        lock: '0x0',
+        lock: '0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c',
         faucet: '0x0',
         vibes: '0xF14874f2D27f4e11c73203767AB14D5088cD648E',
+        ssw: '0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4',
       };
   }
 };
