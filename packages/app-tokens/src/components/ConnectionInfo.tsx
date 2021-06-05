@@ -2,7 +2,7 @@ import { Description, Dot, Text } from '@geist-ui/react';
 import { makeStyles } from '@material-ui/styles';
 import React, { FunctionComponent } from 'react';
 
-import { useWeb3Strict } from '../util/web3';
+import { useNetworkName, useWeb3Strict } from '../util/web3';
 import { ThemeConfig } from '../Theme';
 import { EthAddress } from './EthAddress';
 
@@ -23,7 +23,8 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 });
 
 export const ConnectionInfo: FunctionComponent = () => {
-  const { account, chainId } = useWeb3Strict();
+  const { account } = useWeb3Strict();
+  const network = useNetworkName();
   const classes = useStyles();
   return (
     <div className={classes.bar}>
@@ -31,10 +32,7 @@ export const ConnectionInfo: FunctionComponent = () => {
         <Text h2>BVAL-721 Manager</Text>
       </div>
       <div>
-        <Description
-          title="network"
-          content={<Dot type="success">{chainId === 1 ? 'mainnet' : chainId === 4 ? 'rinkeby' : 'what'}</Dot>}
-        />
+        <Description title="network" content={<Dot type="success">{network}</Dot>} />
       </div>
       <div>
         <Description title="connected account" content={<EthAddress address={account} />} />

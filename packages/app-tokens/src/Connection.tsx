@@ -10,7 +10,7 @@ export const Connection: FunctionComponent = (props) => {
 
   // blind attempt injected connector on boot
   useEffect(() => {
-    const connector = new InjectedConnector({ supportedChainIds: [1, 4] });
+    const connector = new InjectedConnector({ supportedChainIds: [1, 4, 137] });
     activate(connector);
   }, []);
 

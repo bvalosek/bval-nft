@@ -38,7 +38,7 @@ export const useContracts = (): Contracts => {
         nft: '0x0',
         lock: '0x0',
         faucet: '0x0',
-        vibes: '0x0',
+        vibes: '0xF14874f2D27f4e11c73203767AB14D5088cD648E',
       };
   }
 };
@@ -65,6 +65,11 @@ export const deployVibes = async (signer: Signer): Promise<Contract> => {
   const factory = new ContractFactory(VIBES.abi, VIBES.bytecode, signer);
   const contract = await factory.deploy();
   return contract;
+};
+
+export const mintVibesTo = async (address: string, to: string, amount: string, signer: Signer): Promise<void> => {
+  const contract = new Contract(address, VIBES.abi, signer);
+  await contract.mintTo(to, amount);
 };
 
 export const atomicMint = async (
