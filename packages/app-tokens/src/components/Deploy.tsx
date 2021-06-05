@@ -23,7 +23,7 @@ export const Deploy: FunctionComponent = () => {
 
   return (
     <Container>
-      <Text h2>Deploy BVAL721</Text>
+      {/* <Text h2>Deploy BVAL721</Text>
       <div>
         <Button type="success" onClick={() => deployNft()}>
           Deploy Collection
@@ -39,6 +39,12 @@ export const Deploy: FunctionComponent = () => {
       <div>
         <Button type="success" onClick={() => deployFaucet()}>
           Deploy Faucet
+        </Button>
+      </div> */}
+      <Text h2>Deploy Vibes</Text>
+      <div>
+        <Button type="success" onClick={() => deployLock()}>
+          Deploy $VIBES
         </Button>
       </div>
     </Container>

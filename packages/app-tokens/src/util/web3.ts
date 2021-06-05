@@ -20,13 +20,15 @@ export const useWeb3Strict = (): ContextWithLibrary => {
 };
 
 /** determine network name */
-export const useNetworkName = (): 'mainnet' | 'rinkeby' => {
+export const useNetworkName = (): 'mainnet' | 'rinkeby' | 'polygon' => {
   const { chainId } = useWeb3Strict();
   switch (chainId) {
     case 1:
       return 'mainnet';
     case 4:
       return 'rinkeby';
+    case 137:
+      return 'polygon';
   }
   throw new Error('invalid chain');
 };
