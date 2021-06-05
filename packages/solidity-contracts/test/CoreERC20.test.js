@@ -1,15 +1,15 @@
 const truffleAssert = require('truffle-assertions');
 
-const BVAL20 = artifacts.require('BVAL20');
+const CoreERC20 = artifacts.require('CoreERC20');
 
 const factory = async () => {
-  return BVAL20.new();
+  return CoreERC20.new('Name', 'SYMBOL');
 };
 
 // max gas for deployment
 const MAX_DEPLOYMENT_GAS = 2200000;
 
-contract('CoreERC20', (accounts) => {
+contract.only('CoreERC20', (accounts) => {
   describe('gas constraints', () => {
     it('should deploy with less than target deployment gas', async () => {
       const instance = await factory();
@@ -47,25 +47,6 @@ contract('CoreERC20', (accounts) => {
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'burn amount exceeds balance');
     });
   });
-  describe('pausing', () => {
-    it('should not allow minting while paused', async () => {
-      const [a1] = accounts;
-      const instance = await factory();
-      await instance.pause();
-      const task = instance.mintTo(a1, 1000);
-      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'ERC20Pausable: token transfer while paused');
-      await instance.unpause();
-      await instance.mintTo(a1, 1000);
-    });
-    it('should not allow transfering while paused', async () => {
-      const [a1, a2] = accounts;
-      const instance = await factory();
-      await instance.mintTo(a1, 1000);
-      await instance.pause();
-      const task = instance.transferFrom(a1, a2, 1000);
-      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'ERC20Pausable: token transfer while paused');
-    });
-  });
   // mostly proving to myself this works like i think it does, this is
   // really testing the underlying AccessControl functionality from open zep
   describe('role renouncement', () => {
@@ -81,35 +62,10 @@ contract('CoreERC20', (accounts) => {
 
       // can no longer assign mint role
       const task2 = instance.grantRole(await instance.MINTER_ROLE(), a1);
-      await truffleAssert.fails(task2, truffleAssert.ErrorType.REVERT, 'sender must be an admin to grant');
+      await truffleAssert.fails(task2, truffleAssert.ErrorType.REVERT, 'is missing role');
 
       assert.equal(await instance.getRoleMemberCount(await instance.MINTER_ROLE()), 0);
       assert.equal(await instance.getRoleMemberCount(await instance.MINTER_ADMIN_ROLE()), 0);
-
-      // can still grant other role
-      await instance.grantRole(await instance.PAUSER_ROLE(), a2);
-    });
-    it('should allow eventual pauser lockout', async () => {
-      const [a1, a2] = accounts;
-      const instance = await factory();
-      await instance.pause();
-      await instance.unpause();
-      await instance.revokeRole(await instance.PAUSER_ROLE(), a1);
-      await instance.revokeRole(await instance.PAUSER_ADMIN_ROLE(), a1);
-
-      // can no longer operate
-      const task1 = instance.unpause();
-      await truffleAssert.fails(task1, truffleAssert.ErrorType.REVERT, 'requires PAUSER_ROLE');
-
-      // can no longer assign operator role
-      const task2 = instance.grantRole(await instance.PAUSER_ADMIN_ROLE(), a1);
-      await truffleAssert.fails(task2, truffleAssert.ErrorType.REVERT, 'sender must be an admin to grant');
-
-      assert.equal(await instance.getRoleMemberCount(await instance.PAUSER_ROLE()), 0);
-      assert.equal(await instance.getRoleMemberCount(await instance.PAUSER_ADMIN_ROLE()), 0);
-
-      // can still grant other role
-      await instance.grantRole(await instance.MINTER_ROLE(), a2);
     });
   });
 });

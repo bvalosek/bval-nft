@@ -9,7 +9,7 @@
     "clean": "rm -rf ./build ./db"
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "4.0.0",
+    "@openzeppelin/contracts": "4.1.0",
     "@truffle/hdwallet-provider": "1.2.1",
     "cross-env": "7.0.3",
     "dotenv": "8.2.0",
