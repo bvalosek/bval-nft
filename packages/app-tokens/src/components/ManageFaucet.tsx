@@ -16,10 +16,46 @@ export const ManageFaucet: FunctionComponent = () => {
   };
 
   const seed = async () => {
+    // https://www.screensaver.world/object/373
+    // await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
+    //   tokenId: '373',
+    //   totalDays: 365 * 3,
+    //   dailyRateInWholeVibes: 1000,
+    // });
+    // https://www.screensaver.world/object/180
+    // await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
+    //   tokenId: '180',
+    //   totalDays: 365 * 3,
+    //   dailyRateInWholeVibes: 1000,
+    //   backdateDays: 2,
+    // });
+    // https://www.screensaver.world/object/168
+    // await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
+    //   tokenId: '168',
+    //   totalDays: 365 * 3,
+    //   dailyRateInWholeVibes: 1000,
+    //   backdateDays: 2,
+    // });
+    // https://www.screensaver.world/object/156
+    // await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
+    //   tokenId: '156',
+    //   totalDays: 365 * 3,
+    //   dailyRateInWholeVibes: 1000,
+    //   backdateDays: 2,
+    // });
+    // https://www.screensaver.world/object/127
+    // await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
+    //   tokenId: '127',
+    //   totalDays: 365 * 3,
+    //   dailyRateInWholeVibes: 1000,
+    //   backdateDays: 2,
+    // });
+    // https://www.screensaver.world/object/26
     await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
-      tokenId: '373',
+      tokenId: '26',
       totalDays: 365 * 3,
       dailyRateInWholeVibes: 1000,
+      backdateDays: 7,
     });
   };
 

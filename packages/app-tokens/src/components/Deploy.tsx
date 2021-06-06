@@ -27,6 +27,7 @@ export const Deploy: FunctionComponent = () => {
   };
 
   const grant = async () => {
+    // BVAL/VIBES treasury
     await grantSeederRole(contracts.faucetV2, '0x9940D367E0596f64DbcbBd57f480359E4A2F852f', library.getSigner());
   };
 
