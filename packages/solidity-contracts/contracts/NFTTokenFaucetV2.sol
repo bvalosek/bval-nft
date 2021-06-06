@@ -19,6 +19,7 @@ struct FaucetOptions {
 struct ManagedTokenInfo {
   uint256 tokenId;
   address owner;
+  uint seedTimestamp;
   uint256 dailyRate;
   uint256 balance;
   uint256 claimable;
@@ -47,6 +48,9 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
   // lock contract
   ITokenLockManager private _lock;
 
+  // mapping from tokens -> seed date
+  mapping (uint256 => uint) private _seededAt;
+
   // mapping from tokens -> last claim timestamp
   mapping (uint256 => uint) private _lastClaim;
 
@@ -68,6 +72,7 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
   // a token was seeded
   event Seed(
     uint256 indexed tokenId,
+    uint seedTimestamp,
     uint256 rate,
     uint256 totalDays);
 
@@ -113,12 +118,13 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
   }
 
   // get info about a managed token
-  function tokenInfo(uint256 tokenId) external view returns (ManagedTokenInfo memory) {
+  function tokenInfo(uint256 tokenId) public view returns (ManagedTokenInfo memory) {
     require(_tokens.contains(tokenId), "invalid token");
     bool isBurnt = _isTokenBurnt(tokenId);
     return ManagedTokenInfo({
       tokenId: tokenId,
       owner: isBurnt ? address(0) : _nft.ownerOf(tokenId),
+      seedTimestamp: _seededAt[tokenId],
       dailyRate: _rates[tokenId],
       balance: _balances[tokenId],
       claimable: claimable(tokenId),
@@ -147,13 +153,17 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
     uint256 amount = totalDays * rate;
     _token.transferFrom(msgSender, address(this), amount);
 
+    // allow backdating by setting the seed date in the past
+    uint seedTimestamp = block.timestamp - backdateDays * 1 days;
+
     // set info for this token
     _tokens.add(tokenId);
     _balances[tokenId] = amount;
     _rates[tokenId] = rate;
-    _lastClaim[tokenId] = block.timestamp - backdateDays * 1 days;
+    _seededAt[tokenId] = seedTimestamp;
+    _lastClaim[tokenId] = seedTimestamp;
 
-    emit Seed(tokenId, rate, totalDays);
+    emit Seed(tokenId, seedTimestamp, rate, totalDays);
   }
 
   // seed an nft with the token

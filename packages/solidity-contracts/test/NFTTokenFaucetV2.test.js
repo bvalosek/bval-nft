@@ -168,6 +168,7 @@ contract.only('NFTTokenFaucet', (accounts) => {
       assert.equal(info.claimable.toString(), '0');
       assert.equal(info.isBurnt, false);
       assert.equal(info.owner, a1);
+      assert.equal(info.seedTimestamp, '1616976000');
     });
     it('should still return token information for burned tokens', async () => {
       const [a1] = accounts;
