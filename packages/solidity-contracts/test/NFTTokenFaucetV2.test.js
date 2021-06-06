@@ -193,7 +193,7 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'out of range');
     });
   });
-  describe.only('cleanup', () => {
+  describe('cleanup', () => {
     it('should return tokens after cleaning up a burnt nft', async () => {
       const [a1] = accounts;
       const [tokenId] = TOKENS;
@@ -230,6 +230,18 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await nft.burn(tokenId);
       await faucet.cleanup(tokenId);
       assert.equal(await faucet.tokenCount(), '0');
+    });
+  });
+  describe('claiming', () => {
+    it('should allow claiming', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2021-03-30'); // 1 day later
+      await faucet.claim(tokenId);
+      const info = await faucet.tokenInfo(tokenId);
+      assert.equal(info.balance, BN(100 * 1000 - 1000));
     });
   });
 });

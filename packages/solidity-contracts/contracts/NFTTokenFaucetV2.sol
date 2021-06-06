@@ -161,8 +161,13 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
     return seed(tokenId, rate, totalDays, 0);
   }
 
-  // take the generated tokens from an nft
-  function claim(uint256 tokenId, uint256 amount) external {
+  // claim all tokens inside an nft
+  function claim(uint256 tokenId) external {
+    return claim(tokenId, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff);
+  }
+
+  // take the generated tokens from an nft, up to amount
+  function claim(uint256 tokenId, uint256 amount) public {
     address msgSender = _msgSender();
     address owner = _nft.ownerOf(tokenId);
     require(owner == msgSender, "not token owner");
