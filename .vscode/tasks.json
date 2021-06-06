@@ -19,6 +19,12 @@
       "command": "npm run app:dev",
       "problemMatcher": [],
     },
+    {
+      "label": "😎 Run vibes site locally",
+      "type": "shell",
+      "command": "npm run vibes:dev",
+      "problemMatcher": [],
+    },
   ],
   "inputs": [
 

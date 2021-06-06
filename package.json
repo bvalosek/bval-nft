@@ -12,7 +12,9 @@
     "contracts:build": "npx lerna run --stream build --scope @bvalosek/solidity-contracts",
     "gallery:dev": "npx lerna run --stream dev --scope @bvalosek/site-token-gallery",
     "gallery:build": "npx lerna run --stream build --scope @bvalosek/site-token-gallery",
-    "manifest:build": "npx lerna run --stream build --scope @bvalosek/token-manifest"
+    "manifest:build": "npx lerna run --stream build --scope @bvalosek/token-manifest",
+    "vibes:dev": "npx lerna run --stream dev --scope @bvalosek/site-vibes",
+    "vibes:build": "npx lerna run --stream build --scope @bvalosek/site-vibes"
   },
   "prettier": {
     "semi": true,
