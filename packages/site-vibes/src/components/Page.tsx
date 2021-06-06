@@ -16,9 +16,6 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       bottom: 0,
       left: 0,
       right: 0,
-      '& code': {
-        fontFamily: theme.monoFont,
-      },
     },
   };
 });

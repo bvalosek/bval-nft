@@ -1,0 +1,38 @@
+import { makeStyles } from '@material-ui/styles';
+import React, { FunctionComponent } from 'react';
+import { ThemeConfig } from '../Theme';
+
+const useStyles = makeStyles<ThemeConfig>((theme) => {
+  return {
+    hero: {
+      minHeight: '35vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      '& h1': {
+        textTransform: 'lowercase',
+        lineHeight: 1,
+        fontSize: theme.scaledSpacing(10, 4),
+      },
+      container: {
+        maxWidth: theme.maxWidth,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing(2),
+      },
+    },
+  };
+});
+
+export const Hero: FunctionComponent = () => {
+  const classes = useStyles();
+  return (
+    <div className={classes.hero}>
+      <div className={classes.container}>
+        <h1>
+          <span>VIBES</span>
+        </h1>
+      </div>
+    </div>
+  );
+};

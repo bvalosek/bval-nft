@@ -15,8 +15,7 @@ export const createTheme = () => {
         main: colors.white,
       },
     },
-    font: '"Fira Code", monospace',
-    monoFont: '"Hack", "Menlo", "Monaco", "Courier New", monospace',
+    font: '"DM Mono", monospace',
     maxWidth: '1200px',
 
     spacing: (...mults: number[]): string => mults.map((m) => `${m / 4}rem`).join(' '),
