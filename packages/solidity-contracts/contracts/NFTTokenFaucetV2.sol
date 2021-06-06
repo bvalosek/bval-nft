@@ -136,8 +136,7 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
     address msgSender = _msgSender();
     require(hasRole(SEEDER_ROLE, msgSender), "requires SEEDER_ROLE");
     require(!_tokens.contains(tokenId), "token already seeded");
-    // the ownerOf call actually reverts before our require statement is evaluated
-    require(_nft.ownerOf(tokenId) != address(0), "token has been burnt");
+    require(!_isTokenBurnt(tokenId), "token has been burnt");
 
     // take token from sender and stash in contract
     uint256 amount = totalDays * rate;
@@ -182,7 +181,7 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
     address msgSender = _msgSender();
     require(hasRole(SEEDER_ROLE, msgSender), "requires SEEDER_ROLE");
     require(_balances[tokenId] != 0, "token has no balance");
-    require(_nft.ownerOf(tokenId) == address(0), "token is not burnt");
+    require(_isTokenBurnt(tokenId), "token is not burnt");
 
     // return remaining balance
     _token.transfer(msgSender, _balances[tokenId]);
@@ -197,6 +196,15 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
   // ---
   // utils
   // ---
+
+  function _isTokenBurnt(uint256 tokenId) internal view returns (bool) {
+    try _nft.ownerOf(tokenId) returns (address) {
+      // if ownerOf didnt revert, then token is not burnt
+      return false;
+    } catch  {
+      return true;
+    }
+  }
 
   // returns true if operator can manage tokenId
   function _isApprovedOrOwner(uint256 tokenId, address operator) internal view returns (bool) {

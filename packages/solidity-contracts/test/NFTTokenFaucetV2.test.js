@@ -96,7 +96,7 @@ contract.only('NFTTokenFaucet', (accounts) => {
       console.log('claim', resp.receipt.gasUsed);
     });
   });
-  describe.only('seeding', () => {
+  describe('seeding', () => {
     it('should revert if msg sender does not have SEEDER_ROLE', async () => {
       const [a1, a2] = accounts;
       const [tokenId] = TOKENS;
@@ -121,7 +121,7 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await nft.burn(tokenId);
 
       const task = faucet.seed(tokenId, BN(1000), 100);
-      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'nonexistent token');
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'token has been burnt');
     });
     it('should deposit seed tokens into the contract reserve', async () => {
       const [a1] = accounts;
@@ -146,6 +146,70 @@ contract.only('NFTTokenFaucet', (accounts) => {
           event.totalDays.toString() === '100'
         );
       });
+    });
+    it('should increment token count', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100);
+      assert.equal(await faucet.tokenCount(), 1);
+    });
+  });
+  describe('token views', () => {
+    it('should return token information', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100);
+      const info = await faucet.tokenInfo(tokenId);
+      assert.equal(info.tokenId, '560090546495223353507900328505153421583562422229593510008531217198667005953');
+      assert.equal(info.balance, BN(1000 * 100));
+      assert.equal(info.dailyRate, BN(1000));
+      assert.equal(info.claimable.toString(), '0');
+    });
+    it('should provide token ID by index', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100);
+      const id = await faucet.tokenIdAt(0);
+      assert.equal(id, '560090546495223353507900328505153421583562422229593510008531217198667005953');
+    });
+    it('should revert if token id out of range', async () => {
+      const [a1] = accounts;
+      const { faucet } = await factory(a1);
+      const task = faucet.tokenIdAt(0);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'out of range');
+    });
+  });
+  describe('cleanup', () => {
+    it('should return tokens after cleaning up a burnt nft', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet, nft, token } = await factory(a1);
+      const balanceBefore = await token.balanceOf(a1);
+      await faucet.seed(tokenId, BN(1000), 100);
+      await nft.burn(tokenId);
+      await faucet.cleanup(tokenId);
+      const balanceAfter = await token.balanceOf(a1);
+      assert.equal(balanceBefore.toString(), balanceAfter.toString());
+    });
+    it('should revert if not SEEDER', async () => {
+      const [a1, a2] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet, nft } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100);
+      await nft.burn(tokenId);
+      const task = faucet.cleanup(tokenId, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires SEEDER_ROLE');
+    });
+    it('should revert if token not burnt', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100);
+      const task = faucet.cleanup(tokenId);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'token is not burnt');
     });
   });
 });
