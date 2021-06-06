@@ -263,6 +263,19 @@ contract.only('NFTTokenFaucet', (accounts) => {
       const task = faucet.claim(tokenId, { from: a2 });
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not token owner');
     });
+    it('should revert if token is locked', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet, lock } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2021-03-30'); // 1 day later
+      await lock.lockToken(tokenId);
+      const task = faucet.claim(tokenId);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'token is locked');
+      await setNetworkTime('2022-03-30'); // 1 year later
+      await faucet.claim(tokenId);
+      // doesnt revert
+    });
     it('should only allow claiming what has generated', async () => {
       const [a1] = accounts;
       const [tokenId] = TOKENS;
