@@ -177,6 +177,7 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
     // than available
     uint256 availableToClaim = claimable(tokenId);
     uint256 toClaim = amount < availableToClaim ? amount : availableToClaim;
+    require(toClaim > 0, "nothing to claim");
 
     // update balances and execute ERC-20 transfer
     _balances[tokenId] -= toClaim;

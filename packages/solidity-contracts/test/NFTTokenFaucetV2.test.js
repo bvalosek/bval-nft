@@ -243,5 +243,52 @@ contract.only('NFTTokenFaucet', (accounts) => {
       const info = await faucet.tokenInfo(tokenId);
       assert.equal(info.balance, BN(100 * 1000 - 1000));
     });
+    it('should revert if nothing to claim', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2022-03-30'); // 1 year later
+      await faucet.claim(tokenId);
+      const task = faucet.claim(tokenId);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'nothing to claim');
+    });
+    it('should revert if non owner attempts to claim', async () => {
+      const [a1, a2] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2021-03-30'); // 1 day later
+      const task = faucet.claim(tokenId, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not token owner');
+    });
+    it('should only allow claiming what has generated', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet, token } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2022-03-29'); // 1 year later
+      const balanceBefore = await token.balanceOf(a1);
+      await faucet.claim(tokenId);
+      const balanceAfter = await token.balanceOf(a1);
+      assert.equal(balanceAfter.sub(balanceBefore), BN(1000 * 100));
+      assert.equal((await faucet.reserveBalance()).toString(), '0');
+    });
+    it('should emit a Claim event', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2022-03-30'); // 1 year later
+      const resp = await faucet.claim(tokenId);
+
+      truffleAssert.eventEmitted(resp, 'Claim', (event) => {
+        return (
+          event.tokenId.toString() === '560090546495223353507900328505153421583562422229593510008531217198667005953' &&
+          event.claimer === a1 &&
+          event.amount.toString() === BN(1000 * 100).toString()
+        );
+      });
+    });
   });
 });
