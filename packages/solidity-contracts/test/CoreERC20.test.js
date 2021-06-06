@@ -9,7 +9,7 @@ const factory = async () => {
 // max gas for deployment
 const MAX_DEPLOYMENT_GAS = 2200000;
 
-contract.only('CoreERC20', (accounts) => {
+contract('CoreERC20', (accounts) => {
   describe('gas constraints', () => {
     it('should deploy with less than target deployment gas', async () => {
       const instance = await factory();

@@ -4,7 +4,7 @@ const factory = async () => {
   return VIBES.new();
 };
 
-contract.only('VIBES', (accounts) => {
+contract('VIBES', (accounts) => {
   describe('metadata', () => {
     it('should return name', async () => {
       const instance = await factory();
