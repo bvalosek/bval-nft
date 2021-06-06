@@ -18,10 +18,12 @@ struct FaucetOptions {
 // view of token state
 struct ManagedTokenInfo {
   uint256 tokenId;
+  address owner;
   uint256 dailyRate;
   uint256 balance;
   uint256 claimable;
   uint lastClaimAt;
+  bool isBurnt;
 }
 
 // Slightly different take on the NFT token faucet, this time requiring
@@ -113,12 +115,15 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
   // get info about a managed token
   function tokenInfo(uint256 tokenId) external view returns (ManagedTokenInfo memory) {
     require(_tokens.contains(tokenId), "invalid token");
+    bool isBurnt = _isTokenBurnt(tokenId);
     return ManagedTokenInfo({
       tokenId: tokenId,
+      owner: isBurnt ? address(0) : _nft.ownerOf(tokenId),
       dailyRate: _rates[tokenId],
       balance: _balances[tokenId],
       claimable: claimable(tokenId),
-      lastClaimAt: _lastClaim[tokenId]
+      lastClaimAt: _lastClaim[tokenId],
+      isBurnt: _isTokenBurnt(tokenId)
     });
   }
 

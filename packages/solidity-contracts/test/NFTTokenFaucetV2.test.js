@@ -166,6 +166,17 @@ contract.only('NFTTokenFaucet', (accounts) => {
       assert.equal(info.balance, BN(1000 * 100));
       assert.equal(info.dailyRate, BN(1000));
       assert.equal(info.claimable.toString(), '0');
+      assert.equal(info.isBurnt, false);
+      assert.equal(info.owner, a1);
+    });
+    it('should still return token information for burned tokens', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet, nft } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100);
+      await nft.burn(tokenId);
+      const info = await faucet.tokenInfo(tokenId);
+      assert.equal(info.isBurnt, true);
     });
     it('should provide token ID by index', async () => {
       const [a1] = accounts;
@@ -182,7 +193,7 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'out of range');
     });
   });
-  describe('cleanup', () => {
+  describe.only('cleanup', () => {
     it('should return tokens after cleaning up a burnt nft', async () => {
       const [a1] = accounts;
       const [tokenId] = TOKENS;
@@ -210,6 +221,15 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await faucet.seed(tokenId, BN(1000), 100);
       const task = faucet.cleanup(tokenId);
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'token is not burnt');
+    });
+    it('should no longer manage the token after cleaning up', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet, nft } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100);
+      await nft.burn(tokenId);
+      await faucet.cleanup(tokenId);
+      assert.equal(await faucet.tokenCount(), '0');
     });
   });
 });
