@@ -56,6 +56,7 @@ const factory = async (account) => {
   // add some tokens to the account and approve the faucet to spend them
   await token.mintTo(account, BN(100000));
   await token.approve(faucet.address, BN('1000000000000000000'), { from: account });
+  await simpleMint(nft, TOKENS[0]);
 
   return { nft, token, lock, faucet };
 };
@@ -75,14 +76,76 @@ contract.only('NFTTokenFaucet', (accounts) => {
     });
     it('should seed with less than target mutation gas', async () => {
       const [a1] = accounts;
-      const tokenId = TOKENS[0];
-      const { nft, faucet, token } = await factory(a1);
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
 
-      await token.mintTo(a1, BN(100000));
-      await simpleMint(nft, tokenId);
       const resp = await faucet.seed(tokenId, BN(1000), 100);
+
       assert.isBelow(resp.receipt.gasUsed, MAX_MUTATION_GAS);
       console.log('seed', resp.receipt.gasUsed);
+    });
+    it('should claim with less than target mutation gas', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+
+      await faucet.seed(tokenId, BN(1000), 100, 1);
+      const resp = await faucet.claim(tokenId, BN(100000));
+
+      assert.isBelow(resp.receipt.gasUsed, MAX_MUTATION_GAS);
+      console.log('claim', resp.receipt.gasUsed);
+    });
+  });
+  describe.only('seeding', () => {
+    it('should revert if msg sender does not have SEEDER_ROLE', async () => {
+      const [a1, a2] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+
+      const task = faucet.seed(tokenId, BN(1000), 100, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires SEEDER_ROLE');
+    });
+    it('should revert if token already seeded', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+
+      await faucet.seed(tokenId, BN(1000), 100);
+      const task = faucet.seed(tokenId, BN(1000), 100);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'token already seeded');
+    });
+    it('should revert if token burnt', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet, nft } = await factory(a1);
+      await nft.burn(tokenId);
+
+      const task = faucet.seed(tokenId, BN(1000), 100);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'nonexistent token');
+    });
+    it('should deposit seed tokens into the contract reserve', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+
+      await faucet.seed(tokenId, BN(1000), 100);
+
+      const reserve = await faucet.reserveBalance();
+      assert.equal(reserve, BN(1000 * 100));
+    });
+    it('should emit a Seed event', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+
+      const resp = await faucet.seed(tokenId, BN(1000), 100);
+      truffleAssert.eventEmitted(resp, 'Seed', (event) => {
+        return (
+          event.tokenId.toString() === '560090546495223353507900328505153421583562422229593510008531217198667005953' &&
+          event.rate.toString() === BN(1000) &&
+          event.totalDays.toString() === '100'
+        );
+      });
     });
   });
 });

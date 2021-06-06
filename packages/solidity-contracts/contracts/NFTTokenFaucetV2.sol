@@ -135,7 +135,8 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
   function seed(uint256 tokenId, uint256 rate, uint256 totalDays, uint256 backdateDays) public {
     address msgSender = _msgSender();
     require(hasRole(SEEDER_ROLE, msgSender), "requires SEEDER_ROLE");
-    require(_lastClaim[tokenId] == 0, "token already seeded");
+    require(!_tokens.contains(tokenId), "token already seeded");
+    // the ownerOf call actually reverts before our require statement is evaluated
     require(_nft.ownerOf(tokenId) != address(0), "token has been burnt");
 
     // take token from sender and stash in contract
@@ -170,7 +171,7 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
 
     // update balances and execute ERC-20 transfer
     _balances[tokenId] -= toClaim;
-    _token.transferFrom(address(this), msgSender, toClaim);
+    _token.transfer(msgSender, toClaim);
 
     emit Claim(tokenId, msgSender, toClaim);
   }
@@ -184,7 +185,7 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
     require(_nft.ownerOf(tokenId) == address(0), "token is not burnt");
 
     // return remaining balance
-    _token.transferFrom(address(this), msgSender, _balances[tokenId]);
+    _token.transfer(msgSender, _balances[tokenId]);
 
     // clear
     _tokens.remove(tokenId);
