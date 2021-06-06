@@ -7,6 +7,8 @@ import {
   deployBVALWellspring,
   deployTokenLockManager,
   deployVibes,
+  deployVIBESWellspring,
+  grantSeederRole,
   mintVibesTo,
   useContracts,
 } from '../util/contract';
@@ -16,21 +18,25 @@ export const Deploy: FunctionComponent = () => {
   const { library } = useWeb3Strict();
   const contracts = useContracts();
 
-  const deployNft = async () => {
-    await deployBVAL721(library.getSigner());
-  };
+  // const deployNft = async () => {
+  //   await deployBVAL721(library.getSigner());
+  // };
 
   const deployFaucet = async () => {
-    await deployBVALWellspring(library.getSigner(), contracts);
+    await deployVIBESWellspring(library.getSigner(), contracts);
   };
 
-  const deployLock = async () => {
-    deployTokenLockManager(library.getSigner(), contracts.ssw);
+  const grant = async () => {
+    await grantSeederRole(contracts.faucetV2, '0x9940D367E0596f64DbcbBd57f480359E4A2F852f', library.getSigner());
   };
 
-  const deployL2Token = async () => {
-    deployVibes(library.getSigner());
-  };
+  // const deployLock = async () => {
+  //   deployTokenLockManager(library.getSigner(), contracts.ssw);
+  // };
+
+  // const deployL2Token = async () => {
+  //   deployVibes(library.getSigner());
+  // };
 
   return (
     <Container>
@@ -48,18 +54,30 @@ export const Deploy: FunctionComponent = () => {
           Deploy Faucet
         </Button>
       </div> */}
-      <Text h2>Deploy TokenLockManager</Text>
+      {/* <Text h2>Deploy TokenLockManager</Text>
       <div>
         <Button type="success" onClick={() => deployLock()}>
           Deploy Lock
         </Button>
+      </div> */}
+      <Text h2>Deploy VIBES Wellspring</Text>
+      <div>
+        <Button type="success" onClick={() => deployFaucet()}>
+          Deploy Faucet
+        </Button>
       </div>
-      <Text h2>Deploy Vibes</Text>
+      <Text h2>Grant Treasury SEEDER role</Text>
+      <div>
+        <Button type="success" onClick={() => grant()}>
+          Grant
+        </Button>
+      </div>
+      {/* <Text h2>Deploy Vibes</Text>
       <div>
         <Button type="success" onClick={() => deployL2Token()}>
           Deploy $VIBES
         </Button>
-      </div>
+      </div> */}
       <Text h2>Mint To Treasury</Text>
       <div>
         <Button
@@ -68,7 +86,7 @@ export const Deploy: FunctionComponent = () => {
             mintVibesTo(
               contracts.vibes,
               '0x9940D367E0596f64DbcbBd57f480359E4A2F852f',
-              '10000000000000000000000000',
+              '90000000000000000000000000',
               library.getSigner()
             )
           }

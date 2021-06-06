@@ -1,9 +1,10 @@
-import { Contract, ContractFactory, Signer } from 'ethers';
+import { BigNumber, Contract, ContractFactory, Signer } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 
-import { BVAL721, BVAL_WELLSPRING, LOCK_MANAGER, VIBES } from '@bvalosek/solidity-contracts';
-import { SequenceCreateData, TokenMintData } from '@bvalosek/lib-tokens';
+import { BVAL721, BVAL_WELLSPRING, LOCK_MANAGER, VIBES, VIBES_WELLSPRING } from '@bvalosek/solidity-contracts';
+import { SequenceCreateData, toHexStringBytes, TokenMintData } from '@bvalosek/lib-tokens';
 import { useNetworkName } from './web3';
+import { Provider } from 'react';
 
 interface Contracts {
   token: string;
@@ -12,6 +13,7 @@ interface Contracts {
   faucet: string;
   vibes: string;
   ssw: string;
+  faucetV2: string;
 }
 
 export const useContracts = (): Contracts => {
@@ -25,6 +27,7 @@ export const useContracts = (): Contracts => {
         faucet: '0x0',
         vibes: '0x0',
         ssw: '0x0',
+        faucetV2: '0x0',
       };
     case 'rinkeby':
       return {
@@ -34,6 +37,7 @@ export const useContracts = (): Contracts => {
         faucet: '0x0',
         vibes: '0x0',
         ssw: '0x0',
+        faucetV2: '0x0',
       };
     case 'polygon':
       return {
@@ -43,14 +47,88 @@ export const useContracts = (): Contracts => {
         faucet: '0x0',
         vibes: '0xF14874f2D27f4e11c73203767AB14D5088cD648E',
         ssw: '0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4',
+        faucetV2: '0x23B8cE2Da60Aab910739a377D977d10eE6864AC0',
       };
   }
+};
+
+export const getManagedTokenInfo = async (address: string, signer: Signer): Promise<void> => {
+  const faucet = new Contract(address, VIBES_WELLSPRING.abi, signer);
+  const count = await faucet.tokenCount();
+
+  for (let index = 0; index < count; index++) {
+    const tokenId = await faucet.tokenIdAt(index);
+    const info = await faucet.tokenInfo(tokenId);
+    const projected = {
+      tokenId: info.tokenId.toString(),
+      owner: toHexStringBytes(info.owner, 20),
+      seedTimestamp: info.seedTimestamp.toNumber(),
+      dailyRate: info.dailyRate.toString(),
+      balance: info.balance.toString(),
+      claimable: info.claimable.toString(),
+      lastClaimAt: info.lastClaimAt.toNumber(),
+      isBurnt: info.isBurnt,
+    };
+    console.log(projected);
+  }
+
+  console.log(count);
+};
+
+interface Seed {
+  tokenId: string;
+  dailyRateInWholeVibes: number;
+  totalDays: number;
+  backdateDays?: number;
+}
+
+export const seedFaucetToken = async (
+  faucetAddress: string,
+  tokenAddress: string,
+  signer: Signer,
+  { tokenId, dailyRateInWholeVibes, totalDays, backdateDays = 0 }: Seed
+): Promise<void> => {
+  const token = new Contract(tokenAddress, VIBES.abi, signer);
+  const faucet = new Contract(faucetAddress, VIBES_WELLSPRING.abi, signer);
+
+  const allowance = await token.allowance(await signer.getAddress(), faucetAddress);
+  const rate = `${dailyRateInWholeVibes}000000000000000000`; // lol
+  const amount = BigNumber.from(rate).mul(totalDays);
+
+  if (amount.gt(allowance)) {
+    const resp = await token.approve(
+      faucetAddress,
+      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+    );
+    console.log(resp);
+  }
+
+  const resp = await faucet['seed(uint256,uint256,uint256,uint256)'](tokenId, rate, totalDays, backdateDays);
+  console.log(resp);
+};
+
+export const grantSeederRole = async (faucetAddress: string, seederAddress: string, signer: Signer): Promise<void> => {
+  const faucet = new Contract(faucetAddress, VIBES_WELLSPRING.abi, signer);
+  const resp = await faucet.grantRole(await faucet.SEEDER_ROLE(), seederAddress);
+  console.log(resp);
 };
 
 export const deployBVAL721 = async (signer: Signer): Promise<Contract> => {
   const factory = new ContractFactory(BVAL721.abi, BVAL721.bytecode, signer);
   const contract = await factory.deploy();
   return contract;
+};
+
+export const getSeeders = async (faucetAddress: string, signer: Signer): Promise<string[]> => {
+  const faucet = new Contract(faucetAddress, VIBES_WELLSPRING.abi, signer);
+  const role = await faucet.SEEDER_ROLE();
+  const count = await faucet.getRoleMemberCount(role);
+  const seeders: string[] = [];
+  for (let index = 0; index < count; index++) {
+    const resp = await faucet.getRoleMember(role, index);
+    seeders.push(resp);
+  }
+  return seeders;
 };
 
 export const deployTokenLockManager = async (signer: Signer, nft: string): Promise<Contract> => {
@@ -62,6 +140,12 @@ export const deployTokenLockManager = async (signer: Signer, nft: string): Promi
 export const deployBVALWellspring = async (signer: Signer, { nft, token }: Contracts): Promise<Contract> => {
   const factory = new ContractFactory(BVAL_WELLSPRING.abi, BVAL_WELLSPRING.bytecode, signer);
   const contract = await factory.deploy({ nft, token, lock: '0x0000000000000000000000000000000000000000' });
+  return contract;
+};
+
+export const deployVIBESWellspring = async (signer: Signer, { ssw, vibes, lock }: Contracts): Promise<Contract> => {
+  const factory = new ContractFactory(VIBES_WELLSPRING.abi, VIBES_WELLSPRING.bytecode, signer);
+  const contract = await factory.deploy({ nft: ssw, token: vibes, lock });
   return contract;
 };
 
