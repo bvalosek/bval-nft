@@ -15,6 +15,7 @@ export const ManageFaucet: FunctionComponent = () => {
     await getManagedTokenInfo(contracts.faucetV2, library.getSigner());
   };
 
+  // TODO: something better lol
   const seed = async () => {
     // https://www.screensaver.world/object/373
     // await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
@@ -51,12 +52,12 @@ export const ManageFaucet: FunctionComponent = () => {
     //   backdateDays: 2,
     // });
     // https://www.screensaver.world/object/26
-    await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
-      tokenId: '26',
-      totalDays: 365 * 3,
-      dailyRateInWholeVibes: 1000,
-      backdateDays: 7,
-    });
+    // await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
+    //   tokenId: '26',
+    //   totalDays: 365 * 3,
+    //   dailyRateInWholeVibes: 1000,
+    //   backdateDays: 7,
+    // });
   };
 
   useEffect(() => {
