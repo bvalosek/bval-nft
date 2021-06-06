@@ -9,10 +9,14 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      textAlign: 'center',
       '& h1': {
         textTransform: 'lowercase',
         lineHeight: 1,
         fontSize: theme.scaledSpacing(10, 4),
+        letterSpacing: theme.scaledSpacing(4),
+        marginLeft: theme.scaledSpacing(4),
+        color: theme.palette.accent.main,
       },
       container: {
         maxWidth: theme.maxWidth,
@@ -26,11 +30,12 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 
 export const Hero: FunctionComponent = () => {
   const classes = useStyles();
+
   return (
     <div className={classes.hero}>
       <div className={classes.container}>
         <h1>
-          <span>VIBES</span>
+          <span>VIBES.</span>
         </h1>
       </div>
     </div>

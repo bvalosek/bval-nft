@@ -1,6 +1,8 @@
 const colors = {
   white: '#FFFFFF',
   black: '#000000',
+  darkGray: '#333333',
+  bvalBlue: '#0025FD',
 };
 
 /** theme values */
@@ -13,6 +15,10 @@ export const createTheme = () => {
       },
       foreground: {
         main: colors.white,
+        dark: colors.darkGray,
+      },
+      accent: {
+        main: colors.bvalBlue,
       },
     },
     font: '"DM Mono", monospace',
