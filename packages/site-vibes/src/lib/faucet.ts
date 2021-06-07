@@ -1,9 +1,8 @@
 import { getContracts } from './contracts';
-import { VIBES_WELLSPRING } from '@bvalosek/solidity-contracts';
+import VIBES_WELLSPRING from '@bvalosek/solidity-contracts/deployed-contracts/VIBESWellspring-2021-06-05.json';
 import { BigNumber, Contract } from 'ethers';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { currentTimestamp, toHexStringBytes } from './web3';
-import { asDecimal } from './numbers';
 
 export interface TokenInfo {
   tokenId: string;

@@ -13,7 +13,7 @@ interface Props {
   };
 }
 
-const useStyles = makeStyles<ThemeConfig>((theme) => {
+const useStyles = makeStyles<ThemeConfig>(() => {
   return {
     dec: {
       opacity: 0.5,
