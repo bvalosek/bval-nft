@@ -3,6 +3,8 @@ const colors = {
   black: '#000000',
   darkGray: '#333333',
   bvalBlue: '#0025FD',
+  bvalPink: '#ff1940',
+  bvalGreen: '#3bff29',
 };
 
 /** theme values */
@@ -19,9 +21,12 @@ export const createTheme = () => {
       },
       accent: {
         main: colors.bvalBlue,
+        secondary: colors.bvalGreen,
+        tertiary: colors.bvalPink,
       },
     },
     font: '"DM Mono", monospace',
+    impactFont: '"Rubik Mono", monospace',
     maxWidth: '1200px',
 
     spacing: (...mults: number[]): string => mults.map((m) => `${m / 4}rem`).join(' '),

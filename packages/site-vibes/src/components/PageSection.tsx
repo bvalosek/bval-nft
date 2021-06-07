@@ -4,6 +4,7 @@ import React, { FunctionComponent } from 'react';
 import { ThemeConfig } from '../Theme';
 
 interface Props {
+  maxWidth?: number | string;
   backgroundColor?: string;
 }
 
@@ -15,7 +16,7 @@ const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
     },
     container: {
       flex: 1,
-      maxWidth: theme.maxWidth,
+      maxWidth: (props) => props.maxWidth ?? theme.maxWidth,
       padding: theme.scaledSpacing(4, 1.5),
     },
   };

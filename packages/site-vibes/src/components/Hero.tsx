@@ -5,7 +5,7 @@ import { ThemeConfig } from '../Theme';
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     hero: {
-      minHeight: '35vh',
+      minHeight: '25vh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -13,7 +13,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       '& h1': {
         textTransform: 'lowercase',
         lineHeight: 1,
-        fontSize: theme.scaledSpacing(10, 4),
+        fontSize: theme.scaledSpacing(6, 4),
         letterSpacing: theme.scaledSpacing(4),
         marginLeft: theme.scaledSpacing(4),
         color: theme.palette.accent.main,
