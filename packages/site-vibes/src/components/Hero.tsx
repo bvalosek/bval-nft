@@ -12,6 +12,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       textAlign: 'center',
       '& h1': {
         textTransform: 'lowercase',
+        textDecoration: 'underline',
         lineHeight: 1,
         fontSize: theme.scaledSpacing(6, 4),
         letterSpacing: theme.scaledSpacing(4),

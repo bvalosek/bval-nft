@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/styles';
 import { ThemeConfig } from '../Theme';
 import { useTokens } from '../hooks/tokens';
 import { computeStats } from '../lib/faucet';
-import { asDecimal } from '../lib/numbers';
 import { DecimalNumber } from './DecimalNumber';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
@@ -29,29 +28,35 @@ export const Info: FunctionComponent = () => {
   const stats = computeStats(tokens);
 
   return (
-    <PageSection maxWidth={'900px'}>
+    <PageSection maxWidth={'1000px'}>
       <div className={classes.content}>
         <p>
           🐇 <a href="https://tokens.bvalosek.com/project">The BVAL NFT Project</a> has expanded to Layer 2. We're
-          further down the rabbit hole now.
+          further down the rabbit hole than ever now.
         </p>
         <p>
-          🌈 Each NFT I mint on the{' '}
+          {/* 🌈 Each NFT I mint on the{' '}
           <a href="https://www.screensaver.world/created/0x303EeFeDeE1bA8e5d507a55465d946B2fea18583">
             Screensaver.World
           </a>{' '}
           platform continously accumulates <strong>$VIBES</strong> as an intrinsically staked digital asset within the
-          NFT.
-          {/* will now be entangled with a custom digital engine that causes <strong>$VIBES</strong> to be
-          generated inside of them over time. */}
+          NFT.  */}
+          🌈 I hacked my{' '}
+          <a href="https://www.screensaver.world/created/0x303EeFeDeE1bA8e5d507a55465d946B2fea18583">
+            Screensaver.World
+          </a>{' '}
+          NFTs to continously generate <strong>$VIBES</strong> inside of them as an intrinsically staked digital asset.
         </p>
         <p>
-          🎢 The current token owner can harvest the <strong>$VIBES</strong> to their wallet at any time, which
-          permanently removes them from the NFT. <strong>$VIBES</strong> that are not harvested stay inside the NFT
-          across sales or trades.
+          🎢 The owner of an NFT can unstake the <strong>$VIBES</strong> to their wallet at any time, which is a one-way
+          operation. Staked <strong>$VIBES</strong> stay inside the NFT across transfers or sales.
         </p>
         <p>
-          📈 Total Accumulation:{' '}
+          💎 By capturing the value of holding my art as <strong>$VIBES</strong>, and allowing my collectors to
+          capitalize on that by unstaking, we have established a pattern of Provenance Mining.
+        </p>
+        <p>
+          📈 Total Intrinsic Stake:{' '}
           {stats.totalGenerated.gt(0) ? (
             <DecimalNumber number={stats.totalGenerated} interoplate={{ sampledAt, dailyRate: stats.totalDailyRate }} />
           ) : (

@@ -10,12 +10,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       background: theme.palette.background.main,
       color: theme.palette.foreground.main,
       fontFamily: theme.font,
-      position: 'absolute',
-      overflow: 'auto',
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
+      height: '100vh',
     },
   };
 });
