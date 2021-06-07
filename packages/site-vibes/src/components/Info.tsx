@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react';
 import { PageSection } from './PageSection';
 import { makeStyles } from '@material-ui/styles';
 import { ThemeConfig } from '../Theme';
-import { theme } from '../../../site-token-gallery/src/Theme';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
@@ -38,8 +37,9 @@ export const Info: FunctionComponent = () => {
           of them over time.
         </p>
         <p>
-          🎢 The current token owner can harvest the <strong>$VIBES</strong> within the NFT to their wallet at any time,
-          which permanently removes them from the NFT.
+          🎢 The current token owner can harvest the <strong>$VIBES</strong> to their wallet at any time, which
+          permanently removes them from the NFT. <strong>$VIBES</strong> that are not harvested stay inside the NFT
+          across sales or trades.
         </p>
         <p>
           🍄 As always, we are absolutely doing this shit live. Want to know more? Find me in the{' '}

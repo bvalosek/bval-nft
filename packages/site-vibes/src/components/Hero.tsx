@@ -5,7 +5,7 @@ import { ThemeConfig } from '../Theme';
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     hero: {
-      minHeight: '25vh',
+      minHeight: '15vh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',

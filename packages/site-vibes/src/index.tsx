@@ -7,6 +7,7 @@ import { Web3ReactProvider } from '@web3-react/core';
 import { Page } from './components/Page';
 import { Hero } from './components/Hero';
 import { Info } from './components/Info';
+import { Menu } from './components/Menu';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getLibrary = (provider: any) => new Web3Provider(provider);
@@ -16,6 +17,7 @@ const Root: FunctionComponent = () => (
     <Web3ReactProvider getLibrary={getLibrary}>
       <Page>
         <Hero />
+        <Menu />
         <Info />
       </Page>
     </Web3ReactProvider>
