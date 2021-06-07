@@ -10,7 +10,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       background: theme.palette.background.main,
       color: theme.palette.foreground.main,
       fontFamily: theme.font,
-      height: '100vh',
+      minHeight: '100vh',
     },
   };
 });
