@@ -17,7 +17,7 @@ const Root: FunctionComponent = () => (
     <Web3ReactProvider getLibrary={getLibrary}>
       <Page>
         <Hero />
-        <Menu />
+        {/* <Menu /> */}
         <Info />
       </Page>
     </Web3ReactProvider>
