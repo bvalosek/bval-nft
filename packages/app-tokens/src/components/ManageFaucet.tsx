@@ -51,12 +51,12 @@ export const ManageFaucet: FunctionComponent = () => {
     //   dailyRateInWholeVibes: 1000,
     //   backdateDays: 2,
     // });
-    // https://www.screensaver.world/object/26
+    // https://www.screensaver.world/object/741
     // await seedFaucetToken(contracts.faucetV2, contracts.vibes, library.getSigner(), {
-    //   tokenId: '26',
+    //   tokenId: '741',
     //   totalDays: 365 * 3,
-    //   dailyRateInWholeVibes: 1000,
-    //   backdateDays: 7,
+    //   dailyRateInWholeVibes: 3000,
+    //   backdateDays: 0,
     // });
   };
 

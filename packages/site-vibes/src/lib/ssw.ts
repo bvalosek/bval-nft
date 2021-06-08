@@ -10,6 +10,7 @@ export interface ScreensaverTokenMetadata {
   description: string;
   tags: string[];
   image: string;
+  animation_url?: string;
   creator: string;
   /** iso8601 */
   creationDate: string;

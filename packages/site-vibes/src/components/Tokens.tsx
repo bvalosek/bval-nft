@@ -26,6 +26,10 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       display: 'grid',
       gap: theme.scaledSpacing(1),
       fontSize: theme.scaledSpacing(4),
+      '& video': {
+        width: '100%',
+        display: 'inline',
+      },
     },
     top: {
       fontSize: theme.scaledSpacing(2.5),
@@ -64,7 +68,12 @@ export const Tokens: FunctionComponent = () => {
             <div key={token.tokenId} className={classes.token}>
               <div>
                 <Link to={`/tokens/${token.tokenId}`}>
-                  <img src={metadata?.image} />
+                  {metadata?.image && <img src={metadata?.image} />}
+                  {metadata?.animation_url && (
+                    <video autoPlay muted loop controls={false}>
+                      <source src={metadata.animation_url} />
+                    </video>
+                  )}
                 </Link>
               </div>
               <div className={classes.info}>
