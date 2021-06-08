@@ -64,7 +64,8 @@ export const Info: FunctionComponent = () => {
           <strong>$VIBES</strong>
         </p>
         <p>
-          🍄 As always, we are absolutely doing this shit live. Want to know more or see whats next? Find me in the{' '}
+          🍄 As always, we are absolutely <a href="https://tokens.bvalosek.com/bval-token">doing this shit live</a>.
+          Want to know more or see whats next? Find me in the{' '}
           <a href="https://tokens.bvalosek.com/contact">usual places</a> or visit the{' '}
           <a href="https://discord.gg/wGdTeU3kk4" target="_blank" rel="noopener">
             Screensaver DAO
