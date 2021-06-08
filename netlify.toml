@@ -1,0 +1,9 @@
+[[redirects]]
+  from = "/stats"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/tokens"
+  to = "/index.html"
+  status = 200

@@ -28,7 +28,7 @@ export const Info: FunctionComponent = () => {
   const stats = computeStats(tokens);
 
   return (
-    <PageSection maxWidth={'1000px'}>
+    <PageSection>
       <div className={classes.content}>
         <p>
           🐇 <a href="https://tokens.bvalosek.com/project">The BVAL NFT Project</a> has expanded to Layer 2. We're

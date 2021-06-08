@@ -27,7 +27,7 @@ export const createTheme = () => {
     },
     font: '"DM Mono", monospace',
     impactFont: '"Montserrat", monospace',
-    maxWidth: '1200px',
+    maxWidth: '1000px',
 
     spacing: (...mults: number[]): string => mults.map((m) => `${m / 4}rem`).join(' '),
     scaledSpacing: (size: number, scaling = 0.5): string =>

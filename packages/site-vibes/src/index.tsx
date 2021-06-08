@@ -8,6 +8,9 @@ import { Page } from './components/Page';
 import { Hero } from './components/Hero';
 import { Info } from './components/Info';
 import { Menu } from './components/Menu';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Tokens } from './components/Tokens';
+import { Stats } from './components/Stats';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getLibrary = (provider: any) => new Web3Provider(provider);
@@ -15,11 +18,23 @@ const getLibrary = (provider: any) => new Web3Provider(provider);
 const Root: FunctionComponent = () => (
   <ThemeProvider theme={createTheme()}>
     <Web3ReactProvider getLibrary={getLibrary}>
-      <Page>
-        <Hero />
-        {/* <Menu /> */}
-        <Info />
-      </Page>
+      <BrowserRouter>
+        <Page>
+          <Hero />
+          <Menu />
+          <Switch>
+            <Route exact path="/">
+              <Info />
+            </Route>
+            <Route path="/tokens">
+              <Tokens />
+            </Route>
+            <Route path="/stats">
+              <Stats />
+            </Route>
+          </Switch>
+        </Page>
+      </BrowserRouter>
     </Web3ReactProvider>
   </ThemeProvider>
 );
