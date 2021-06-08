@@ -2,6 +2,7 @@ import React, { createContext, FunctionComponent, useContext, useEffect, useStat
 import { getTokenCount, getTokenInfoByIndex, TokenInfo } from '../lib/faucet';
 import { getProvider } from '../lib/rpc';
 import { currentTimestamp } from '../lib/web3';
+import { getTokenMetadata } from '../lib/ssw';
 
 interface UseTokens {
   tokens: TokenInfo[];
@@ -19,6 +20,9 @@ const useTokensImplementation = (): UseTokens => {
     setSampledAt(currentTimestamp());
     const infos = await Promise.all(range.map((n) => getTokenInfoByIndex(provider, n)));
     setTokens(infos);
+
+    const data = await Promise.all(infos.map((i) => getTokenMetadata(provider, i.tokenId)));
+    console.log(data);
   };
 
   useEffect(() => {
