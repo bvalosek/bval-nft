@@ -2,8 +2,10 @@ import { makeStyles } from '@material-ui/styles';
 import React, { FunctionComponent } from 'react';
 import { useTokens } from '../hooks/tokens';
 import { ThemeConfig } from '../Theme';
+import { Address } from './Address';
 import { DecimalNumber } from './DecimalNumber';
 import { Loading } from './Loading';
+import { ObjectLink } from './ObjectLink';
 import { PageSection } from './PageSection';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
@@ -18,19 +20,25 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       },
       gap: theme.scaledSpacing(15),
     },
+    info: {},
     token: {
       display: 'grid',
-      gap: theme.scaledSpacing(3),
+      gap: theme.scaledSpacing(1),
       fontSize: theme.scaledSpacing(4),
     },
     top: {
+      fontSize: theme.scaledSpacing(2.5),
       display: 'flex',
       '& div:first-child': {
         flex: 1,
+        fontSize: theme.scaledSpacing(3),
       },
     },
-    vibes: {
-      fontSize: theme.scaledSpacing(3),
+    collector: {
+      fontSize: theme.scaledSpacing(2.5),
+      fontFamily: theme.impactFont,
+      opacity: 0.5,
+      fontWeight: 'bold',
     },
   };
 });
@@ -58,14 +66,22 @@ export const Tokens: FunctionComponent = () => {
                 <img src={metadata?.image} />
               </div>
               <div className={classes.info}>
-                <div className={classes.vibes}>
-                  <DecimalNumber
-                    number={token.claimable}
-                    interoplate={{ sampledAt: sampledAt, dailyRate: token.dailyRate }}
-                  />{' '}
-                  $VIBES
+                <div className={classes.top}>
+                  <div className={classes.vibes}>
+                    <DecimalNumber
+                      number={token.claimable}
+                      interoplate={{ sampledAt: sampledAt, dailyRate: token.dailyRate }}
+                    />{' '}
+                    VIBES
+                  </div>
+                  <div>
+                    <ObjectLink tokenId={token.tokenId} />
+                  </div>
                 </div>
                 <div className={classes.title}>{metadata?.name}</div>
+                <div className={classes.collector}>
+                  <Address address={token.owner} />
+                </div>
               </div>
             </div>
           );
