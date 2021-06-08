@@ -35,12 +35,6 @@ export const Info: FunctionComponent = () => {
           further down the rabbit hole than ever now.
         </p>
         <p>
-          {/* 🌈 Each NFT I mint on the{' '}
-          <a href="https://www.screensaver.world/created/0x303EeFeDeE1bA8e5d507a55465d946B2fea18583">
-            Screensaver.World
-          </a>{' '}
-          platform continously accumulates <strong>$VIBES</strong> as an intrinsically staked digital asset within the
-          NFT.  */}
           🌈 I hacked my{' '}
           <a href="https://www.screensaver.world/created/0x303EeFeDeE1bA8e5d507a55465d946B2fea18583">
             Screensaver.World
@@ -52,13 +46,18 @@ export const Info: FunctionComponent = () => {
           operation. Staked <strong>$VIBES</strong> stay inside the NFT across transfers or sales.
         </p>
         <p>
-          💎 By capturing the value of holding my art as <strong>$VIBES</strong>, and allowing my collectors to
-          capitalize on that by unstaking, we have established a pattern of Provenance Mining.
+          💎 This captures the value of holding my art, and allows my collectors to capitalize on that value by
+          unstaking the generated <strong>$VIBES</strong>. I'm calling this mechanic <em>Provenance Mining</em>.
         </p>
         <p>
           📈 Total Intrinsic Stake:{' '}
           {stats.totalGenerated.gt(0) ? (
-            <DecimalNumber number={stats.totalGenerated} interoplate={{ sampledAt, dailyRate: stats.totalDailyRate }} />
+            <>
+              <DecimalNumber
+                number={stats.totalClaimable}
+                interoplate={{ sampledAt, dailyRate: stats.totalDailyRate }}
+              />
+            </>
           ) : (
             '⌛️'
           )}{' '}
