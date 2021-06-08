@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { createContext, FunctionComponent, useContext, useEffect, useState } from 'react';
 import { getTokenCount, getTokenInfoByIndex, TokenInfo } from '../lib/faucet';
 import { getProvider } from '../lib/rpc';
 import { currentTimestamp } from '../lib/web3';
@@ -8,7 +8,7 @@ interface UseTokens {
   sampledAt: number;
 }
 
-export const useTokens = (): UseTokens => {
+const useTokensImplementation = (): UseTokens => {
   const provider = getProvider();
   const [tokens, setTokens] = useState<TokenInfo[]>([]);
   const [sampledAt, setSampledAt] = useState(currentTimestamp());
@@ -26,4 +26,16 @@ export const useTokens = (): UseTokens => {
   }, []);
 
   return { tokens, sampledAt };
+};
+
+const TokensContext = createContext<UseTokens>(undefined);
+
+export const TokensProvider: FunctionComponent = (props) => {
+  const tokens = useTokensImplementation();
+  return <TokensContext.Provider value={tokens}>{props.children}</TokensContext.Provider>;
+};
+
+export const useTokens = (): UseTokens => {
+  const tokens = useContext(TokensContext);
+  return tokens;
 };
