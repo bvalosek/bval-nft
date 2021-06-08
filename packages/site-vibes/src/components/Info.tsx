@@ -5,21 +5,10 @@ import { ThemeConfig } from '../Theme';
 import { useTokens } from '../hooks/tokens';
 import { computeStats } from '../lib/faucet';
 import { DecimalNumber } from './DecimalNumber';
+import { Content } from './Content';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
-  return {
-    content: {
-      fontSize: theme.scaledSpacing(4),
-      display: 'grid',
-      gap: theme.spacing(10),
-      '& a': {
-        color: theme.palette.accent.secondary,
-      },
-      '& strong': {
-        color: theme.palette.accent.tertiary,
-      },
-    },
-  };
+  return {};
 });
 
 export const Info: FunctionComponent = () => {
@@ -29,7 +18,7 @@ export const Info: FunctionComponent = () => {
 
   return (
     <PageSection>
-      <div className={classes.content}>
+      <Content>
         <p>
           🐇 <a href="https://tokens.bvalosek.com/project">The BVAL NFT Project</a> has expanded to Layer 2. We're
           further down the rabbit hole than ever now.
@@ -72,7 +61,7 @@ export const Info: FunctionComponent = () => {
           </a>{' '}
           Discord and check out the community.
         </p>
-      </div>
+      </Content>
     </PageSection>
   );
 };

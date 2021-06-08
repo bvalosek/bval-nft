@@ -12,6 +12,7 @@
     "@material-ui/styles": "4.11.3",
     "@web3-react/core": "6.1.1",
     "@web3-react/injected-connector": "6.0.7",
-    "ethers": "5.0.29"
+    "ethers": "5.0.29",
+    "react-markdown": "6.0.2"
   }
 }

@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/styles';
 import React, { FunctionComponent } from 'react';
+import { Link } from 'react-router-dom';
 import { useTokens } from '../hooks/tokens';
 import { ThemeConfig } from '../Theme';
 import { Address } from './Address';
@@ -38,7 +39,6 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       fontSize: theme.scaledSpacing(2.5),
       fontFamily: theme.impactFont,
       opacity: 0.5,
-      fontWeight: 'bold',
     },
   };
 });
@@ -63,7 +63,9 @@ export const Tokens: FunctionComponent = () => {
           return (
             <div key={token.tokenId} className={classes.token}>
               <div>
-                <img src={metadata?.image} />
+                <Link to={`/tokens/${token.tokenId}`}>
+                  <img src={metadata?.image} />
+                </Link>
               </div>
               <div className={classes.info}>
                 <div className={classes.top}>

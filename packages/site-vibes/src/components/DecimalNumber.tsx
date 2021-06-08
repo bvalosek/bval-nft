@@ -32,12 +32,12 @@ export const DecimalNumber: FunctionComponent<Props> = ({ number, interoplate, d
     const delta = Date.now() - interoplate.sampledAt * 1000;
     const alpha = interoplate.dailyRate.mul(delta).div(1000 * 60 * 60 * 24);
     setAlpha(alpha);
-  }, [interoplate, interoplate.dailyRate]);
+  }, [interoplate, interoplate?.dailyRate]);
 
   useEffect(() => {
     const h = setInterval(update, 100);
     return () => clearInterval(h);
-  }, [interoplate, interoplate.dailyRate]);
+  }, [interoplate, interoplate?.dailyRate]);
 
   const [a, b] = asDecimal(number.add(alpha));
 

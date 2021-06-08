@@ -1,10 +1,11 @@
 import React, { FunctionComponent } from 'react';
+import { Content } from './Content';
 import { PageSection } from './PageSection';
 
 export const Stats: FunctionComponent = () => {
   return (
     <PageSection>
-      <p>TODO</p>
+      <Content>// TODO</Content>
     </PageSection>
   );
 };
