@@ -24,10 +24,12 @@ const useTokensImplementation = (): UseTokens => {
 
     const infos = await Promise.all(range.map((n) => getTokenInfoByIndex(provider, n)));
     setTokens(infos.sort((a, b) => Number(b.tokenId) - Number(a.tokenId)));
-    console.log(infos);
 
     await Promise.all(
       infos.map(async (i) => {
+        if (i.isBurnt) {
+          return;
+        }
         const data = await getTokenMetadata(provider, i.tokenId);
         setTokenMetadata((m) => {
           return {

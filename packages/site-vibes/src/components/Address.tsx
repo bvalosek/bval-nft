@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { resolveTwitterId } from '../lib/proof-of-twitter';
-import { truncateHex } from '../lib/strings'
+import { truncateHex } from '../lib/strings';
 
 interface Props {
   address: string;
@@ -18,13 +18,13 @@ export const Address: FunctionComponent<Props> = ({ address }) => {
   };
 
   useEffect(() => {
+    setResolved(undefined);
     fetch();
-  }, []);
+  }, [address]);
 
   if (resolved !== undefined) {
-    return <span>@{resolved}</span>
+    return <span>@{resolved}</span>;
   }
 
-  return <span>{truncateHex(address</span>
-
+  return <span>{truncateHex(address)}</span>;
 };

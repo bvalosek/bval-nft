@@ -5,7 +5,7 @@ import { ThemeConfig } from '../Theme';
 
 interface Props {
   maxWidth?: number | string;
-  backgroundColor?: string;
+  padding?: number | string;
 }
 
 const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
@@ -17,7 +17,7 @@ const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
     container: {
       flex: 1,
       maxWidth: (props) => props.maxWidth ?? theme.maxWidth,
-      padding: theme.scaledSpacing(4, 1.5),
+      padding: (props) => props.padding ?? theme.scaledSpacing(4, 1.5),
     },
   };
 });

@@ -1,6 +1,7 @@
 import { getContracts } from './contracts';
+import VIBES from '@bvalosek/solidity-contracts/deployed-contracts/VIBES-2021-06-05.json';
 import VIBES_WELLSPRING from '@bvalosek/solidity-contracts/deployed-contracts/VIBESWellspring-2021-06-05.json';
-import { BigNumber, Contract } from 'ethers';
+import { BigNumber, Contract, Signer } from 'ethers';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { currentTimestamp, toHexStringBytes } from './web3';
 
@@ -60,9 +61,44 @@ export const getTokenInfoByIndex = async (provider: JsonRpcProvider, index: numb
     lastClaimAt: info.lastClaimAt.toNumber(),
     isBurnt: info.isBurnt,
     seedTimestamp,
-    totalClaimed,
+    totalClaimed: totalClaimed.lt(BigNumber.from(10).pow(18)) ? BigNumber.from(0) : totalClaimed,
     totalGenerated,
   };
 
   return projected;
+};
+
+export const cleanupToken = async (signer: Signer, tokenId: string): Promise<void> => {
+  const faucet = new Contract(getContracts().faucetV2, VIBES_WELLSPRING.abi, signer);
+  const trx = await faucet.cleanup(tokenId);
+  console.log(trx);
+};
+
+interface Seed {
+  tokenId: string;
+  dailyRateInWholeVibes: number;
+  totalDays: number;
+  backdateDays?: number;
+}
+
+export const seedToken = async (
+  signer: Signer,
+  { tokenId, dailyRateInWholeVibes, totalDays, backdateDays = 0 }: Seed
+): Promise<void> => {
+  const { vibes, faucetV2 } = getContracts();
+
+  const token = new Contract(vibes, VIBES.abi, signer);
+  const faucet = new Contract(faucetV2, VIBES_WELLSPRING.abi, signer);
+
+  const allowance = await token.allowance(await signer.getAddress(), faucetV2);
+  const rate = `${dailyRateInWholeVibes}000000000000000000`; // lol
+  const amount = BigNumber.from(rate).mul(totalDays);
+
+  if (amount.gt(allowance)) {
+    const resp = await token.approve(faucetV2, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+    console.log(resp);
+  }
+
+  const resp = await faucet['seed(uint256,uint256,uint256,uint256)'](tokenId, rate, totalDays, backdateDays);
+  console.log(resp);
 };

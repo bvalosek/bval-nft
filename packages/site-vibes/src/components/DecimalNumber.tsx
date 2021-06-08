@@ -44,8 +44,12 @@ export const DecimalNumber: FunctionComponent<Props> = ({ number, interoplate, d
   return (
     <>
       <span>{Number(a).toLocaleString('en-us')}</span>
-      <span>.</span>
-      <span className={classes.dec}>{b.substr(0, decimals)}</span>
+      {decimals !== 0 && (
+        <>
+          <span>.</span>
+          <span className={classes.dec}>{b.substr(0, decimals)}</span>
+        </>
+      )}
     </>
   );
 };

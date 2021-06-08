@@ -9,6 +9,10 @@ import { Loading } from './Loading';
 import { ObjectLink } from './ObjectLink';
 import { PageSection } from './PageSection';
 
+interface Props {
+  owner?: string;
+}
+
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     container: {
@@ -33,6 +37,13 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
     },
     top: {
       fontSize: theme.scaledSpacing(2.5),
+      '& a': {
+        color: theme.palette.accent.secondary,
+        '&:hover': {
+          color: theme.palette.foreground.main,
+          background: theme.palette.accent.main,
+        },
+      },
       display: 'flex',
       '& div:first-child': {
         flex: 1,
@@ -40,14 +51,13 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       },
     },
     collector: {
-      fontSize: theme.scaledSpacing(2.5),
-      fontFamily: theme.impactFont,
+      fontSize: theme.scaledSpacing(3),
       opacity: 0.5,
     },
   };
 });
 
-export const Tokens: FunctionComponent = () => {
+export const Tokens: FunctionComponent<Props> = ({ owner }) => {
   const classes = useStyles();
   const { tokens, tokenMetadata, sampledAt } = useTokens();
 
@@ -59,44 +69,51 @@ export const Tokens: FunctionComponent = () => {
     );
   }
 
+  let filtered = tokens;
+  if (owner) {
+    filtered = filtered.filter((t) => t.owner === owner);
+  }
+
   return (
     <PageSection maxWidth="1200px">
       <div className={classes.container}>
-        {tokens.map((token) => {
-          const metadata = tokenMetadata[token.tokenId];
-          return (
-            <div key={token.tokenId} className={classes.token}>
-              <div>
-                <Link to={`/tokens/${token.tokenId}`}>
-                  {metadata?.image && <img src={metadata?.image} />}
-                  {metadata?.animation_url && (
-                    <video autoPlay muted loop controls={false}>
-                      <source src={metadata.animation_url} />
-                    </video>
-                  )}
-                </Link>
-              </div>
-              <div className={classes.info}>
-                <div className={classes.top}>
-                  <div className={classes.vibes}>
-                    <DecimalNumber
-                      number={token.claimable}
-                      interoplate={{ sampledAt: sampledAt, dailyRate: token.dailyRate }}
-                    />{' '}
-                    VIBES
+        {filtered
+          .filter((t) => !t.isBurnt)
+          .map((token) => {
+            const metadata = tokenMetadata[token.tokenId];
+            return (
+              <div key={token.tokenId} className={classes.token}>
+                <div>
+                  <Link to={`/tokens/${token.tokenId}`}>
+                    {metadata?.image && <img src={metadata?.image} />}
+                    {metadata?.animation_url && (
+                      <video autoPlay muted loop controls={false}>
+                        <source src={metadata.animation_url} />
+                      </video>
+                    )}
+                  </Link>
+                </div>
+                <div className={classes.info}>
+                  <div className={classes.top}>
+                    <div className={classes.vibes}>
+                      <DecimalNumber
+                        number={token.claimable}
+                        interoplate={{ sampledAt: sampledAt, dailyRate: token.dailyRate }}
+                      />{' '}
+                      VIBES
+                    </div>
+                    <div>
+                      <ObjectLink tokenId={token.tokenId} />
+                    </div>
                   </div>
-                  <div>
-                    <ObjectLink tokenId={token.tokenId} />
+                  <div className={classes.title}>{metadata?.name}</div>
+                  <div className={classes.collector}>
+                    <Address address={token.owner} />
                   </div>
                 </div>
-                <div className={classes.title}>{metadata?.name}</div>
-                <div className={classes.collector}>
-                  <Address address={token.owner} />
-                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </PageSection>
   );

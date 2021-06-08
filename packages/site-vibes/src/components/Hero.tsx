@@ -29,14 +29,14 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
   };
 });
 
-export const Hero: FunctionComponent = () => {
+export const Hero: FunctionComponent = ({ children }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.hero}>
       <div className={classes.container}>
         <h1>
-          <span>VIBES.</span>
+          <span>{children}</span>
         </h1>
       </div>
     </div>

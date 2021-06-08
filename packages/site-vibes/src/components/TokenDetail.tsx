@@ -43,6 +43,8 @@ export const TokenDetail: FunctionComponent = () => {
     );
   }
 
+  const interopolate = { sampledAt, dailyRate: token.dailyRate };
+
   return (
     <>
       <div className={classes.hero}>
@@ -55,15 +57,13 @@ export const TokenDetail: FunctionComponent = () => {
         <div>{metadata.description}</div>
         <div>tags: {metadata.tags.join(', ')}</div>
         <div>
-          intrinsic stake:{' '}
-          <DecimalNumber number={token.claimable} interoplate={{ sampledAt: sampledAt, dailyRate: token.dailyRate }} />{' '}
-          VIBES
+          intrinsic stake: <DecimalNumber number={token.claimable} interoplate={interopolate} /> VIBES
         </div>
         <div>
           mining rate: <DecimalNumber number={token.dailyRate} /> VIBES/day
         </div>
         <div>
-          mined to date: <DecimalNumber number={token.totalGenerated} /> VIBES/day
+          mined to date: <DecimalNumber number={token.totalGenerated} interoplate={interopolate} /> VIBES
         </div>
         <div>
           claimed to date: <DecimalNumber number={token.totalClaimed} /> VIBES

@@ -25,7 +25,7 @@ export const Menu: FunctionComponent = () => {
     <PageSection maxWidth="600px">
       <div className={classes.container}>
         <div>
-          <NavLink exact to="/" activeClassName={classes.activeLink}>
+          <NavLink exact to="/info" activeClassName={classes.activeLink}>
             Info
           </NavLink>
         </div>

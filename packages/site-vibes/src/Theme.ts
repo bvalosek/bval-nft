@@ -14,6 +14,7 @@ export const createTheme = () => {
     palette: {
       background: {
         main: colors.black,
+        light: colors.darkGray,
       },
       foreground: {
         main: colors.white,
