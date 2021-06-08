@@ -10,7 +10,7 @@ export interface TokenInfo {
   seedTimestamp: number;
   dailyRate: BigNumber;
   balance: BigNumber;
-  claimable: string;
+  claimable: BigNumber;
   lastClaimAt: number;
   isBurnt: boolean;
   totalClaimed: BigNumber;

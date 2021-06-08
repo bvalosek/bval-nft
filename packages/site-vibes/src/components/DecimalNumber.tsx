@@ -35,7 +35,7 @@ export const DecimalNumber: FunctionComponent<Props> = ({ number, interoplate, d
   }, [interoplate, interoplate.dailyRate]);
 
   useEffect(() => {
-    const h = setInterval(update, 50);
+    const h = setInterval(update, 100);
     return () => clearInterval(h);
   }, [interoplate, interoplate.dailyRate]);
 

@@ -1,12 +1,11 @@
 import { Contract } from 'ethers';
 import SSW_GALLERY from './abi/ssw-gallery.json';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { fetchIpfsJson } from './ipfs';
 
 // https://github.com/Screensaver-world/Gallery-Contract/blob/main/Gallery.sol
 const galleryAddress = '0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4';
 
-interface ScreensaverTokenMetadata {
+export interface ScreensaverTokenMetadata {
   name: string;
   description: string;
   tags: string[];
