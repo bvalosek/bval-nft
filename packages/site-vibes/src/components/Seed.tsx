@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber';
 import React, { FunctionComponent, useState } from 'react';
 import { useWallet } from '../hooks/wallet';
 import { seedToken } from '../lib/faucet';
-import { getProvider } from '../lib/rpc';
 import { getTokenMetadata, ScreensaverTokenMetadata } from '../lib/ssw';
 import { Address } from './Address';
 import { Button } from './Button';

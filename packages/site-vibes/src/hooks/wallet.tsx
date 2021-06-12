@@ -2,19 +2,8 @@ import React, { createContext, FunctionComponent, useContext, useEffect, useStat
 import { BigNumber } from '@ethersproject/bignumber';
 import { useWeb3React } from '@web3-react/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
-import { getTokenBalance } from '../lib/vibes';
-
-export const POLYGON_MAINNET_PARAMS = {
-  chainId: '0x89', // A 0x-prefixed hexadecimal chainId
-  chainName: 'Polygon Mainnet',
-  nativeCurrency: {
-    name: 'Matic',
-    symbol: 'MATIC',
-    decimals: 18,
-  },
-  rpcUrls: ['https://rpc-mainnet.matic.network'],
-  blockExplorerUrls: ['https://explorer.matic.network/'],
-};
+import { addToMetamask, getTokenBalance } from '../lib/vibes';
+import { switchToPolygon } from '../lib/web3';
 
 const connector = new InjectedConnector({});
 
@@ -29,12 +18,14 @@ export const useWalletImplementation = () => {
     await activate(connector);
   };
 
-  const switchToPolygon = async () => {
+  const gotoPoly = async () => {
     const provider = await connector.getProvider();
-    await provider.request({
-      method: 'wallet_addEthereumChain',
-      params: [POLYGON_MAINNET_PARAMS],
-    });
+    await switchToPolygon(provider);
+  };
+
+  const trackInMetamask = async () => {
+    const provider = await connector.getProvider();
+    await addToMetamask(provider);
   };
 
   const attemptReconnect = async () => {
@@ -72,7 +63,8 @@ export const useWalletImplementation = () => {
     account,
     error,
     connect,
-    switchToPolygon,
+    switchToPolygon: gotoPoly,
+    trackInMetamask,
   };
 };
 

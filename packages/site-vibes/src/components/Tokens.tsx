@@ -5,9 +5,11 @@ import { useTokens } from '../hooks/tokens';
 import { ThemeConfig } from '../Theme';
 import { Address } from './Address';
 import { DecimalNumber } from './DecimalNumber';
+import { Divider } from './Divder';
 import { Loading } from './Loading';
 import { ObjectLink } from './ObjectLink';
 import { PageSection } from './PageSection';
+import { Title } from './Title';
 
 interface Props {
   owner?: string;
@@ -20,23 +22,23 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       '@media(min-width: 800px)': {
         gridTemplateColumns: '1fr 1fr',
       },
-      '@media(min-width: 1100px)': {
+      '@media(min-width: 1000px)': {
         gridTemplateColumns: '1fr 1fr 1fr',
       },
-      gap: theme.scaledSpacing(15),
+      gap: theme.scaledSpacing(10),
     },
     info: {},
     token: {
       display: 'grid',
-      gap: theme.scaledSpacing(1),
-      fontSize: theme.scaledSpacing(4),
+      gap: theme.spacing(2),
+      fontSize: theme.spacing(4),
+      '@media(min-width: 800px)': { fontSize: theme.spacing(5) },
       '& video': {
         width: '100%',
         display: 'inline',
       },
     },
     top: {
-      fontSize: theme.scaledSpacing(2.5),
       '& a': {
         color: theme.palette.accent.secondary,
         '&:hover': {
@@ -45,14 +47,16 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
         },
       },
       display: 'flex',
+      fontSize: theme.spacing(3.5),
+      '@media(min-width: 800px)': { fontSize: theme.spacing(4.5) },
       '& div:first-child': {
         flex: 1,
-        fontSize: theme.scaledSpacing(3),
       },
     },
     collector: {
-      fontSize: theme.scaledSpacing(3),
       opacity: 0.5,
+      fontSize: theme.spacing(3.5),
+      '@media(min-width: 800px)': { fontSize: theme.spacing(4.5) },
     },
   };
 });
@@ -69,17 +73,17 @@ export const Tokens: FunctionComponent<Props> = ({ owner }) => {
     );
   }
 
-  let filtered = tokens;
+  let filtered = tokens.filter((t) => !t.isBurnt);
   if (owner) {
     filtered = filtered.filter((t) => t.owner === owner);
   }
 
   return (
-    <PageSection maxWidth="1200px">
-      <div className={classes.container}>
-        {filtered
-          .filter((t) => !t.isBurnt)
-          .map((token) => {
+    <>
+      <PageSection maxWidth="1500px">
+        <Title>@bvalosek's Screensaver.World NFTs</Title>
+        <div className={classes.container}>
+          {filtered.map((token) => {
             const metadata = tokenMetadata[token.tokenId];
             return (
               <div key={token.tokenId} className={classes.token}>
@@ -114,7 +118,11 @@ export const Tokens: FunctionComponent<Props> = ({ owner }) => {
               </div>
             );
           })}
-      </div>
-    </PageSection>
+        </div>
+      </PageSection>
+      <PageSection>
+        <Divider />
+      </PageSection>
+    </>
   );
 };

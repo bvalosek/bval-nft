@@ -1,12 +1,16 @@
 import { makeStyles } from '@material-ui/styles';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTokens } from '../hooks/tokens';
 import { ThemeConfig } from '../Theme';
 import { Address } from './Address';
+import { Content } from './Content';
 import { DecimalNumber } from './DecimalNumber';
 import { Loading } from './Loading';
 import { PageSection } from './PageSection';
+import { Stats } from './Stats';
+import { Title } from './Title';
+import { Vibes } from './Vibes';
 
 interface Params {
   tokenId: string;
@@ -14,12 +18,21 @@ interface Params {
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
+    main: {
+      fontSize: theme.spacing(3.5),
+      '@media(min-width: 800px)': { fontSize: theme.spacing(4.5) },
+    },
+    title: {
+      fontSize: theme.spacing(4.5),
+      '@media(min-width: 800px)': { fontSize: theme.spacing(5.5) },
+    },
     hero: {
       display: 'flex',
       justifyContent: 'center',
       '& > div': {
         flex: 1,
-        padding: theme.scaledSpacing(4),
+        padding: theme.spacing(4),
+        marginTop: theme.spacing(6),
         maxWidth: '60vh',
         maxHeight: '60vh',
       },
@@ -31,6 +44,10 @@ export const TokenDetail: FunctionComponent = () => {
   const { tokenId } = useParams<Params>();
   const { tokens, tokenMetadata, sampledAt } = useTokens();
   const classes = useStyles();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const token = tokens.find((t) => t.tokenId === tokenId);
   const metadata = tokenMetadata[tokenId];
@@ -52,30 +69,35 @@ export const TokenDetail: FunctionComponent = () => {
           <img src={metadata.image} />
         </div>
       </div>
-      <PageSection maxWidth="1200px">
-        <div>{metadata.name}</div>
-        <div>{metadata.description}</div>
-        <div>tags: {metadata.tags.join(', ')}</div>
-        <div>
-          intrinsic stake: <DecimalNumber number={token.claimable} interoplate={interopolate} /> VIBES
+      <PageSection>
+        <div className={classes.main}>
+          <div className={classes.title}>{metadata.name}</div>
+          <div>{metadata.description}</div>
+          <div>
+            collector: <Address address={token.owner} />
+          </div>
+          <div>tags: {metadata.tags.map((t) => `#${t}`).join(', ')}</div>
         </div>
-        <div>
-          mining rate: <DecimalNumber number={token.dailyRate} /> VIBES/day
-        </div>
-        <div>
-          mined to date: <DecimalNumber number={token.totalGenerated} interoplate={interopolate} /> VIBES
-        </div>
-        <div>
-          claimed to date: <DecimalNumber number={token.totalClaimed} /> VIBES
-        </div>
-        <div>
-          remaining lifetime value: <DecimalNumber number={token.balance} /> VIBES
-        </div>
-        <div>
-          collector: <Address address={token.owner} />
-        </div>
+        <Title>Details</Title>
+        <Stats>
+          <div>
+            intrinsic stake: <DecimalNumber number={token.claimable} interoplate={interopolate} /> <Vibes />
+          </div>
+          <div>
+            mining rate: <DecimalNumber number={token.dailyRate} decimals={0} /> <Vibes /> / day
+          </div>
+          <div>
+            mined to date: <DecimalNumber number={token.totalGenerated} interoplate={interopolate} decimals={0} />{' '}
+            <Vibes />
+          </div>
+          <div>
+            claimed to date: <DecimalNumber number={token.totalClaimed} decimals={0} /> <Vibes />
+          </div>
+          <div>
+            current value: <DecimalNumber number={token.balance} decimals={0} /> <Vibes />
+          </div>
+        </Stats>
       </PageSection>
-      ;
     </>
   );
 };

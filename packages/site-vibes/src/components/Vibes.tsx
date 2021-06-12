@@ -17,5 +17,5 @@ const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
 
 export const Vibes: FunctionComponent<Props> = (props) => {
   const classes = useStyles(props);
-  return <span className={classes.vibes}>$VIBES</span>;
+  return <span className={classes.vibes}>VIBES</span>;
 };

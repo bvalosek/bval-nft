@@ -14,7 +14,10 @@ export const Connect: FunctionComponent = (props) => {
   if (state !== 'ready') {
     return (
       <Content>
-        <Button onClick={() => doIt()}>connect to blockchain</Button>
+        <p>Connect your MetaMask wallet.</p>
+        <p style={{ textAlign: 'center' }}>
+          <Button onClick={() => doIt()}>connect with MetaMask</Button>
+        </p>
       </Content>
     );
   }

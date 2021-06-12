@@ -1,11 +1,18 @@
+import { makeStyles } from '@material-ui/styles';
 import React, { FunctionComponent } from 'react';
-import { Content } from './Content';
-import { PageSection } from './PageSection';
+import { ThemeConfig } from '../Theme';
 
-export const Stats: FunctionComponent = () => {
-  return (
-    <PageSection>
-      <Content>// TODO</Content>
-    </PageSection>
-  );
+const useStyles = makeStyles<ThemeConfig>((theme) => {
+  return {
+    stats: {
+      '@media(max-width: 799px)': {
+        fontSize: theme.spacing(3.5),
+      },
+    },
+  };
+});
+
+export const Stats: FunctionComponent = (props) => {
+  const classes = useStyles();
+  return <div className={classes.stats}>{props.children}</div>;
 };

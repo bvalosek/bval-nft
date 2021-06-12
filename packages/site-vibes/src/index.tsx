@@ -18,6 +18,8 @@ import { NavBar } from './components/NavBar';
 import { Wallet } from './components/Wallet';
 import { WalletProvider } from './hooks/wallet';
 import { Title } from './components/Title';
+import { Divider } from './components/Divder';
+import { Application } from './Application';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getLibrary = (provider: any) => new Web3Provider(provider);
@@ -28,34 +30,7 @@ const Root: FunctionComponent = () => (
       <WalletProvider>
         <TokensProvider>
           <BrowserRouter>
-            <Page>
-              {/* <Menu /> */}
-              <NavBar />
-              <Switch>
-                <Redirect exact path="/" to="/tokens" />
-                <Route path="/debug">
-                  <Debug />
-                </Route>
-                <Route exact path="/info">
-                  <Hero>vibes.</Hero>
-                  <Info />
-                </Route>
-                <Route path="/tokens/:tokenId">
-                  <TokenDetail />
-                </Route>
-                <Route path="/tokens">
-                  <Title>@bvalosek's Screensaver.World NFTs</Title>
-                  <Tokens />
-                </Route>
-                <Route path="/stats">
-                  <Stats />
-                </Route>
-                <Route path="/wallet">
-                  <Hero>wallet.</Hero>
-                  <Wallet />
-                </Route>
-              </Switch>
-            </Page>
+            <Application />
           </BrowserRouter>
         </TokensProvider>
       </WalletProvider>

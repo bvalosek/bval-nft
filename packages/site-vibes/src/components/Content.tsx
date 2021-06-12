@@ -5,14 +5,16 @@ import { ThemeConfig } from '../Theme';
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     content: {
-      fontSize: theme.scaledSpacing(4),
+      fontSize: theme.spacing(4),
+      '@media(min-width: 800px)': { fontSize: theme.spacing(5) },
       display: 'grid',
       gap: theme.spacing(10),
       '& a': {
         color: theme.palette.accent.secondary,
       },
       '& strong': {
-        color: theme.palette.accent.tertiary,
+        fontWeight: 'bold',
+        color: 'aqua',
       },
     },
   };
