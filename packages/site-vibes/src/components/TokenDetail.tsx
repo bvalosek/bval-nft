@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom';
 import { useTokens } from '../hooks/tokens';
 import { ThemeConfig } from '../Theme';
 import { Address } from './Address';
+import { Button } from './Button';
 import { Content } from './Content';
 import { DecimalNumber } from './DecimalNumber';
+import { Divider } from './Divder';
 import { Loading } from './Loading';
 import { PageSection } from './PageSection';
 import { Stats } from './Stats';
@@ -25,6 +27,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
     title: {
       fontSize: theme.spacing(4.5),
       '@media(min-width: 800px)': { fontSize: theme.spacing(5.5) },
+      marginBottom: theme.spacing(2),
     },
     hero: {
       display: 'flex',
@@ -74,7 +77,10 @@ export const TokenDetail: FunctionComponent = () => {
           <div className={classes.title}>{metadata.name}</div>
           <div>{metadata.description}</div>
           <div>
-            collector: <Address address={token.owner} />
+            collector:{' '}
+            <Button onClick={() => window.open(`https://screensaver.world/owned/${token.owner}`, '_blank')}>
+              <Address address={token.owner} />
+            </Button>
           </div>
           <div>tags: {metadata.tags.map((t) => `#${t}`).join(', ')}</div>
         </div>
@@ -97,6 +103,9 @@ export const TokenDetail: FunctionComponent = () => {
             current value: <DecimalNumber number={token.balance} decimals={0} /> <Vibes />
           </div>
         </Stats>
+      </PageSection>
+      <PageSection>
+        <Divider />
       </PageSection>
     </>
   );

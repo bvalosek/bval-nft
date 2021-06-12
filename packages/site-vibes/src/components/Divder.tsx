@@ -9,6 +9,8 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       display: 'flex',
       justifyContent: 'center',
       paddingBottom: theme.spacing(20),
+      whiteSpace: 'nowrap',
+      width: '100%',
     },
   };
 });

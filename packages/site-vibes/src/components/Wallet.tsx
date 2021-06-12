@@ -8,6 +8,7 @@ import { Button } from './Button';
 import { Connect } from './Connect';
 import { Content } from './Content';
 import { DecimalNumber } from './DecimalNumber';
+import { Divider } from './Divder';
 import { PageSection } from './PageSection';
 import { Stats } from './Stats';
 import { Title } from './Title';
@@ -61,6 +62,9 @@ export const Wallet: FunctionComponent = () => {
             </p>
           </Connect>
         </Content>
+      </PageSection>
+      <PageSection>
+        <Divider />
       </PageSection>
     </>
   );
