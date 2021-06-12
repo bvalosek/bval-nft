@@ -1,9 +1,14 @@
 [[redirects]]
-  from = "/stats"
+  from = "/info"
   to = "/index.html"
   status = 200
 
 [[redirects]]
   from = "/tokens"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/wallet"
   to = "/index.html"
   status = 200
