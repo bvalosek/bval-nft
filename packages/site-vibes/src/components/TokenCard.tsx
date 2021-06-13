@@ -12,7 +12,7 @@ import { PageSection } from './PageSection';
 interface Props {
   tokenId: string;
   hideCollector?: boolean;
-  hideTitle?: bolean;
+  hideTitle?: boolean;
 }
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
