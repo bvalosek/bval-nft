@@ -27,3 +27,7 @@ export const switchToPolygon = async (provider: any): Promise<void> => {
     ],
   });
 };
+
+export const walletPresent = (): boolean => {
+  return (window as any).ethereum !== undefined;
+};

@@ -36,8 +36,8 @@ export const Wallet: FunctionComponent = () => {
     <>
       <PageSection>
         <Content>
-          <Title>Your VIBES</Title>
           <Connect>
+            <Title>Your VIBES</Title>
             <Stats>
               <p>
                 🏦 <strong>balance</strong>: <DecimalNumber number={balance} decimals={0} /> <Vibes />
