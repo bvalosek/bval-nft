@@ -9,6 +9,11 @@
   status = 200
 
 [[redirects]]
+  from = "/tokens/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
   from = "/wallet"
   to = "/index.html"
   status = 200
@@ -19,6 +24,6 @@
   status = 200
 
 [[redirects]]
-  from = "/debug"
+  from = "/admin"
   to = "/index.html"
   status = 200

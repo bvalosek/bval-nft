@@ -6,11 +6,10 @@ import { Button } from './Button';
 import { Connect } from './Connect';
 import { Content } from './Content';
 import { DecimalNumber } from './DecimalNumber';
-import { Input } from './Input';
 import { PageSection } from './PageSection';
 import { Seed } from './Seed';
 
-export const Debug: FunctionComponent = () => {
+export const Admin: FunctionComponent = () => {
   const { tokens } = useTokens();
   const { library } = useWallet();
 
@@ -21,7 +20,7 @@ export const Debug: FunctionComponent = () => {
   return (
     <PageSection>
       <Content>
-        <h1>Debug</h1>
+        <h1>Admin</h1>
         <Connect>
           <h2>Cleanup Tokens</h2>
           {tokens
