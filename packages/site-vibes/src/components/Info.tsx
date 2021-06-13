@@ -40,8 +40,8 @@ export const Info: FunctionComponent = () => {
             staked digital asset.
           </p>
           <p>
-            🎢 The owner of an NFT can unstake the <Vibes /> to their wallet at any time, which is a one-way operation.
-            Staked <Vibes /> stay inside the NFT across transfers or sales.
+            🎢 The owner of an NFT can unstake the <Vibes /> to their <Button navTo="/wallet">wallet</Button> at any
+            time, which is a one-way operation. Staked <Vibes /> stay inside the NFT across transfers or sales.
           </p>
           <p>
             💎 This captures the value of holding my art, and allows my collectors to capitalize on that value by
@@ -88,8 +88,8 @@ export const Info: FunctionComponent = () => {
             Discord and check out the community.
           </p>
           <ButtonGroup>
-            <Button navTo="/tokens">VIEW NFTs</Button>
-            <Button navTo="/wallet">CHECK WALLET</Button>
+            <Button navTo="/tokens">🖼 VIEW NFTs</Button>
+            <Button navTo="/wallet">🤑 CHECK WALLET</Button>
           </ButtonGroup>
         </Content>
       </PageSection>

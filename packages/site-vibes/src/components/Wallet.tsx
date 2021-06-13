@@ -58,7 +58,7 @@ export const Wallet: FunctionComponent = () => {
             <Title>utils</Title>
             <ButtonGroup>
               <Button onClick={() => track()}>
-                TRACK <Vibes /> in MetaMask
+                🦊 TRACK <Vibes /> in MetaMask
               </Button>
             </ButtonGroup>
           </Connect>

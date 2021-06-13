@@ -12,6 +12,7 @@ import { ButtonGroup } from './ButtonGroup';
 import { Button } from './Button';
 import { featuredTokenId, useNextPrimaryPage } from '../hooks/app';
 import { New } from './Next';
+import { Vibes } from './Vibes';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
@@ -60,22 +61,32 @@ export const Featured: FunctionComponent = () => {
       <PageSection>
         <div className={classes.hero}>
           <div>
-            <TokenCard tokenId={featuredTokenId} hideCollector />
+            <TokenCard tokenId={featuredTokenId} hideCollector hideTitle />
           </div>
         </div>
       </PageSection>
       <PageSection>
         <Content>
           <p>
-            🌈 <strong>collector</strong>:{' '}
-            <Button externalNavTo={`http://screensaver.world/owned/${token.owner}`}>
+            The current <Vibes /> Featured NFT is{' '}
+            <strong>
+              <em>{metadata.name}</em>
+            </strong>
+          </p>
+          <p>
+            🎨 artist:{' '}
+            <Button onClick={() => window.open(`https://screensaver.world/created/${metadata.creator}`, '_blank')}>
+              <Address address={metadata.creator} />
+            </Button>
+            <br />
+            🌈 collector:{' '}
+            <Button onClick={() => window.open(`https://screensaver.world/owned/${token.owner}`, '_blank')}>
               <Address address={token.owner} />
-            </Button>{' '}
-            <New />
+            </Button>
           </p>
           <ButtonGroup>
-            <Button navTo="/tokens">VIEW NFTs</Button>
-            <Button navTo="/info">MORE INFO</Button>
+            <Button navTo="/tokens">🖼 VIEW NFTs</Button>
+            <Button navTo="/info">💻 MORE INFO</Button>
           </ButtonGroup>
         </Content>
       </PageSection>

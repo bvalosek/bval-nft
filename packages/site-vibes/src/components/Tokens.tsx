@@ -85,7 +85,7 @@ export const Tokens: FunctionComponent<Props> = ({ owner }) => {
         <Title>@bvalosek's Screensaver.World NFTs</Title>
         <div className={classes.container}>
           {filtered.map((token) => (
-            <TokenCard tokenId={token.tokenId} />
+            <TokenCard hideCollector tokenId={token.tokenId} />
           ))}
         </div>
       </PageSection>

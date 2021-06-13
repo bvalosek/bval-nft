@@ -1,6 +1,7 @@
 const colors = {
   white: '#FFFFFF',
   black: '#000000',
+  gray: '#888888',
   darkGray: '#333333',
   blue: '#2444ff',
   pink: '#ff1940',
@@ -19,7 +20,7 @@ export const createTheme = () => {
       },
       foreground: {
         main: colors.white,
-        dark: colors.darkGray,
+        dark: colors.gray,
       },
       accent: {
         main: colors.blue,

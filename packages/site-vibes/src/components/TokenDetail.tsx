@@ -83,20 +83,17 @@ export const TokenDetail: FunctionComponent = () => {
               tags: {metadata.tags.map((t) => `#${t}`).join(', ')}
             </p>
             <p>
+              🎨 artist:{' '}
+              <Button onClick={() => window.open(`https://screensaver.world/created/${metadata.creator}`, '_blank')}>
+                <Address address={metadata.creator} />
+              </Button>
+              <br />
               🌈 collector:{' '}
               <Button onClick={() => window.open(`https://screensaver.world/owned/${token.owner}`, '_blank')}>
                 <Address address={token.owner} />
               </Button>
             </p>
           </Content>
-          {/* <div>{metadata.description}</div>
-          <div>tags: {metadata.tags.map((t) => `#${t}`).join(', ')}</div>
-          <div>
-            🌈 collector:{' '}
-            <Button onClick={() => (`https://screensaver.world/ownwindow.opened/${token.owner}`, '_blank')}>
-              <Address address={token.owner} />
-            </Button>
-          </div> */}
         </div>
       </PageSection>
       <PageSection>

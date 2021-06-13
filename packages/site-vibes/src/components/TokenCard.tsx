@@ -49,7 +49,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       },
     },
     collector: {
-      opacity: 0.5,
+      color: theme.palette.foreground.dark,
       fontSize: theme.spacing(3.5),
       '@media(min-width: 800px)': { fontSize: theme.spacing(4.5) },
     },
@@ -101,7 +101,7 @@ export const TokenCard: FunctionComponent<Props> = ({ tokenId, hideCollector, hi
         {!hideTitle && <div className={classes.title}>{metadata?.name}</div>}
         {!hideCollector && (
           <div className={classes.collector}>
-            <Address address={token.owner} />
+            🌈 <Address address={token.owner} />
           </div>
         )}
       </div>
