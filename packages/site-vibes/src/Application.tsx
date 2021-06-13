@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Debug } from './components/Debug';
+import { Featured } from './components/Featured';
 import { Info } from './components/Info';
 import { Page } from './components/Page';
 import { TokenDetail } from './components/TokenDetail';
@@ -26,6 +27,9 @@ export const Application: FunctionComponent = () => {
         </Route>
         <Route path="/tokens/:tokenId">
           <TokenDetail />
+        </Route>
+        <Route path="/featured">
+          <Featured />
         </Route>
       </Switch>
     </Page>

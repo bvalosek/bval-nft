@@ -84,6 +84,9 @@ export const NavBar: FunctionComponent = () => {
             <Button onClick={withClose(() => history.push('/tokens'))}>tokens</Button>
           </div>
           <div>
+            <Button onClick={withClose(() => history.push('/featured'))}>featured</Button>
+          </div>
+          <div>
             <Button onClick={withClose(() => history.push('/wallet'))}>wallet</Button>
           </div>
         </div>

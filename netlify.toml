@@ -12,3 +12,13 @@
   from = "/wallet"
   to = "/index.html"
   status = 200
+
+[[redirects]]
+  from = "/featured"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/debug"
+  to = "/index.html"
+  status = 200
