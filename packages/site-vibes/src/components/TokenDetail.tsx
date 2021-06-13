@@ -29,6 +29,8 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       fontSize: theme.spacing(4.5),
       '@media(min-width: 800px)': { fontSize: theme.spacing(5.5) },
       marginBottom: theme.spacing(2),
+      fontWeight: 'bold',
+      color: theme.palette.accent.secondary,
     },
     hero: {
       display: 'flex',
@@ -82,7 +84,7 @@ export const TokenDetail: FunctionComponent = () => {
             </p>
             <p>
               🌈 collector:{' '}
-              <Button onClick={() => (`https://screensaver.world/ownwindow.opened/${token.owner}`, '_blank')}>
+              <Button onClick={() => window.open(`https://screensaver.world/owned/${token.owner}`, '_blank')}>
                 <Address address={token.owner} />
               </Button>
             </p>

@@ -26,16 +26,15 @@ export const Button: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const { navTo, externalNavTo...attr } = props;
+  const { navTo, externalNavTo, ...attr } = props;
   const className = `${props.className ?? ''} ${classes.button}`;
 
   if (navTo) {
     attr.onClick = () => {
       history.push(navTo);
     };
-  }
-  else if (externalNavTo) {
-    attr.onClick =() => window.open(externalNavTo, '_blank')
+  } else if (externalNavTo) {
+    attr.onClick = () => window.open(externalNavTo, '_blank');
   }
 
   return (
