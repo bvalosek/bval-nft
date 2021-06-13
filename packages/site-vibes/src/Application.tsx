@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Debug } from './components/Debug';
 import { Featured } from './components/Featured';
@@ -7,12 +7,26 @@ import { Page } from './components/Page';
 import { TokenDetail } from './components/TokenDetail';
 import { Tokens } from './components/Tokens';
 import { Wallet } from './components/Wallet';
+import { useNextPrimaryPage } from './hooks/app';
 
 export const Application: FunctionComponent = () => {
+  const { next } = useNextPrimaryPage();
+  const [primaryPage, setPrimaryPage] = useState('');
+
+  useEffect(() => {
+    const n = next();
+    setPrimaryPage(n);
+    console.log(n);
+  }, []);
+
+  if (!primaryPage) {
+    return null;
+  }
+
   return (
     <Page>
       <Switch>
-        <Redirect exact path="/" to="/tokens" />
+        <Redirect exact path="/" to={primaryPage} />
         <Route exact path="/info">
           <Info />
         </Route>

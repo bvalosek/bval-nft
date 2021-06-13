@@ -4,7 +4,7 @@ import { Button } from './Button';
 import { Content } from './Content';
 
 export const Connect: FunctionComponent = (props) => {
-  const { state, connect, switchToPolygon } = useWallet();
+  const { state, connect, switchToPolygon, error } = useWallet();
 
   const doIt = async () => {
     await connect();
@@ -14,10 +14,11 @@ export const Connect: FunctionComponent = (props) => {
   if (state !== 'ready') {
     return (
       <Content>
-        <p>Connect your MetaMask wallet.</p>
+        <p>connect your MetaMask wallet.</p>
         <p style={{ textAlign: 'center' }}>
-          <Button onClick={() => doIt()}>connect with MetaMask</Button>
+          <Button onClick={() => doIt()}>CONNECT</Button>
         </p>
+        {error?.message && <p>🤮 error with injected web3 context: {error?.message}</p>}
       </Content>
     );
   }

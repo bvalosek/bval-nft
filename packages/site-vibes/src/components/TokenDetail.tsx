@@ -12,6 +12,7 @@ import { Loading } from './Loading';
 import { PageSection } from './PageSection';
 import { Stats } from './Stats';
 import { Title } from './Title';
+import { TokenCard } from './TokenCard';
 import { Vibes } from './Vibes';
 
 interface Params {
@@ -33,10 +34,8 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       display: 'flex',
       justifyContent: 'center',
       '& > div': {
-        flex: 1,
         padding: theme.spacing(4),
         marginTop: theme.spacing(6),
-        maxWidth: '60vh',
         maxHeight: '60vh',
       },
     },
@@ -69,21 +68,36 @@ export const TokenDetail: FunctionComponent = () => {
     <>
       <div className={classes.hero}>
         <div>
-          <img src={metadata.image} />
+          <TokenCard hideCollector hideTitle tokenId={token.tokenId} />
         </div>
       </div>
       <PageSection>
         <div className={classes.main}>
           <div className={classes.title}>{metadata.name}</div>
-          <div>{metadata.description}</div>
+          <Content>
+            <p>
+              {metadata.description}
+              <br />
+              tags: {metadata.tags.map((t) => `#${t}`).join(', ')}
+            </p>
+            <p>
+              🌈 collector:{' '}
+              <Button onClick={() => (`https://screensaver.world/ownwindow.opened/${token.owner}`, '_blank')}>
+                <Address address={token.owner} />
+              </Button>
+            </p>
+          </Content>
+          {/* <div>{metadata.description}</div>
+          <div>tags: {metadata.tags.map((t) => `#${t}`).join(', ')}</div>
           <div>
-            collector:{' '}
-            <Button onClick={() => window.open(`https://screensaver.world/owned/${token.owner}`, '_blank')}>
+            🌈 collector:{' '}
+            <Button onClick={() => (`https://screensaver.world/ownwindow.opened/${token.owner}`, '_blank')}>
               <Address address={token.owner} />
             </Button>
-          </div>
-          <div>tags: {metadata.tags.map((t) => `#${t}`).join(', ')}</div>
+          </div> */}
         </div>
+      </PageSection>
+      <PageSection>
         <Title>Details</Title>
         <Stats>
           <div>

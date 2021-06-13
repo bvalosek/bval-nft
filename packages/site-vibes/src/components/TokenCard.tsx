@@ -5,30 +5,18 @@ import { useTokens } from '../hooks/tokens';
 import { ThemeConfig } from '../Theme';
 import { Address } from './Address';
 import { DecimalNumber } from './DecimalNumber';
-import { Divider } from './Divder';
 import { Loading } from './Loading';
 import { ObjectLink } from './ObjectLink';
 import { PageSection } from './PageSection';
-import { Title } from './Title';
-import { TokenCard } from './TokenCard';
 
 interface Props {
-  owner?: string;
+  tokenId: string;
+  hideCollector?: boolean;
+  hideTitle?: bolean;
 }
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
-    container: {
-      display: 'grid',
-      '@media(min-width: 800px)': {
-        gridTemplateColumns: '1fr 1fr',
-      },
-      '@media(min-width: 1000px)': {
-        gridTemplateColumns: '1fr 1fr 1fr',
-      },
-      gap: theme.scaledSpacing(10),
-    },
-    info: {},
     token: {
       display: 'grid',
       gap: theme.spacing(2),
@@ -37,6 +25,12 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       '& video': {
         width: '100%',
         display: 'inline',
+      },
+    },
+    media: {
+      maxWidth: '50vh',
+      '& img': {
+        width: '100%',
       },
     },
     top: {
@@ -62,7 +56,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
   };
 });
 
-export const Tokens: FunctionComponent<Props> = ({ owner }) => {
+export const TokenCard: FunctionComponent<Props> = ({ tokenId, hideCollector, hideTitle }) => {
   const classes = useStyles();
   const { tokens, tokenMetadata, sampledAt } = useTokens();
 
@@ -74,22 +68,43 @@ export const Tokens: FunctionComponent<Props> = ({ owner }) => {
     );
   }
 
-  let filtered = tokens.filter((t) => !t.isBurnt);
-  if (owner) {
-    filtered = filtered.filter((t) => t.owner === owner);
-  }
+  const token = tokens.find((t) => t.tokenId === tokenId);
+  const metadata = tokenMetadata[token.tokenId];
 
   return (
-    <>
-      <PageSection>
-        <Title>@bvalosek's Screensaver.World NFTs</Title>
-        <div className={classes.container}>
-          {filtered.map((token) => <TokenCard tokenId={token.tokenId} />}
+    <div key={token.tokenId} className={classes.token}>
+      <div>
+        <div className={classes.media}>
+          <Link to={`/tokens/${token.tokenId}`}>
+            {metadata?.image && <img src={metadata?.image} />}
+            {metadata?.animation_url && (
+              <video autoPlay muted loop controls={false}>
+                <source src={metadata.animation_url} />
+              </video>
+            )}
+          </Link>
         </div>
-      </PageSection>
-      <PageSection>
-        <Divider />
-      </PageSection>
-    </>
+      </div>
+      <div className={classes.info}>
+        <div className={classes.top}>
+          <div className={classes.vibes}>
+            <DecimalNumber
+              number={token.claimable}
+              interoplate={{ sampledAt: sampledAt, dailyRate: token.dailyRate }}
+            />{' '}
+            VIBES
+          </div>
+          <div>
+            <ObjectLink tokenId={token.tokenId} />
+          </div>
+        </div>
+        {!hideTitle && <div className={classes.title}>{metadata?.name}</div>}
+        {!hideCollector && (
+          <div className={classes.collector}>
+            <Address address={token.owner} />
+          </div>
+        )}
+      </div>
+    </div>
   );
 };

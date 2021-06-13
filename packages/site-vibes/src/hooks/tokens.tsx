@@ -52,7 +52,7 @@ const TokensContext = createContext<UseTokens>(undefined);
 
 export const TokensProvider: FunctionComponent = (props) => {
   const tokens = useTokensImplementation();
-  return <TokensContext.Provider value={tokens}>{props.children}</TokensContext.Provider>;
+  return <TokensContext.Provider value={tokens}>{tokens.tokens.length > 0 && props.children}</TokensContext.Provider>;
 };
 
 export const useTokens = (): UseTokens => {

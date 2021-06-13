@@ -1,7 +1,7 @@
 const prefixed = (key: string): string => `vibes:${key}`;
 
 /** write to local storage */
-export function storageSet(key: string, value: unknown): void {
+export function storageSet<T>(key: string, value: T): void {
   const item = JSON.stringify(value);
   localStorage.setItem(prefixed(key), item);
 }

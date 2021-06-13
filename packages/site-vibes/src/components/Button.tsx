@@ -5,6 +5,7 @@ import { ThemeConfig } from '../Theme';
 
 type Props = React.HtmlHTMLAttributes<HTMLSpanElement> & {
   navTo?: string;
+  externalNavTo?: string;
 };
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
@@ -25,13 +26,16 @@ export const Button: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const { navTo, ...attr } = props;
+  const { navTo, externalNavTo...attr } = props;
   const className = `${props.className ?? ''} ${classes.button}`;
 
   if (navTo) {
     attr.onClick = () => {
       history.push(navTo);
     };
+  }
+  else if (externalNavTo) {
+    attr.onClick =() => window.open(externalNavTo, '_blank')
   }
 
   return (

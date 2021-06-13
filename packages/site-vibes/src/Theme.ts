@@ -5,6 +5,7 @@ const colors = {
   blue: '#2444ff',
   pink: '#ff1940',
   green: '#3bff29',
+  yellow: '#fffb21',
 };
 
 /** theme values */
@@ -24,6 +25,7 @@ export const createTheme = () => {
         main: colors.blue,
         secondary: colors.green,
         tertiary: colors.pink,
+        quadriarylolwhat: colors.yellow,
       },
     },
     font: '"DM Mono", monospace',

@@ -11,6 +11,7 @@ import { Hero } from './Hero';
 import { Divider } from './Divder';
 import { Button } from './Button';
 import { Stats } from './Stats';
+import { ButtonGroup } from './ButtonGroup';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {};
@@ -86,6 +87,10 @@ export const Info: FunctionComponent = () => {
             </a>{' '}
             Discord and check out the community.
           </p>
+          <ButtonGroup>
+            <Button navTo="/tokens">VIEW NFTs</Button>
+            <Button navTo="/wallet">CHECK WALLET</Button>
+          </ButtonGroup>
         </Content>
       </PageSection>
       <PageSection>

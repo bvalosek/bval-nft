@@ -5,6 +5,7 @@ import { useWallet } from '../hooks/wallet';
 import { computeStats } from '../lib/faucet';
 import { ThemeConfig } from '../Theme';
 import { Button } from './Button';
+import { ButtonGroup } from './ButtonGroup';
 import { Connect } from './Connect';
 import { Content } from './Content';
 import { DecimalNumber } from './DecimalNumber';
@@ -55,11 +56,11 @@ export const Wallet: FunctionComponent = () => {
               </p>
             </Stats>
             <Title>utils</Title>
-            <p>
+            <ButtonGroup>
               <Button onClick={() => track()}>
-                Track <Vibes /> in MetaMask
+                TRACK <Vibes /> in MetaMask
               </Button>
-            </p>
+            </ButtonGroup>
           </Connect>
         </Content>
       </PageSection>

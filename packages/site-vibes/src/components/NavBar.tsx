@@ -78,16 +78,16 @@ export const NavBar: FunctionComponent = () => {
       {open && (
         <div className={classes.menu}>
           <div>
-            <Button onClick={withClose(() => history.push('/info'))}>info</Button>
+            <Button onClick={withClose(() => history.push('/info'))}>INFO</Button>
           </div>
           <div>
-            <Button onClick={withClose(() => history.push('/tokens'))}>tokens</Button>
+            <Button onClick={withClose(() => history.push('/tokens'))}>TOKENS</Button>
           </div>
           <div>
-            <Button onClick={withClose(() => history.push('/featured'))}>featured</Button>
+            <Button onClick={withClose(() => history.push('/featured'))}>FEATURED</Button>
           </div>
           <div>
-            <Button onClick={withClose(() => history.push('/wallet'))}>wallet</Button>
+            <Button onClick={withClose(() => history.push('/wallet'))}>WALLET</Button>
           </div>
         </div>
       )}
