@@ -80,7 +80,7 @@ export const Tokens: FunctionComponent<Props> = ({ owner }) => {
 
   return (
     <>
-      <PageSection maxWidth="1500px">
+      <PageSection>
         <Title>@bvalosek's Screensaver.World NFTs</Title>
         <div className={classes.container}>
           {filtered.map((token) => {
