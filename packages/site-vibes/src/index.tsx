@@ -13,7 +13,7 @@ import { Tokens } from './components/Tokens';
 import { Stats } from './components/Stats';
 import { TokensProvider } from './hooks/tokens';
 import { TokenDetail } from './components/TokenDetail';
-import { Debug } from './components/Debug';
+import { Admin } from './components/Admin';
 import { NavBar } from './components/NavBar';
 import { Wallet } from './components/Wallet';
 import { WalletProvider } from './hooks/wallet';
