@@ -16,7 +16,6 @@ export const Application: FunctionComponent = () => {
   useEffect(() => {
     const n = next();
     setPrimaryPage(n);
-    console.log(n);
   }, []);
 
   if (!primaryPage) {

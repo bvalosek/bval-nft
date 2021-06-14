@@ -13,6 +13,7 @@ import { Button } from './Button';
 import { featuredTokenId, useNextPrimaryPage } from '../hooks/app';
 import { New } from './Next';
 import { Vibes } from './Vibes';
+import { Divider } from './Divder';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
@@ -89,6 +90,9 @@ export const Featured: FunctionComponent = () => {
             <Button navTo="/info">💻 MORE INFO</Button>
           </ButtonGroup>
         </Content>
+      </PageSection>
+      <PageSection>
+        <Divider />
       </PageSection>
     </>
   );
