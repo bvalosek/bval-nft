@@ -20,3 +20,5 @@ export const addToMetamask = async (provider: any): Promise<void> => {
     },
   });
 };
+
+export const vibesAmount = (amount: number): BigNumber => BigNumber.from(10).pow(18).mul(amount);

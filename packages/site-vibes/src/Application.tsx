@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Admin } from './components/Admin';
+import { Claim } from './components/Claim';
 import { Featured } from './components/Featured';
 import { Info } from './components/Info';
 import { Page } from './components/Page';
@@ -34,6 +35,9 @@ export const Application: FunctionComponent = () => {
         </Route>
         <Route exact path="/tokens">
           <Tokens />
+        </Route>
+        <Route exact path="/claim/:tokenId">
+          <Claim />
         </Route>
         <Route path="/admin">
           <Admin />

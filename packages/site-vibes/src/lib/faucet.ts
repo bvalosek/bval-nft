@@ -102,3 +102,11 @@ export const seedToken = async (
   const resp = await faucet['seed(uint256,uint256,uint256,uint256)'](tokenId, rate, totalDays, backdateDays);
   console.log(resp);
 };
+
+export const claim = async (signer: Signer, tokenId: string, amount?: BigNumber): Promise<void> => {
+  const { faucetV2 } = getContracts();
+  const faucet = new Contract(faucetV2, VIBES_WELLSPRING.abi, signer);
+
+  const resp = await faucet['claim(uint256,uint256)'](tokenId, amount);
+  console.log(resp);
+};

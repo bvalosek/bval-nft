@@ -21,7 +21,7 @@ const useStyles = makeStyles<ThemeConfig>(() => {
   };
 });
 
-export const DecimalNumber: FunctionComponent<Props> = ({ number, interoplate, decimals = 4 }) => {
+export const DecimalNumber: FunctionComponent<Props> = ({ number, interoplate, decimals = 3 }) => {
   const [alpha, setAlpha] = useState(BigNumber.from(0));
   const classes = useStyles();
 

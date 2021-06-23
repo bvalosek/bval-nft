@@ -2,6 +2,10 @@ import { makeStyles } from '@material-ui/styles';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { ThemeConfig } from '../Theme';
 
+interface Props {
+  label?: string;
+}
+
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     notFlash: {
@@ -13,7 +17,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
   };
 });
 
-export const New: FunctionComponent = () => {
+export const New: FunctionComponent<Props> = (props) => {
   const classes = useStyles();
   const flash = useRef(0);
   const [isFlash, setIsFlash] = useState(false);
@@ -30,5 +34,5 @@ export const New: FunctionComponent = () => {
     return () => clearInterval(h);
   }, []);
 
-  return <span className={isFlash ? classes.flash : classes.notFlash}>☀ ️NEW!</span>;
+  return <span className={isFlash ? classes.flash : classes.notFlash}>{(props.label ?? '☀ NEW!').toUpperCase()}</span>;
 };
