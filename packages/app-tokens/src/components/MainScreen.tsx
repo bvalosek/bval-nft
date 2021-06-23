@@ -7,7 +7,7 @@ import { Tasks } from './Tasks';
 export const MainScreen: FunctionComponent = () => {
   return (
     <Card>
-      <Tabs initialValue="3">
+      <Tabs initialValue="2">
         <Tabs.Item label="BVAL721 Tasks" value="1">
           <Tasks />
         </Tabs.Item>
