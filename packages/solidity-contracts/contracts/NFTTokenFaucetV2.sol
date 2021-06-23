@@ -179,8 +179,7 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
   // take the generated tokens from an nft, up to amount
   function claim(uint256 tokenId, uint256 amount) public {
     address msgSender = _msgSender();
-    address owner = _nft.ownerOf(tokenId);
-    require(owner == msgSender, "not token owner");
+    require(_isApprovedOrOwner(tokenId, msgSender), "not owner or approved");
     require(!_lock.isTokenLocked(tokenId), "token is locked");
 
     // compute how much we can claim, only pay attention to amount if its less
@@ -191,6 +190,7 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
 
     // update balances and execute ERC-20 transfer
     _balances[tokenId] -= toClaim;
+    _lastClaim[tokenId] = block.timestamp;
     _token.transfer(msgSender, toClaim);
 
     emit Claim(tokenId, msgSender, toClaim);

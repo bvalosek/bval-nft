@@ -4,7 +4,7 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 require('dotenv').config();
 
-const { TEST_ENDPOINT, MAINNET_ENDPOINT, ETHERSCAN_API_KEY } = process.env;
+const { TEST_ENDPOINT, MAINNET_ENDPOINT, ETHERSCAN_API_KEY, POLYGONSCAN_API_KEY } = process.env;
 
 module.exports = {
   networks: {
@@ -28,6 +28,9 @@ module.exports = {
       timeoutBlocks: 200,
       skipDryRun: true,
     },
+    polygon: {
+      network_id: 137,
+    },
   },
   compilers: {
     solc: {
@@ -43,5 +46,6 @@ module.exports = {
   plugins: ['truffle-plugin-verify'],
   api_keys: {
     etherscan: ETHERSCAN_API_KEY,
+    polygonscan: POLYGONSCAN_API_KEY,
   },
 };

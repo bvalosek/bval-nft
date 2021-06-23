@@ -2,7 +2,7 @@
 const truffleAssert = require('truffle-assertions');
 const timeMachine = require('ganache-time-traveler');
 
-const MockTokenLockManager = artifacts.require('MockTokenLockManager');
+const TokenLockManager = artifacts.require('TokenLockManager');
 const BVAL20 = artifacts.require('BVAL20');
 const BVAL721 = artifacts.require('BVAL721');
 const NFTTokenFaucetV2 = artifacts.require('NFTTokenFaucetV2');
@@ -46,7 +46,7 @@ const simpleMint = async (instance, tokenId = TOKENS[0], date = '2021-03-29') =>
 const factory = async (account) => {
   const token = await BVAL20.new();
   const nft = await BVAL721.new();
-  const lock = await MockTokenLockManager.new(nft.address);
+  const lock = await TokenLockManager.new(nft.address);
   const faucet = await NFTTokenFaucetV2.new({ token: token.address, nft: nft.address, lock: lock.address });
 
   // so we can mint
@@ -62,7 +62,7 @@ const factory = async (account) => {
 };
 
 // gas
-const MAX_DEPLOYMENT_GAS = 1800000;
+const MAX_DEPLOYMENT_GAS = 2000000;
 const MAX_MUTATION_GAS = 200000;
 
 contract.only('NFTTokenFaucet', (accounts) => {
@@ -244,6 +244,32 @@ contract.only('NFTTokenFaucet', (accounts) => {
       const info = await faucet.tokenInfo(tokenId);
       assert.equal(info.balance, BN(100 * 1000 - 1000));
     });
+    it('should allow claiming if approved', async () => {
+      const [a1, a2] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet, nft, token } = await factory(a1);
+      await nft.approve(a2, tokenId);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2021-03-30'); // 1 day later
+      await faucet.claim(tokenId, { from: a2 });
+      const info = await faucet.tokenInfo(tokenId);
+      assert.equal(info.balance, BN(100 * 1000 - 1000));
+      assert.equal(await token.balanceOf(a1), 0);
+      assert.equal(await token.balanceOf(a2), BN(1000));
+    });
+    it('should allow claiming if approved for all', async () => {
+      const [a1, a2] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet, nft, token } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2021-03-30'); // 1 day later
+      await nft.setApprovalForAll(a2, true);
+      await faucet.claim(tokenId, { from: a2 });
+      const info = await faucet.tokenInfo(tokenId);
+      assert.equal(info.balance, BN(100 * 1000 - 1000));
+      assert.equal(await token.balanceOf(a1), 0);
+      assert.equal(await token.balanceOf(a2), BN(1000));
+    });
     it('should revert if nothing to claim', async () => {
       const [a1] = accounts;
       const [tokenId] = TOKENS;
@@ -261,7 +287,7 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
       await setNetworkTime('2021-03-30'); // 1 day later
       const task = faucet.claim(tokenId, { from: a2 });
-      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not token owner');
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'not owner or approved');
     });
     it('should revert if token is locked', async () => {
       const [a1] = accounts;
@@ -303,6 +329,26 @@ contract.only('NFTTokenFaucet', (accounts) => {
           event.amount.toString() === BN(1000 * 100).toString()
         );
       });
+    });
+    it('should reduce claimable following a claim', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2021-03-30'); // 1 day later
+      await faucet.claim(tokenId);
+      const info = await faucet.tokenInfo(tokenId);
+      assert.equal(info.claimable, 0);
+    });
+    it('should not allow claiming immediately after claiming', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2021-03-30'); // 1 day later
+      await faucet.claim(tokenId);
+      const task = faucet.claim(tokenId);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'nothing to claim');
     });
   });
 });
