@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "mkdir -p ./data/processed && ts-node -T -P ../../tsconfig.json ./src/scripts/write-data.ts",
-    "clean": "rm -rf ./data"
+    "build": "mkdir -p ./data/processed && ts-node -T -P ../../tsconfig.json ./src/scripts/write-data.ts"
   },
   "dependencies": {
     "@bvalosek/lib-tokens": "*",
