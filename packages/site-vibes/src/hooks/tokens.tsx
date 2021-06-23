@@ -6,14 +6,14 @@ import { getTokenMetadata } from '../lib/ssw';
 import { ScreensaverTokenMetadata } from '../lib/ssw';
 
 interface UseTokens {
-  tokens: TokenInfo[];
+  tokens: TokenInfo[] | undefined;
   tokenMetadata: Record<string, ScreensaverTokenMetadata>;
   sampledAt: number;
 }
 
 const useTokensImplementation = (): UseTokens => {
   const provider = getProvider();
-  const [tokens, setTokens] = useState<TokenInfo[]>([]);
+  const [tokens, setTokens] = useState<TokenInfo[] | undefined>();
   const [sampledAt, setSampledAt] = useState(currentTimestamp());
   const [tokenMetadata, setTokenMetadata] = useState<UseTokens['tokenMetadata']>({});
 
@@ -52,7 +52,12 @@ const TokensContext = createContext<UseTokens>(undefined);
 
 export const TokensProvider: FunctionComponent = (props) => {
   const tokens = useTokensImplementation();
-  return <TokensContext.Provider value={tokens}>{tokens.tokens.length > 0 && props.children}</TokensContext.Provider>;
+  if (tokens.tokens === undefined) {
+    return null;
+  }
+  return (
+    <TokensContext.Provider value={tokens}>{tokens.tokens !== undefined && props.children}</TokensContext.Provider>
+  );
 };
 
 export const useTokens = (): UseTokens => {

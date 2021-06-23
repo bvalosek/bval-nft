@@ -4,7 +4,6 @@ import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { BVAL721, BVAL_WELLSPRING, LOCK_MANAGER, VIBES, VIBES_WELLSPRING } from '@bvalosek/solidity-contracts';
 import { SequenceCreateData, toHexStringBytes, TokenMintData } from '@bvalosek/lib-tokens';
 import { useNetworkName } from './web3';
-import { Provider } from 'react';
 
 interface Contracts {
   token: string;

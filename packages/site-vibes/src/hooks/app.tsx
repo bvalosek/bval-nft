@@ -22,6 +22,10 @@ export const useNextPrimaryPage = () => {
   const token = tokens.find((t) => t.tokenId === featuredTokenId);
 
   const next = useCallback(() => {
+    if (!token) {
+      return '/tokens';
+    }
+
     const current = storageGet<PrimaryPageState>(skey) ?? {};
     const lastToken = current.lastSeenFeaturedToken;
     const isNewCollector = lastToken?.owner !== token.owner;
