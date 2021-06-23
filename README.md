@@ -12,10 +12,18 @@ BVAL NFT project monorepo
 
 ## Contracts
 
-* ERC-20: [0x27525344bbba0ddb182251387aedd0bde7d466b2](https://etherscan.io/address/0x27525344bbba0ddb182251387aedd0bde7d466b2)
-* ERC-721: [0x02D91986F0C2B02830bDfC022f0dA83529B78334](https://etherscan.io/address/0x02d91986f0c2b02830bdfc022f0da83529b78334)
+### BVAL NFT (L1 Project)
+
+* BVAL ERC-20: [0x27525344bbba0ddb182251387aedd0bde7d466b2](https://etherscan.io/address/0x27525344bbba0ddb182251387aedd0bde7d466b2)
+* BVAL ERC-721: [0x02D91986F0C2B02830bDfC022f0dA83529B78334](https://etherscan.io/address/0x02d91986f0c2b02830bdfc022f0da83529b78334)
 
 All contracts are verified on etherscan.
+
+### Vibes (Polygon L2 Project)
+
+* Token Lock Manager: [0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c](https://polygonscan.com/address/0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c)
+* VIBES ERC-20: [0xCb437B5BC51734e1065C7Eeb18C48aFe8F4555e5](https://polygonscan.com/address/0xCb437B5BC51734e1065C7Eeb18C48aFe8F4555e5)
+* Vibes Wellspring: [0x23B8cE2Da60Aab910739a377D977d10eE6864AC0](https://polygonscan.com/address/0x6eb8e2770939f586f0b5a3c0143ab353e5fff44c)
 
 ## Development
 
