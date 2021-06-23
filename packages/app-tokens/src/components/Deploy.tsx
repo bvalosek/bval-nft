@@ -15,7 +15,7 @@ import {
 import { useWeb3Strict } from '../util/web3';
 
 export const Deploy: FunctionComponent = () => {
-  const { library } = useWeb3Strict();
+  const { library, account } = useWeb3Strict();
   const contracts = useContracts();
 
   // const deployNft = async () => {
@@ -51,14 +51,7 @@ export const Deploy: FunctionComponent = () => {
       <div>
         <Button
           type="success"
-          onClick={() =>
-            mintVibesTo(
-              contracts.vibes,
-              '0x9940D367E0596f64DbcbBd57f480359E4A2F852f',
-              '1000000000000000000000000000',
-              library.getSigner()
-            )
-          }
+          onClick={() => mintVibesTo(contracts.vibes, account, '1000000000000000000000000000', library.getSigner())}
         >
           Mint 1b VIBES
         </Button>
