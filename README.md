@@ -23,7 +23,7 @@ All contracts are verified on etherscan.
 
 * Token Lock Manager: [0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c](https://polygonscan.com/address/0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c)
 * VIBES ERC-20: [0xCb437B5BC51734e1065C7Eeb18C48aFe8F4555e5](https://polygonscan.com/address/0xCb437B5BC51734e1065C7Eeb18C48aFe8F4555e5)
-* Vibes Wellspring: [0x23B8cE2Da60Aab910739a377D977d10eE6864AC0](https://polygonscan.com/address/0x6eb8e2770939f586f0b5a3c0143ab353e5fff44c)
+* Vibes Wellspring: [0x88cf52a742ba72Cb4B6662e5b1B14c54F9853CC7](https://polygonscan.com/address/0x88cf52a742ba72Cb4B6662e5b1B14c54F9853CC7)
 
 ## Development
 
