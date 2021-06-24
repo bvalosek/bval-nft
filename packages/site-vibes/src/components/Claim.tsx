@@ -53,6 +53,17 @@ export const Claim: FunctionComponent = () => {
   }
 
   return (
+    <PageSection>
+      <Title>
+        😎 score some <Vibes /> 😎
+      </Title>
+      <Content>
+        <p>Unstaking VIBES will be here SOOOOOOOOOOOOOON</p>
+      </Content>
+    </PageSection>
+  );
+
+  return (
     <>
       <PageSection>
         <Title>
