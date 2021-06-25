@@ -15,6 +15,7 @@ import { PageSection } from './PageSection';
 import { Title } from './Title';
 import { Vibes } from './Vibes';
 import { TokenCard } from './TokenCard';
+import { Claimer } from './Claimer';
 
 interface Params {
   tokenId: string;
@@ -24,7 +25,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     claim: {
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
+      gridTemplateColumns: `${theme.spacing(80)} auto`,
       gap: theme.spacing(10),
       marginBottom: theme.spacing(10),
     },
@@ -58,7 +59,7 @@ export const Claim: FunctionComponent = () => {
         😎 score some <Vibes /> 😎
       </Title>
       <Content>
-        <p>Unstaking VIBES will be here SOOOOOOOOOOOOOON</p>
+        <p>Unstaking VIBES will be here very SOOOOOOOOOOOOOON</p>
       </Content>
     </PageSection>
   );
@@ -91,7 +92,9 @@ export const Claim: FunctionComponent = () => {
             <div>
               <TokenCard tokenId={token.tokenId} hideCollector hideTitle />
             </div>
-            <div>claim</div>
+            <div>
+              <Claimer />
+            </div>
           </div>
           <Content>
             <p>
