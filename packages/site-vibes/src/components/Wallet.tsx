@@ -20,7 +20,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 });
 
 export const Wallet: FunctionComponent = () => {
-  const { balance, account, trackInMetamask } = useWallet();
+  const { balance, account, trackInMetamask, transactions } = useWallet();
   const { tokens, sampledAt } = useTokens();
   const classes = useStyles();
 
@@ -53,6 +53,13 @@ export const Wallet: FunctionComponent = () => {
                 <Vibes /> / day
                 <br />
                 🖼 <strong>owned NFTs</strong>: {owned.length}
+                <br />
+                ⚡️ <strong>pending transactions</strong>:{' '}
+                {transactions.length === 0
+                  ? 'none'
+                  : transactions.map((trx) => (
+                      <Button externalNavTo={`https://polygonscan.com/tx/${trx.hash}`}>{trx.nonce}</Button>
+                    ))}
               </p>
             </Stats>
             <Title>utils</Title>

@@ -11,10 +11,10 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     input: {
       background: theme.palette.background.main,
-      border: 'none',
-      padding: theme.scaledSpacing(1),
-      fontSize: theme.scaledSpacing(3),
       color: theme.palette.foreground.main,
+      border: 'none',
+      // padding: theme.scaledSpacing(1),
+      width: '100%',
       '&:focus': {
         outline: 'none',
         borderColor: theme.palette.accent.secondary,
@@ -39,10 +39,8 @@ export const Input: FunctionComponent<Props> = (props) => {
   }
 
   return (
-    <div>
-      <input {...attrs} className={className}>
-        {props.children}
-      </input>
-    </div>
+    <input {...attrs} className={className}>
+      {props.children}
+    </input>
   );
 };

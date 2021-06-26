@@ -1,21 +1,19 @@
 import { makeStyles } from '@material-ui/styles';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTokens } from '../hooks/tokens';
 import { useWallet } from '../hooks/wallet';
 import { claim } from '../lib/faucet';
-import { vibesAmount } from '../lib/vibes';
 import { ThemeConfig } from '../Theme';
 import { Button } from './Button';
 import { ButtonGroup } from './ButtonGroup';
 import { Content } from './Content';
 import { Loading } from './Loading';
-import { New } from './Next';
 import { PageSection } from './PageSection';
 import { Title } from './Title';
 import { Vibes } from './Vibes';
-import { TokenCard } from './TokenCard';
 import { Claimer } from './Claimer';
+import { BigNumber, ContractTransaction } from 'ethers';
 
 interface Params {
   tokenId: string;
@@ -24,22 +22,28 @@ interface Params {
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     claim: {
-      display: 'grid',
-      gridTemplateColumns: `${theme.spacing(80)} auto`,
-      gap: theme.spacing(10),
-      marginBottom: theme.spacing(10),
+      '@media(min-width: 800px)': {
+        display: 'grid',
+        gridTemplateColumns: `${theme.spacing(80)} auto`,
+        gap: theme.spacing(10),
+        marginBottom: theme.spacing(10),
+      },
     },
   };
 });
 
 export const Claim: FunctionComponent = () => {
   const { tokenId } = useParams<Params>();
+  const [trx, setTrx] = useState<null | ContractTransaction>(null);
   const { tokens, tokenMetadata, sampledAt } = useTokens();
-  const { account, library } = useWallet();
+  const { account, library, registerTransactions } = useWallet();
   const classes = useStyles();
 
-  const onClaim = async () => {
-    await claim(library.getSigner(), tokenId, vibesAmount(100));
+  const onClaim = async (amount: BigNumber) => {
+    const resp = await claim(library.getSigner(), tokenId, amount);
+    setTrx(resp);
+    registerTransactions(resp);
+    return resp;
   };
 
   const token = tokens.find((t) => t.tokenId === tokenId);
@@ -53,16 +57,28 @@ export const Claim: FunctionComponent = () => {
     );
   }
 
-  return (
-    <PageSection>
-      <Title>
-        😎 score some <Vibes /> 😎
-      </Title>
-      <Content>
-        <p>Unstaking VIBES will be here very SOOOOOOOOOOOOOON</p>
-      </Content>
-    </PageSection>
-  );
+  if (trx) {
+    return (
+      <>
+        <PageSection>
+          <Title>
+            😎 score some <Vibes /> 😎
+          </Title>
+        </PageSection>
+        <PageSection>
+          <Content>
+            <p>
+              Claim transaction submitted! Your <Vibes /> are on the way.
+            </p>
+            <ButtonGroup>
+              <Button navTo={`/tokens/${token.tokenId}`}>🖼 BACK to NFT</Button>
+              <Button externalNavTo={`https://polygonscan.com/tx/${trx.hash}`}>🔎 VIEW on Polygonscan</Button>
+            </ButtonGroup>
+          </Content>
+        </PageSection>
+      </>
+    );
+  }
 
   return (
     <>
@@ -87,31 +103,24 @@ export const Claim: FunctionComponent = () => {
         </PageSection>
       )}
       {token.owner === account && (
-        <PageSection>
-          <div className={classes.claim}>
-            <div>
-              <TokenCard tokenId={token.tokenId} hideCollector hideTitle />
-            </div>
-            <div>
-              <Claimer />
-            </div>
-          </div>
-          <Content>
-            <p>
-              This will <New label="⚠️ permanently️ ⚠️" /> unstake <Vibes /> from <strong>{metadata.name}</strong> to
-              your <Button navTo="/wallet">Wallet</Button>.
-            </p>
-            <p>Are you sure you want to continue?</p>
-            <p>
-              <ButtonGroup>
-                <Button onClick={() => onClaim()}>
-                  🤑 CLAIM <Vibes />
-                </Button>
-                <Button navTo={`/tokens/${token.tokenId}`}>🙅‍♀️ CANCEL</Button>
-              </ButtonGroup>
-            </p>
-          </Content>
-        </PageSection>
+        <>
+          <PageSection>
+            <Claimer tokenId={token.tokenId} onClaim={onClaim} />
+          </PageSection>
+          <PageSection>
+            <Content>
+              <p style={{ textAlign: 'center' }}>
+                This will <strong>PERMANENTLY</strong> unstake the <Vibes /> inside of your NFT! More <Vibes /> will
+                continue to be mined after unstaking.
+              </p>
+              <p>
+                <ButtonGroup>
+                  <Button navTo={`/tokens/${token.tokenId}`}>🙅 CANCEL</Button>
+                </ButtonGroup>
+              </p>
+            </Content>
+          </PageSection>
+        </>
       )}
     </>
   );

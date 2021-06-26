@@ -2,20 +2,15 @@ import React, { createContext, FunctionComponent, useContext, useEffect, useStat
 import { getTokenCount, getTokenInfoByIndex, TokenInfo } from '../lib/faucet';
 import { getProvider } from '../lib/rpc';
 import { currentTimestamp } from '../lib/web3';
-import { getTokenMetadata } from '../lib/ssw';
-import { ScreensaverTokenMetadata } from '../lib/ssw';
+import { getTokenMetadata, ScreensaverTokenMetadata } from '../lib/ssw';
+import { useWallet } from './wallet';
 
-interface UseTokens {
-  tokens: TokenInfo[] | undefined;
-  tokenMetadata: Record<string, ScreensaverTokenMetadata>;
-  sampledAt: number;
-}
-
-const useTokensImplementation = (): UseTokens => {
+const useTokensImplementation = () => {
   const provider = getProvider();
   const [tokens, setTokens] = useState<TokenInfo[] | undefined>();
   const [sampledAt, setSampledAt] = useState(currentTimestamp());
-  const [tokenMetadata, setTokenMetadata] = useState<UseTokens['tokenMetadata']>({});
+  const [tokenMetadata, setTokenMetadata] = useState<Record<string, ScreensaverTokenMetadata>>({});
+  const { onTransactions } = useWallet();
 
   const fetch = async () => {
     const count = await getTokenCount(provider);
@@ -42,11 +37,16 @@ const useTokensImplementation = (): UseTokens => {
   };
 
   useEffect(() => {
+    // initial fetch
     fetch();
+
+    return onTransactions(() => fetch());
   }, []);
 
-  return { tokens, sampledAt, tokenMetadata };
+  return { tokens, sampledAt, tokenMetadata, refreshTokenData: fetch };
 };
+
+type UseTokens = ReturnType<typeof useTokensImplementation>;
 
 const TokensContext = createContext<UseTokens>(undefined);
 

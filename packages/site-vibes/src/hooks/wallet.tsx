@@ -1,9 +1,10 @@
-import React, { createContext, FunctionComponent, useContext, useEffect, useState } from 'react';
+import React, { createContext, FunctionComponent, useContext, useEffect, useRef, useState } from 'react';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useWeb3React } from '@web3-react/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { addToMetamask, getTokenBalance } from '../lib/vibes';
 import { switchToPolygon } from '../lib/web3';
+import { ContractTransaction } from 'ethers';
 
 const connector = new InjectedConnector({});
 
@@ -13,6 +14,8 @@ type WalletState = 'disconnected' | 'connected' | 'ready';
 export const useWalletImplementation = () => {
   const { activate, active, error, chainId, account, library } = useWeb3React();
   const [balance, setBalance] = useState<BigNumber>(BigNumber.from(0));
+  const [transactions, setTransactions] = useState<ContractTransaction[]>([]);
+  const callbacks = useRef<Array<() => unknown>>([]);
 
   const connect = async () => {
     await activate(connector);
@@ -34,9 +37,24 @@ export const useWalletImplementation = () => {
     }
   };
 
+  const onTransactions = (callback: () => unknown) => {
+    callbacks.current.push(callback);
+    return () => {
+      callbacks.current = callbacks.current.filter((cb) => cb !== callback);
+    };
+  };
+
   const fetchBalance = async () => {
     const balance = await getTokenBalance(library.getSigner(), account);
     setBalance(balance);
+  };
+
+  const registerTransactions = async (trx: ContractTransaction) => {
+    setTransactions((trxs) => [...trxs, trx]);
+    await trx.wait();
+    setTransactions((trxs) => trxs.filter((t) => t !== trx));
+    callbacks.current.forEach((cb) => cb());
+    await fetchBalance();
   };
 
   useEffect(() => {
@@ -65,6 +83,9 @@ export const useWalletImplementation = () => {
     connect,
     switchToPolygon: gotoPoly,
     trackInMetamask,
+    registerTransactions,
+    transactions,
+    onTransactions,
   };
 };
 

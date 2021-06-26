@@ -1,7 +1,7 @@
 import { getContracts } from './contracts';
 import VIBES from '@bvalosek/solidity-contracts/deployed-contracts/VIBES-2021-06-05.json';
 import VIBES_WELLSPRING from '@bvalosek/solidity-contracts/deployed-contracts/VIBESWellspring-2021-06-05.json';
-import { BigNumber, Contract, Signer } from 'ethers';
+import { BigNumber, Contract, Signer, ContractTransaction } from 'ethers';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { currentTimestamp, toHexStringBytes } from './web3';
 
@@ -103,10 +103,10 @@ export const seedToken = async (
   console.log(resp);
 };
 
-export const claim = async (signer: Signer, tokenId: string, amount?: BigNumber): Promise<void> => {
+export const claim = async (signer: Signer, tokenId: string, amount?: BigNumber): Promise<ContractTransaction> => {
   const { faucetV2 } = getContracts();
   const faucet = new Contract(faucetV2, VIBES_WELLSPRING.abi, signer);
 
   const resp = await faucet['claim(uint256,uint256)'](tokenId, amount);
-  console.log(resp);
+  return resp;
 };

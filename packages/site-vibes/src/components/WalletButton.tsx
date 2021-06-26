@@ -7,6 +7,7 @@ import { ThemeConfig } from '../Theme';
 import { Address } from './Address';
 import { Button } from './Button';
 import { DecimalNumber } from './DecimalNumber';
+import { New } from './Next';
 import { Vibes } from './Vibes';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
@@ -20,7 +21,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 });
 
 export const WalletButton: FunctionComponent = () => {
-  const { state, connect, switchToPolygon, account, balance } = useWallet();
+  const { state, connect, switchToPolygon, account, balance, transactions } = useWallet();
   const history = useHistory();
   const classes = useStyles();
 
@@ -46,6 +47,12 @@ export const WalletButton: FunctionComponent = () => {
         <DecimalNumber number={balance} decimals={0} /> <Vibes /> |{' '}
       </span>
       <Address address={account} />
+      {transactions.length ? (
+        <span className={classes.onlyDesktop}>
+          {' '}
+          | <New label="pending trx" />
+        </span>
+      ) : null}
     </Button>
   );
 };

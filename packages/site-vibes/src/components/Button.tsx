@@ -12,16 +12,8 @@ type Props = React.HtmlHTMLAttributes<HTMLSpanElement> & {
 const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
   return {
     inner: {
-      '&:hover': (props) => {
-        if (props.disabled) {
-          return {
-            opacity: 0.75,
-          };
-        }
-        return {
-          background: theme.palette.accent.main,
-          color: theme.palette.foreground.main,
-        };
+      '&:hover': {
+        background: (props) => (props.disabled ? 'inherit' : theme.palette.accent.main),
       },
     },
     button: {
