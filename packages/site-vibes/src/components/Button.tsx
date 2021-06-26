@@ -13,7 +13,7 @@ const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
   return {
     inner: {
       '&:hover': {
-        background: (props) => (props.disabled ? 'inherit' : theme.palette.accent.main),
+        background: (props) => (props.disabled ? 'inherit' : theme.palette.accent.dark),
       },
     },
     button: {

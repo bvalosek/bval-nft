@@ -10,11 +10,12 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       display: 'grid',
       gap: theme.spacing(10),
       '& a': {
-        color: theme.palette.accent.secondary,
+        color: theme.palette.accent.tertiary,
+        textDecoration: 'underline',
       },
       '& strong': {
         fontWeight: 'bold',
-        color: 'aqua',
+        color: theme.palette.accent.secondary,
       },
     },
   };

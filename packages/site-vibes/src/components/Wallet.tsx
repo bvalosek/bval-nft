@@ -54,7 +54,7 @@ export const Wallet: FunctionComponent = () => {
                 <br />
                 🖼 <strong>owned NFTs</strong>: {owned.length}
                 <br />
-                ⚡️ <strong>pending transactions</strong>:{' '}
+                ⚡️ <strong>pending trx</strong>:{' '}
                 {transactions.length === 0
                   ? 'none'
                   : transactions.map((trx) => (

@@ -110,8 +110,8 @@ export const Claim: FunctionComponent = () => {
           <PageSection>
             <Content>
               <p style={{ textAlign: 'center' }}>
-                This will <strong>PERMANENTLY</strong> unstake the <Vibes /> inside of your NFT! More <Vibes /> will
-                continue to be mined after unstaking.
+                This will <strong>PERMANENTLY</strong> unstake the <Vibes /> inside of your NFT to your wallet. More{' '}
+                <Vibes /> will continue to be mined after unstaking.
               </p>
               <p>
                 <ButtonGroup>

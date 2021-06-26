@@ -9,7 +9,7 @@ interface Props {
 const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
   return {
     vibes: {
-      color: (props) => (props.accent === false ? theme.palette.foreground.main : theme.palette.accent.tertiary),
+      color: (props) => (props.accent === false ? theme.palette.foreground.main : theme.palette.accent.main),
       fontWeight: 'bold',
     },
   };

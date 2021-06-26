@@ -3,7 +3,7 @@ const colors = {
   black: '#000000',
   gray: '#888888',
   darkGray: '#333333',
-  blue: '#2444ff',
+  blue: '#3464ff',
   pink: '#ff1940',
   green: '#3bff29',
   yellow: '#fffb21',
@@ -24,6 +24,7 @@ export const createTheme = () => {
       },
       accent: {
         main: colors.blue,
+        dark: '#0000ff',
         secondary: colors.green,
         tertiary: colors.pink,
         quadriarylolwhat: colors.yellow,
