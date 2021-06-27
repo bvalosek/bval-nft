@@ -336,9 +336,13 @@ contract.only('NFTTokenFaucet', (accounts) => {
       const { faucet } = await factory(a1);
       await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
       await setNetworkTime('2021-03-30'); // 1 day later
+
       await faucet.claim(tokenId);
-      const info = await faucet.tokenInfo(tokenId);
-      assert.equal(info.claimable, 0);
+      {
+        const info = await faucet.tokenInfo(tokenId);
+        assert.equal(info.balance, BN(100 * 1000 - 1000 * 1));
+        assert.equal(info.claimable, 0);
+      }
     });
     it('should not allow claiming immediately after claiming', async () => {
       const [a1] = accounts;
@@ -349,6 +353,40 @@ contract.only('NFTTokenFaucet', (accounts) => {
       await faucet.claim(tokenId);
       const task = faucet.claim(tokenId);
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'nothing to claim');
+    });
+    it('should properly handle partial claiming', async () => {
+      const [a1] = accounts;
+      const [tokenId] = TOKENS;
+      const { faucet } = await factory(a1);
+      await faucet.seed(tokenId, BN(1000), 100); // 1000 a day for 100 days
+      await setNetworkTime('2022-03-30'); // 1 year later
+
+      {
+        const info = await faucet.tokenInfo(tokenId);
+        assert.equal(info.balance, BN(100 * 1000 - 1000 * 0));
+        assert.equal(info.claimable, BN(100 * 1000 - 1000 * 0));
+      }
+
+      await faucet.claim(tokenId, BN(1000));
+      {
+        const info = await faucet.tokenInfo(tokenId);
+        assert.equal(info.balance, BN(100 * 1000 - 1000 * 1));
+        assert.equal(info.claimable, BN(100 * 1000 - 1000 * 1));
+      }
+
+      await faucet.claim(tokenId, BN(1000));
+      {
+        const info = await faucet.tokenInfo(tokenId);
+        assert.equal(info.balance, BN(100 * 1000 - 1000 * 2));
+        assert.equal(info.claimable, BN(100 * 1000 - 1000 * 2));
+      }
+
+      await faucet.claim(tokenId, BN(1000 * 98));
+      {
+        const info = await faucet.tokenInfo(tokenId);
+        assert.equal(info.balance, 0);
+        assert.equal(info.claimable, 0);
+      }
     });
   });
 });

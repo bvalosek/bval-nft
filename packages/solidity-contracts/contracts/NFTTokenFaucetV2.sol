@@ -188,9 +188,14 @@ contract NFTTokenFaucetV2 is AccessControlEnumerable {
     uint256 toClaim = amount < availableToClaim ? amount : availableToClaim;
     require(toClaim > 0, "nothing to claim");
 
+    // claim only as far up as we need to get our amount... basically "advances"
+    // the lastClaim timestamp the exact amount needed to provide the amount
+    // claim at = last + (to claim / rate) * 1 day, rewritten for div last
+    uint claimAt = _lastClaim[tokenId] + toClaim * 1 days / _rates[tokenId];
+
     // update balances and execute ERC-20 transfer
     _balances[tokenId] -= toClaim;
-    _lastClaim[tokenId] = block.timestamp;
+    _lastClaim[tokenId] = claimAt;
     _token.transfer(msgSender, toClaim);
 
     emit Claim(tokenId, msgSender, toClaim);
