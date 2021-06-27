@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { addToMetamask, getTokenBalance } from '../lib/vibes';
 import { switchToPolygon } from '../lib/web3';
+import { getPooledVibes } from '../lib/quickswap';
 import { ContractTransaction } from 'ethers';
 
 const connector = new InjectedConnector({});
@@ -14,6 +15,7 @@ type WalletState = 'disconnected' | 'connected' | 'ready';
 export const useWalletImplementation = () => {
   const { activate, active, error, chainId, account, library } = useWeb3React();
   const [balance, setBalance] = useState<BigNumber>(BigNumber.from(0));
+  const [pooled, setPooled] = useState<BigNumber | null>(null);
   const [transactions, setTransactions] = useState<ContractTransaction[]>([]);
   const callbacks = useRef<Array<() => unknown>>([]);
 
@@ -45,8 +47,11 @@ export const useWalletImplementation = () => {
   };
 
   const fetchBalance = async () => {
-    const balance = await getTokenBalance(library.getSigner(), account);
+    const provider = library.getSigner();
+    const balance = await getTokenBalance(provider, account);
     setBalance(balance);
+    const pooled = await getPooledVibes(provider, account);
+    setPooled(pooled);
   };
 
   const registerTransactions = async (trx: ContractTransaction) => {
@@ -86,6 +91,7 @@ export const useWalletImplementation = () => {
     registerTransactions,
     transactions,
     onTransactions,
+    pooled,
   };
 };
 

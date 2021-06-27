@@ -14,6 +14,7 @@ import { Title } from './Title';
 import { Vibes } from './Vibes';
 import { Claimer } from './Claimer';
 import { BigNumber, ContractTransaction } from 'ethers';
+import { Divider } from './Divder';
 
 interface Params {
   tokenId: string;
@@ -76,6 +77,7 @@ export const Claim: FunctionComponent = () => {
             </ButtonGroup>
           </Content>
         </PageSection>
+        <Divider />
       </>
     );
   }
@@ -94,11 +96,9 @@ export const Claim: FunctionComponent = () => {
               You are not the owner of <strong>{metadata.name}</strong>. Only the current owner of an NFT can claim the{' '}
               <Vibes /> staked inside it.
             </p>
-            <p>
-              <ButtonGroup>
-                <Button navTo={`/tokens/${token.tokenId}`}>BACK</Button>
-              </ButtonGroup>
-            </p>
+            <ButtonGroup>
+              <Button navTo={`/tokens/${token.tokenId}`}>BACK</Button>
+            </ButtonGroup>
           </Content>
         </PageSection>
       )}
@@ -113,15 +113,16 @@ export const Claim: FunctionComponent = () => {
                 This will <strong>PERMANENTLY</strong> unstake the <Vibes /> inside of your NFT to your wallet. More{' '}
                 <Vibes /> will continue to be mined after unstaking.
               </p>
-              <p>
-                <ButtonGroup>
-                  <Button navTo={`/tokens/${token.tokenId}`}>🙅 CANCEL</Button>
-                </ButtonGroup>
-              </p>
+              <ButtonGroup>
+                <Button navTo={`/tokens/${token.tokenId}`}>🙅 CANCEL</Button>
+              </ButtonGroup>
             </Content>
           </PageSection>
         </>
       )}
+      <PageSection>
+        <Divider />
+      </PageSection>
     </>
   );
 };

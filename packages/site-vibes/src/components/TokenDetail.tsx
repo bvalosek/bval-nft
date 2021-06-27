@@ -114,21 +114,19 @@ export const TokenDetail: FunctionComponent = () => {
           <div>
             <Content>
               <Title>Actions</Title>
-              <p style={{ textAlign: 'center' }}>
-                <ButtonGroup>
-                  <Button disabled={token.owner !== account} navTo={`/claim/${token.tokenId}`}>
-                    😎 CLAIM <Vibes />
-                  </Button>
-                  <Button externalNavTo={`https://www.screensaver.world/object/${token.tokenId}`}>
-                    🌌 VIEW on screensaver
-                  </Button>
-                  <Button
-                    externalNavTo={`https://opensea.io/assets/matic/0x486ca491c9a0a9ace266aa100976bfefc57a0dd4/${token.tokenId}`}
-                  >
-                    ⛵️ VIEW on OpenSea
-                  </Button>
-                </ButtonGroup>
-              </p>
+              <ButtonGroup>
+                <Button disabled={token.owner !== account} navTo={`/claim/${token.tokenId}`}>
+                  😎 CLAIM <Vibes />
+                </Button>
+                <Button externalNavTo={`https://www.screensaver.world/object/${token.tokenId}`}>
+                  🌌 VIEW on screensaver
+                </Button>
+                <Button
+                  externalNavTo={`https://opensea.io/assets/matic/0x486ca491c9a0a9ace266aa100976bfefc57a0dd4/${token.tokenId}`}
+                >
+                  ⛵️ VIEW on OpenSea
+                </Button>
+              </ButtonGroup>
             </Content>
           </div>
         </div>

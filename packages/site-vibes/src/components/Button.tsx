@@ -28,15 +28,20 @@ export const Button: FunctionComponent<Props> = (props) => {
   const history = useHistory();
 
   const { navTo, externalNavTo, ...attr } = props;
+  const onClickFromProps = attr.onClick;
   const className = `${props.className ?? ''} ${classes.button}`;
 
   if (!props.disabled) {
     if (navTo) {
-      attr.onClick = () => {
+      attr.onClick = (e) => {
+        if (onClickFromProps) onClickFromProps(e);
         history.push(navTo);
       };
     } else if (externalNavTo) {
-      attr.onClick = () => window.open(externalNavTo, '_blank');
+      attr.onClick = (e) => {
+        if (onClickFromProps) onClickFromProps(e);
+        window.open(externalNavTo, '_blank');
+      };
     }
   }
 

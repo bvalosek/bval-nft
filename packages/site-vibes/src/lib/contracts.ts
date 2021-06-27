@@ -3,6 +3,7 @@ interface Contracts {
   vibes: string;
   ssw: string;
   faucetV2: string;
+  quickswapVibesMatic: string;
 }
 
 export const getContracts = (): Contracts => {
@@ -11,5 +12,6 @@ export const getContracts = (): Contracts => {
     vibes: '0xd269af9008c674b3814b4830771453d6a30616eb',
     ssw: '0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4',
     faucetV2: '0x37bD35C6967B786306b6Fa201Ec5Cf5751675804',
+    quickswapVibesMatic: '0x4F9e9C2EB7D90447FA190d4986b9E0A1562E2587',
   };
 };

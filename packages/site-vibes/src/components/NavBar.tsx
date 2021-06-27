@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useWallet } from '../hooks/wallet';
 import { ThemeConfig } from '../Theme';
 import { Button } from './Button';
+import { Divider } from './Divder';
 import { PageSection } from './PageSection';
 import { Vibes } from './Vibes';
 import { WalletButton } from './WalletButton';
