@@ -22,8 +22,8 @@ All contracts are verified on etherscan.
 ### Vibes (Polygon L2 Project)
 
 * Token Lock Manager: [0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c](https://polygonscan.com/address/0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c)
-* VIBES ERC-20: [0xCb437B5BC51734e1065C7Eeb18C48aFe8F4555e5](https://polygonscan.com/address/0xCb437B5BC51734e1065C7Eeb18C48aFe8F4555e5)
-* Vibes Wellspring: [0x88cf52a742ba72Cb4B6662e5b1B14c54F9853CC7](https://polygonscan.com/address/0x88cf52a742ba72Cb4B6662e5b1B14c54F9853CC7)
+* VIBES ERC-20: [0xd269af9008c674b3814b4830771453d6a30616eb](https://polygonscan.com/address/0xd269af9008c674b3814b4830771453d6a30616eb)
+* Vibes Wellspring: [0x37bD35C6967B786306b6Fa201Ec5Cf5751675804](https://polygonscan.com/address/0x37bD35C6967B786306b6Fa201Ec5Cf5751675804)
 
 ## Development
 

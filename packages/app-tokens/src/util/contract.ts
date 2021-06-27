@@ -44,9 +44,9 @@ export const useContracts = (): Contracts => {
         nft: '0x0',
         lock: '0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c',
         faucet: '0x0',
-        vibes: '0xCb437B5BC51734e1065C7Eeb18C48aFe8F4555e5',
+        vibes: '0xd269af9008c674b3814b4830771453d6a30616eb',
         ssw: '0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4',
-        faucetV2: '0x88cf52a742ba72Cb4B6662e5b1B14c54F9853CC7',
+        faucetV2: '0x37bD35C6967B786306b6Fa201Ec5Cf5751675804',
       };
   }
 };
