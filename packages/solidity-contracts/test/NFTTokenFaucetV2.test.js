@@ -65,7 +65,7 @@ const factory = async (account) => {
 const MAX_DEPLOYMENT_GAS = 2000000;
 const MAX_MUTATION_GAS = 200000;
 
-contract.only('NFTTokenFaucet', (accounts) => {
+contract('NFTTokenFaucet', (accounts) => {
   describe('gas constraints', () => {
     it('should deploy with less than target deployment gas', async () => {
       const [a1] = accounts;
