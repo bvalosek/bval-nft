@@ -28,7 +28,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 });
 
 export const Wallet: FunctionComponent = () => {
-  const { balance, account, trackInMetamask, transactions, pooled } = useWallet();
+  const { balance, account, trackInMetamask, transactions, pooled, votePower } = useWallet();
   const { tokens, sampledAt } = useTokens();
   const classes = useStyles();
 
@@ -71,6 +71,8 @@ export const Wallet: FunctionComponent = () => {
                       :{' '}
                     </strong>{' '}
                     <DecimalNumber number={pooled} decimals={0} /> <Vibes />
+                    <br />
+                    🗳 <strong>vote power</strong>: <DecimalNumber number={votePower} decimals={0} />
                     <br />
                     🖼 <strong>owned NFTs</strong>: {owned.length}
                     <br />
