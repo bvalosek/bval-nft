@@ -14,6 +14,7 @@ import { Divider } from './Divder';
 import { PageSection } from './PageSection';
 import { Stats } from './Stats';
 import { Title } from './Title';
+import { TokenTable } from './TokenTable';
 import { Vibes } from './Vibes';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
@@ -59,7 +60,7 @@ export const Wallet: FunctionComponent = () => {
                     />{' '}
                     <Vibes />
                     <br />
-                    💎 <strong>net mining rate</strong>: <DecimalNumber number={stats.totalDailyRate} decimals={0} />{' '}
+                    💎 <strong>net mining</strong>: <DecimalNumber number={stats.totalDailyRate} decimals={0} />{' '}
                     <Vibes /> / day
                     <br />
                     🏊‍♂️{' '}
@@ -112,11 +113,14 @@ export const Wallet: FunctionComponent = () => {
                 </ButtonGroup>
               </div>
             </div>
-            <div>
-              <Title>Your NFTs</Title>
-            </div>
           </Connect>
         </Content>
+      </PageSection>
+      <PageSection>
+        <div>
+          <Title>Your NFTs</Title>
+        </div>
+        <TokenTable tokens={owned} />
       </PageSection>
       <PageSection>
         <Divider />

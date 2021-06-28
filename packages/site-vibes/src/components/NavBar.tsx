@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/styles';
 import React, { FunctionComponent, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useWallet } from '../hooks/wallet';
+import { getContracts } from '../lib/contracts';
 import { ThemeConfig } from '../Theme';
 import { Button } from './Button';
 import { Divider } from './Divder';
@@ -89,6 +90,15 @@ export const NavBar: FunctionComponent = () => {
           </div>
           <div>
             <Button externalNavTo="https://snapshot.org/#/sickvibes.eth">🗳 GOVERNANCE</Button>
+          </div>
+          <div>
+            <Button
+              externalNavTo={`https://quickswap.exchange/#/swap?inputCurrency=ETH&outputCurrency=${
+                getContracts().vibes
+              }`}
+            >
+              🤑 BUY <Vibes />
+            </Button>
           </div>
           <div>
             <Button onClick={withClose(() => history.push('/wallet'))}>💸 WALLET</Button>
