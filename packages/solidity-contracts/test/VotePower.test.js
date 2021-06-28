@@ -1,3 +1,5 @@
+const truffleAssert = require('truffle-assertions');
+
 const Vibes = artifacts.require('Vibes');
 const TokenLockManager = artifacts.require('TokenLockManager');
 const NFTTokenFaucetV2 = artifacts.require('NFTTokenFaucetV2');
@@ -87,5 +89,24 @@ contract.only('VotePower', (accounts) => {
     await votePower.setStrategies([faucetStrategy.address]); // just faucet, to check
     assert.equal(await votePower.getVotePower(a1), BN(500));
     assert.equal(await votePower.getVotePower(a2), BN(400));
+  });
+  it('should not allow instantiating a uniswap strategy with a mismatched token', async () => {
+    const token1 = await Vibes.new();
+    const token2 = await Vibes.new();
+    const token3 = await Vibes.new();
+    const pair = await MockPair.new(token1.address, token2.address);
+
+    // does not revert
+    await UniswapPoolStrategy.new(pair.address, token1.address);
+    await UniswapPoolStrategy.new(pair.address, token2.address);
+
+    const task = UniswapPoolStrategy.new(pair.address, token3.address);
+    await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'token is not part pair');
+  });
+  it('should throw of non admin attempts to set strategies', async () => {
+    const [, a2] = accounts;
+    const { votePower } = await factory();
+    const task = votePower.setStrategies([], { from: a2 });
+    await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
   });
 });
