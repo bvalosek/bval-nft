@@ -4,6 +4,10 @@ import lockManager from './build/contracts/TokenLockManager.json';
 import bvalWellspring from './build/contracts/BVALWellspring.json';
 import vibes from './build/contracts/Vibes.json';
 import vibesWellspring from './build/contracts/VIBESWellspring.json';
+import erc20Strategy from './build/contracts/ERC20BalanceStrategy.json';
+import faucetStrategy from './build/contracts/NFTTokenFaucetStrategy.json';
+import uniswapStrategy from './build/contracts/UniswapPoolStrategy.json';
+import votePower from './build/contracts/VotePower.json';
 
 export const BVAL20 = bval20;
 export const BVAL721 = bval721;
@@ -11,3 +15,7 @@ export const LOCK_MANAGER = lockManager;
 export const BVAL_WELLSPRING = bvalWellspring;
 export const VIBES = vibes;
 export const VIBES_WELLSPRING = vibesWellspring;
+export const ERC20_STRATEGY = erc20Strategy;
+export const FAUCET_STRATEGY = faucetStrategy;
+export const UNISWAP_STRATEGY = uniswapStrategy;
+export const VOTE_POWER = votePower;

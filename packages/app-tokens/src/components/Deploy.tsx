@@ -5,9 +5,13 @@ import { Container } from './Container';
 import {
   deployBVAL721,
   deployBVALWellspring,
+  deployERC20Strategy,
+  deployFaucetStrategy,
   deployTokenLockManager,
+  deployUniswapStrategy,
   deployVibes,
   deployVIBESWellspring,
+  deployVotePowerFacade,
   grantSeederRole,
   mintVibesTo,
   useContracts,
@@ -56,20 +60,6 @@ export const Deploy: FunctionComponent = () => {
           Mint 1b VIBES
         </Button>
       </div>
-      {/* <Text h2>Deploy BVAL721</Text>
-      <div>
-        <Button type="success" onClick={() => deployNft()}>
-          Deploy Collection
-        </Button>
-      </div>
-      */}
-      {/*
-      <Text h2>Deploy BVALWellspring</Text>
-      <div>
-        <Button type="success" onClick={() => deployFaucet()}>
-          Deploy Faucet
-        </Button>
-      </div> */}
       <Text h2>Deploy TokenLockManager</Text>
       <div>
         <Button type="success" onClick={() => deployLock()}>
@@ -87,6 +77,50 @@ export const Deploy: FunctionComponent = () => {
         <Button type="success" onClick={() => grant()}>
           Grant
         </Button>
+      </div>
+      <Text h2>Deploy ERC20 Strategy</Text>
+      <div>
+        <Button
+          type="success"
+          onClick={() => {
+            deployERC20Strategy(library.getSigner(), contracts);
+          }}
+        >
+          Deploy ERC20 Strat
+        </Button>
+        <Text h2>Deploy Faucet Strategy</Text>
+        <div>
+          <Button
+            type="success"
+            onClick={() => {
+              deployFaucetStrategy(library.getSigner(), contracts);
+            }}
+          >
+            Deploy Faucet Strat
+          </Button>
+        </div>
+        <Text h2>Deploy Uniswap Strategy</Text>
+        <div>
+          <Button
+            type="success"
+            onClick={() => {
+              deployUniswapStrategy(library.getSigner(), contracts);
+            }}
+          >
+            Deploy Uniswap Strat
+          </Button>
+        </div>
+        <Text h2>Deploy Vote Power Facade</Text>
+        <div>
+          <Button
+            type="success"
+            onClick={() => {
+              deployVotePowerFacade(library.getSigner());
+            }}
+          >
+            Deploy Uniswap Strat
+          </Button>
+        </div>
       </div>
     </Container>
   );

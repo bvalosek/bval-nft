@@ -1,7 +1,17 @@
 import { BigNumber, Contract, ContractFactory, Signer } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 
-import { BVAL721, BVAL_WELLSPRING, LOCK_MANAGER, VIBES, VIBES_WELLSPRING } from '@bvalosek/solidity-contracts';
+import {
+  BVAL721,
+  BVAL_WELLSPRING,
+  LOCK_MANAGER,
+  VIBES,
+  VIBES_WELLSPRING,
+  ERC20_STRATEGY,
+  FAUCET_STRATEGY,
+  UNISWAP_STRATEGY,
+  VOTE_POWER,
+} from '@bvalosek/solidity-contracts';
 import { SequenceCreateData, toHexStringBytes, TokenMintData } from '@bvalosek/lib-tokens';
 import { useNetworkName } from './web3';
 
@@ -13,6 +23,11 @@ interface Contracts {
   vibes: string;
   ssw: string;
   faucetV2: string;
+  quickswapVibesMatic: string;
+  erc20Strategy: string;
+  nftTokenFaucetStrategy: string;
+  uniswapPoolStrategy: string;
+  votePowerFacade: string;
 }
 
 export const useContracts = (): Contracts => {
@@ -27,6 +42,11 @@ export const useContracts = (): Contracts => {
         vibes: '0x0',
         ssw: '0x0',
         faucetV2: '0x0',
+        quickswapVibesMatic: '0x0',
+        erc20Strategy: '0x0',
+        nftTokenFaucetStrategy: '0x0',
+        uniswapPoolStrategy: '0x0',
+        votePowerFacade: '0x0',
       };
     case 'rinkeby':
       return {
@@ -37,6 +57,11 @@ export const useContracts = (): Contracts => {
         vibes: '0x0',
         ssw: '0x0',
         faucetV2: '0x0',
+        quickswapVibesMatic: '0x0',
+        erc20Strategy: '0x0',
+        nftTokenFaucetStrategy: '0x0',
+        uniswapPoolStrategy: '0x0',
+        votePowerFacade: '0x0',
       };
     case 'polygon':
       return {
@@ -47,6 +72,11 @@ export const useContracts = (): Contracts => {
         vibes: '0xd269af9008c674b3814b4830771453d6a30616eb',
         ssw: '0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4',
         faucetV2: '0x37bD35C6967B786306b6Fa201Ec5Cf5751675804',
+        quickswapVibesMatic: '0x4F9e9C2EB7D90447FA190d4986b9E0A1562E2587',
+        erc20Strategy: '0x9940D367E0596f64DbcbBd57f480359E4A2F852f',
+        nftTokenFaucetStrategy: '0x2308BE9DFD702aeF9Ee42c28b54188A75f4313c9',
+        uniswapPoolStrategy: '0xD35BA61d9Bd9AFe04347D88e59A4328a65dC9F4B',
+        votePowerFacade: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
       };
   }
 };
@@ -150,6 +180,33 @@ export const deployVIBESWellspring = async (signer: Signer, { ssw, vibes, lock }
 
 export const deployVibes = async (signer: Signer): Promise<Contract> => {
   const factory = new ContractFactory(VIBES.abi, VIBES.bytecode, signer);
+  const contract = await factory.deploy();
+  return contract;
+};
+
+export const deployERC20Strategy = async (signer: Signer, { vibes }: Contracts): Promise<Contract> => {
+  const factory = new ContractFactory(ERC20_STRATEGY.abi, ERC20_STRATEGY.bytecode, signer);
+  const contract = await factory.deploy(vibes);
+  return contract;
+};
+
+export const deployFaucetStrategy = async (signer: Signer, { faucetV2 }: Contracts): Promise<Contract> => {
+  const factory = new ContractFactory(FAUCET_STRATEGY.abi, FAUCET_STRATEGY.bytecode, signer);
+  const contract = await factory.deploy(faucetV2);
+  return contract;
+};
+
+export const deployUniswapStrategy = async (
+  signer: Signer,
+  { quickswapVibesMatic, vibes }: Contracts
+): Promise<Contract> => {
+  const factory = new ContractFactory(UNISWAP_STRATEGY.abi, UNISWAP_STRATEGY.bytecode, signer);
+  const contract = await factory.deploy(quickswapVibesMatic, vibes);
+  return contract;
+};
+
+export const deployVotePowerFacade = async (signer: Signer): Promise<Contract> => {
+  const factory = new ContractFactory(VOTE_POWER.abi, VOTE_POWER.bytecode, signer);
   const contract = await factory.deploy();
   return contract;
 };
