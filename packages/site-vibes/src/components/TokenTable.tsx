@@ -24,19 +24,27 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       '& tr': {
         padding: theme.spacing(1),
       },
+      '& thead': {
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+      },
+    },
+    objectLink: {
+      fontSize: theme.spacing(4),
+      color: theme.palette.accent.secondary,
     },
   };
 });
 
-export const TokenTable: FunctionComponent<Props> = ({ tokens: owned }) => {
-  const { tokens, sampledAt, tokenMetadata } = useTokens();
+export const TokenTable: FunctionComponent<Props> = ({ tokens }) => {
+  const { sampledAt, tokenMetadata } = useTokens();
   const classes = useStyles();
 
   return (
     <>
       <table className={classes.table}>
         <thead>
-          <tr>
+          <tr className={classes.desktop}>
             <th className={classes.desktop}>object</th>
             <th>token</th>
             <th className={classes.desktop} style={{ textAlign: 'right' }}>
@@ -46,15 +54,19 @@ export const TokenTable: FunctionComponent<Props> = ({ tokens: owned }) => {
               claimed
             </th>
             <th className={classes.desktop} style={{ textAlign: 'right' }}>
-              lifetime value
+              remaining value
             </th>
           </tr>
         </thead>
         <tbody>
           {tokens.map((t) => (
-            <tr>
-              <td className={classes.desktop}>{t.tokenId}</td>
-              <td>
+            <tr key={t.tokenId}>
+              <td className={`${classes.desktop}`} style={{ textAlign: 'center' }}>
+                <Button externalNavTo={`https://screensaver.world/object/${t.tokenId}`}>
+                  <span className={classes.objectLink}>#{t.tokenId}</span>
+                </Button>
+              </td>
+              <td style={{ textAlign: 'center' }}>
                 <Button navTo={`/tokens/${t.tokenId}`}>{tokenMetadata[t.tokenId]?.name ?? '-'}</Button>
               </td>
               <td style={{ textAlign: 'right' }} className={classes.desktop}>

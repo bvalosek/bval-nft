@@ -9,6 +9,7 @@ import { TokenDetail } from './components/TokenDetail';
 import { Tokens } from './components/Tokens';
 import { Wallet } from './components/Wallet';
 import { useNextPrimaryPage } from './hooks/app';
+import { VIPs } from './lib/vips';
 
 export const Application: FunctionComponent = () => {
   const { next } = useNextPrimaryPage();
@@ -47,6 +48,9 @@ export const Application: FunctionComponent = () => {
         </Route>
         <Route path="/featured">
           <Featured />
+        </Route>
+        <Route path="/airdrop">
+          <VIPs />
         </Route>
       </Switch>
     </Page>

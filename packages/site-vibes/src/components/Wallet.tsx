@@ -60,22 +60,14 @@ export const Wallet: FunctionComponent = () => {
                     />{' '}
                     <Vibes />
                     <br />
-                    💎 <strong>net mining</strong>: <DecimalNumber number={stats.totalDailyRate} decimals={0} />{' '}
-                    <Vibes /> / day
-                    <br />
-                    🏊‍♂️{' '}
-                    <strong>
-                      pooled{' '}
-                      <Button externalNavTo={`https://quickswap.exchange/#/add/${getContracts().vibes}/ETH`}>
-                        quickswap
-                      </Button>
-                      :{' '}
-                    </strong>{' '}
-                    <DecimalNumber number={pooled} decimals={0} /> <Vibes />
+                    🏊‍♂️ <strong>pooled liquidity</strong>: <DecimalNumber number={pooled} decimals={0} /> <Vibes />
                     <br />
                     🗳 <strong>vote power</strong>: <DecimalNumber number={votePower} decimals={0} />
                     <br />
                     🖼 <strong>owned NFTs</strong>: {owned.length}
+                    <br />
+                    💎 <strong>mining</strong>: <DecimalNumber number={stats.totalDailyRate} decimals={0} /> <Vibes /> /
+                    day
                     <br />
                     ⚡️ <strong>pending trx</strong>:{' '}
                     {transactions.length === 0
@@ -120,7 +112,14 @@ export const Wallet: FunctionComponent = () => {
         <div>
           <Title>Your NFTs</Title>
         </div>
-        <TokenTable tokens={owned} />
+        {owned.length > 0 && <TokenTable tokens={owned} />}
+        {owned.length === 0 && (
+          <Content>
+            <p>
+              You do not own any <Vibes /> NFTs.
+            </p>
+          </Content>
+        )}
       </PageSection>
       <PageSection>
         <Divider />

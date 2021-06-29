@@ -5,11 +5,11 @@ import { asDecimal } from '../lib/numbers';
 import { ThemeConfig } from '../Theme';
 
 interface Props {
-  number: BigNumber;
+  number?: BigNumber;
   decimals?: number;
   interoplate?: {
-    dailyRate: BigNumber;
-    sampledAt: number;
+    dailyRate?: BigNumber;
+    sampledAt?: number;
   };
 }
 
@@ -26,18 +26,22 @@ export const DecimalNumber: FunctionComponent<Props> = ({ number, interoplate, d
   const classes = useStyles();
 
   const update = useCallback(() => {
-    if (!interoplate) {
+    if (!interoplate || number === undefined || interoplate?.dailyRate === undefined) {
       return;
     }
     const delta = Date.now() - interoplate.sampledAt * 1000;
     const alpha = interoplate.dailyRate.mul(delta).div(1000 * 60 * 60 * 24);
     setAlpha(alpha);
-  }, [interoplate, interoplate?.dailyRate]);
+  }, [interoplate, interoplate?.dailyRate, interoplate?.sampledAt]);
 
   useEffect(() => {
     const h = setInterval(update, 100);
     return () => clearInterval(h);
   }, [interoplate, interoplate?.dailyRate]);
+
+  if (number === undefined) {
+    return <>-</>;
+  }
 
   const [a, b] = asDecimal(number.add(alpha));
 

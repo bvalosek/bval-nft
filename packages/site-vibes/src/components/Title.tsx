@@ -9,7 +9,8 @@ interface Props {
 const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
   return {
     header: {
-      fontSize: theme.scaledSpacing(4.5),
+      fontSize: theme.spacing(4),
+      '@media(min-width: 800px)': { fontSize: theme.spacing(5) },
       margin: theme.scaledSpacing(5),
       textDecoration: 'underline',
       textAlign: (props) => props.align ?? 'center',

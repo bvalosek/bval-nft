@@ -37,6 +37,8 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
     },
     menu: {
       background: theme.palette.background.main,
+      fontSize: theme.spacing(4),
+      '@media(min-width: 800px)': { fontSize: theme.spacing(5) },
       marginTop: theme.spacing(5.5),
       minHeight: '100vh',
       textAlign: 'right',
@@ -102,6 +104,11 @@ export const NavBar: FunctionComponent = () => {
           </div>
           <div>
             <Button onClick={withClose(() => history.push('/wallet'))}>💸 WALLET</Button>
+          </div>
+          <div>
+            <Button onClick={() => setOpen(false)} externalNavTo="https://discord.gg/qDrsjcGR2F">
+              🗣 DISCORD
+            </Button>
           </div>
         </div>
       )}
