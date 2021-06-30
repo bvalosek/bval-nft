@@ -1,4 +1,4 @@
-import { Contract } from 'ethers';
+import { Contract, ContractTransaction, Signer } from 'ethers';
 import SSW_GALLERY from './abi/ssw-gallery.json';
 import { JsonRpcProvider } from '@ethersproject/providers';
 
@@ -29,4 +29,10 @@ export const getTokenMetadata = async (
   const resp = await fetch(url);
   const json = await resp.json();
   return json;
+};
+
+export const cancelBid = async (signer: Signer, tokenId: string): Promise<ContractTransaction> => {
+  const ssw = new Contract(galleryAddress, SSW_GALLERY, signer);
+  const trx = await ssw.cancelBid(tokenId);
+  return trx;
 };

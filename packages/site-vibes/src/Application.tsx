@@ -10,6 +10,7 @@ import { Tokens } from './components/Tokens';
 import { Wallet } from './components/Wallet';
 import { useNextPrimaryPage } from './hooks/app';
 import { VIPs } from './components/vips';
+import { SSWCancelBid } from './lib/ssw-cancel-bid';
 
 export const Application: FunctionComponent = () => {
   const { next } = useNextPrimaryPage();
@@ -51,6 +52,9 @@ export const Application: FunctionComponent = () => {
         </Route>
         <Route path="/airdrop">
           <VIPs />
+        </Route>
+        <Route path="/ssw-cancel-bid">
+          <SSWCancelBid />
         </Route>
       </Switch>
     </Page>
