@@ -34,6 +34,11 @@
   status = 200
 
 [[redirects]]
+  from = "/airdrop"
+  to = "/index.html"
+  status = 20
+
+[[redirects]]
   from = "/ssw-debug"
   to = "/index.html"
   status = 200
