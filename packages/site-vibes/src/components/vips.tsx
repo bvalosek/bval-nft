@@ -99,6 +99,7 @@ const additionalVibesAirdrops = [
   '0x41ff38896855C46d62bc0276B7c35bd05668fdd1',
   '0x27641a64101fF152539dc88C24e09FF36Dc671c0',
   '0x4ffd5da06e6534F1e8B48a1fdFd19EaB0a6C0750',
+  '0x046bBe099CfA0b6cc71d59D6E4Cd38c5d0eEF71b',
 ];
 
 const MaticAirdrop: FunctionComponent<{ address: string }> = ({ address }) => {
