@@ -32,3 +32,9 @@
   from = "/admin"
   to = "/index.html"
   status = 200
+
+[[redirects]]
+  from = "/ssw-debug"
+  to = "/index.html"
+  status = 200
+

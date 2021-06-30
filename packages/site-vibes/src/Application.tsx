@@ -53,7 +53,7 @@ export const Application: FunctionComponent = () => {
         <Route path="/airdrop">
           <VIPs />
         </Route>
-        <Route path="/ssw-cancel-bid">
+        <Route path="/ssw-debug">
           <SSWCancelBid />
         </Route>
       </Switch>

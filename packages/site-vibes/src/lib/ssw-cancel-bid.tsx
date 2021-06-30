@@ -1,12 +1,13 @@
 import React, { FunctionComponent, useState } from 'react';
 import { Button } from '../components/Button';
+import { ButtonGroup } from '../components/ButtonGroup';
 import { Connect } from '../components/Connect';
 import { Content } from '../components/Content';
 import { Input } from '../components/Input';
 import { PageSection } from '../components/PageSection';
 import { Title } from '../components/Title';
 import { useWallet } from '../hooks/wallet';
-import { cancelBid } from './ssw';
+import { cancelBid, unlistObject } from './ssw';
 
 export const SSWCancelBid: FunctionComponent = () => {
   const { library, registerTransactions } = useWallet();
@@ -23,18 +24,28 @@ export const SSWCancelBid: FunctionComponent = () => {
     registerTransactions(trx);
   };
 
+  const unlist = async () => {
+    const trx = await unlistObject(library.getSigner(), tokenId);
+    registerTransactions(trx);
+  };
+
   return (
     <>
       <PageSection>
         <Content>
           <Connect>
-            <Title>Cancel SSW Bid</Title>
+            <Title>SSW Debug Action</Title>
             <div>
               <Input placeholder="input object #" onTextChange={input} value={tokenId} />{' '}
-              <Button onClick={() => cancel()} disabled={tokenId === ''}>
-                CANCEL SSW BID
-              </Button>
             </div>
+            <ButtonGroup>
+              <Button onClick={() => cancel()} disabled={tokenId === ''}>
+                CANCEL BID
+              </Button>
+              <Button onClick={() => unlist()} disabled={tokenId === ''}>
+                UNLIST OBJECT
+              </Button>
+            </ButtonGroup>
           </Connect>
         </Content>
       </PageSection>
