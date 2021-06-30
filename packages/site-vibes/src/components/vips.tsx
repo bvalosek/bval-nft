@@ -1,4 +1,4 @@
-import { BigNumber, utils as ethersUtils } from 'ethers';
+import { BigNumber, utils as ethersUtils, utils } from 'ethers';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Address } from './Address';
 import { Connect } from './Connect';
@@ -47,7 +47,7 @@ const additionalBvalAidrops = [
 ];
 
 const additionalVibesAirdrops = [
-  /**  */
+  // ppl i've collected on SSW, other ppl hyped on the project pre-launch
   '0xA58b4A80dE82b889FF40e487c58208A429c77f88',
   '0x183bdb344a07ee3d27f07ac4799a56e4a2fe5439',
   '0x0E696712DaDEd627f370Ec9Bbf9F7931cf19863D',
@@ -61,14 +61,26 @@ const additionalVibesAirdrops = [
   '0xa6bcB89f21E0BF71E08dEd426C142757791e17cf',
   '0x80eE02DC24D9fD858f12857997Efd43Fe3E83035',
   '0x2f9d6B127837e2F7A8510560CD067F59EBa2f4aA',
+  '0x211f656B82e254CFB2eC42bC89086eC9cB350C5e',
+  '0xF77BfC2a8C1E309Ece5631531E9e1D74eA821fD0',
+  '0x22D02786f813A70c5699621810D0ea85efA07332',
+  '0x3819D14e0B3147829E072336c8beDb02b73eE0AB',
 ];
 
 const MaticAirdrop: FunctionComponent<{ address: string }> = ({ address }) => {
   const [balance, setBalance] = useState<BigNumber>(BigNumber.from(0));
-  const { library } = useWallet();
+  const [submitted, setSubmitted] = useState(false);
+  const { library, registerTransactions } = useWallet();
   const provider = getProvider();
 
   const fetch = async () => setBalance(await provider.getBalance(address));
+
+  const drop = async () => {
+    const signer = library.getSigner();
+    const trx = await signer.sendTransaction({ to: address, value: utils.parseEther('0.1') });
+    setSubmitted(true);
+    registerTransactions(trx);
+  };
 
   useEffect(() => {
     fetch();
@@ -76,7 +88,7 @@ const MaticAirdrop: FunctionComponent<{ address: string }> = ({ address }) => {
 
   return (
     <>
-      <DecimalNumber number={balance} />
+      <Button onClick={() => drop()}>{!submitted ? '🎁' : '⏳'}</Button> <DecimalNumber number={balance} />
     </>
   );
 };
