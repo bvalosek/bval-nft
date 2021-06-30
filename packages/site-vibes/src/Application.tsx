@@ -9,7 +9,7 @@ import { TokenDetail } from './components/TokenDetail';
 import { Tokens } from './components/Tokens';
 import { Wallet } from './components/Wallet';
 import { useNextPrimaryPage } from './hooks/app';
-import { VIPs } from './lib/vips';
+import { VIPs } from './components/vips';
 
 export const Application: FunctionComponent = () => {
   const { next } = useNextPrimaryPage();
