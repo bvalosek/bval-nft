@@ -46,8 +46,20 @@ const additionalBvalAidrops = [
   '0xEEcd2A6ffe01B62ED26102705465Bc598bdF7DDA',
 ];
 
+// https://polygonscan.com/token/0x64b10bc34746e3c7ac4505c76aec0c13e1d4965a#balances
+const booshCoinHolders = [
+  '0x0c6204b8ebaf837d5cff51447050777cd9b39fc4',
+  '0x4dcedbdf36ac9ad41889671fe56b7abe37434390',
+  '0x7d9197e146d5ec395992d118ef244e2f06bfbc37',
+  '0x8abaf5733742b1506f6a1255de0e37aec76b7940',
+  '0xc0a38fcac5b39c5454bd93775a74ec4183d2b488',
+  '0xf8530cca204442e56f8f55ea35eb0fdf0b40eec8',
+  '0xfc91be49bc90d263470f9d83feff46349165ae8e',
+  '0x89e27f651186de46d656f8cd55ba9620dc556320',
+];
+
+// ppl i've collected on SSW, other ppl hyped on the project pre-launch
 const additionalVibesAirdrops = [
-  // ppl i've collected on SSW, other ppl hyped on the project pre-launch
   '0xA58b4A80dE82b889FF40e487c58208A429c77f88',
   '0x183bdb344a07ee3d27f07ac4799a56e4a2fe5439',
   '0x0E696712DaDEd627f370Ec9Bbf9F7931cf19863D',
@@ -75,6 +87,15 @@ const additionalVibesAirdrops = [
   '0x3a30c8DC7913d54ea9A7d7cfE41eD77D9BdA7b78',
   '0x8aE6555F24420F55ecE055d3fa4bd27E8A62E2B5',
   '0xE90545D4Ac0Df0cca39CE84b4d984FC04ce39150',
+  '0x41ff38896855C46d62bc0276B7c35bd05668fdd1',
+  '0x27641a64101fF152539dc88C24e09FF36Dc671c0',
+  '0x4ffd5da06e6534F1e8B48a1fdFd19EaB0a6C0750',
+  '0x897cE0748b9F874d9abc24117c740FA16026201D',
+  '0x1Be195D2f8fd76C63c9ce274349F2ecF5486C601',
+  '0x9A18E1412F7d8566005Db607E38c2279D26422D0',
+  '0xb012A1bDCA34E1d0c2267bb50e6c53C8042eB4b6',
+  '0x6C9b6041797C556d712a64F12e3035d019Fd450e',
+  '0x05dB7e001F6650745DCFf8044d3e5AdE3af4C03a',
   '0x41ff38896855C46d62bc0276B7c35bd05668fdd1',
   '0x27641a64101fF152539dc88C24e09FF36Dc671c0',
   '0x4ffd5da06e6534F1e8B48a1fdFd19EaB0a6C0750',
@@ -145,9 +166,13 @@ export const VIPs: FunctionComponent = () => {
 
   const deduped = [
     ...new Set(
-      [...bvalHolders, ...additionalBvalAidrops, ...vibesTokenHolders, ...additionalVibesAirdrops].map((a) =>
-        a.toLowerCase()
-      )
+      [
+        ...bvalHolders,
+        ...additionalBvalAidrops,
+        ...vibesTokenHolders,
+        ...additionalVibesAirdrops,
+        ...booshCoinHolders,
+      ].map((a) => a.toLowerCase())
     ),
   ].sort();
 
