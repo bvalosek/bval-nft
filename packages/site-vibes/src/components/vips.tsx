@@ -50,6 +50,8 @@ const otherL1People = [
   '0x6908c81da16a60a6abec06883ba27cf0398f47a9',
   '0x271f2d33c88133878a9eaec8091de094c617013b',
   '0x987aab2e64db6eb26bd591abdc9746fd44016267',
+  '0xd16be44a4f59c15f7fd19aef9fb695f2e43dbca1',
+  '0x5d4377C603d5B677d797Cb025e777e9b6B106EF0',
 ];
 
 // https://polygonscan.com/token/0x64b10bc34746e3c7ac4505c76aec0c13e1d4965a#balances

@@ -5,7 +5,7 @@ import UNISWAP_STRATEGY from '@bvalosek/solidity-contracts/deployed-contracts/Un
 import { getContracts } from './contracts';
 
 export const getVotePower = async (provider: JsonRpcProvider, address: string): Promise<BigNumber> => {
-  const votePower = new Contract(getContracts().votePowerFacade, VOTE_POWER.abi, provider);
+  const votePower = new Contract(getContracts().votePowerAdapter, VOTE_POWER.abi, provider);
   const power = await votePower.getVotePower(address);
   return power;
 };

@@ -7,7 +7,8 @@ interface Contracts {
   erc20BalanceStrategy: string;
   nftTokenFaucetStrategy: string;
   uniswapPoolStrategy: string;
-  votePowerFacade: string;
+  votePowerAdapter: string;
+  votePowerTokenFacade: string;
 }
 
 export const getContracts = (): Contracts => {
@@ -20,6 +21,7 @@ export const getContracts = (): Contracts => {
     erc20BalanceStrategy: '0x473C14806Dd173201Aa650D6BAE2cb1635faE957',
     nftTokenFaucetStrategy: '0x2308BE9DFD702aeF9Ee42c28b54188A75f4313c9',
     uniswapPoolStrategy: '0xD35BA61d9Bd9AFe04347D88e59A4328a65dC9F4B',
-    votePowerFacade: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
+    votePowerAdapter: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
+    votePowerTokenFacade: '0x0',
   };
 };

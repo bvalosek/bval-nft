@@ -27,7 +27,8 @@ interface Contracts {
   erc20Strategy: string;
   nftTokenFaucetStrategy: string;
   uniswapPoolStrategy: string;
-  votePowerFacade: string;
+  votePowerAdapter: string;
+  votePowerTokenFacade: string;
 }
 
 export const useContracts = (): Contracts => {
@@ -46,7 +47,8 @@ export const useContracts = (): Contracts => {
         erc20Strategy: '0x0',
         nftTokenFaucetStrategy: '0x0',
         uniswapPoolStrategy: '0x0',
-        votePowerFacade: '0x0',
+        votePowerAdapter: '0x0',
+        votePowerTokenFacade: '0x0',
       };
     case 'rinkeby':
       return {
@@ -61,7 +63,8 @@ export const useContracts = (): Contracts => {
         erc20Strategy: '0x0',
         nftTokenFaucetStrategy: '0x0',
         uniswapPoolStrategy: '0x0',
-        votePowerFacade: '0x0',
+        votePowerAdapter: '0x0',
+        votePowerTokenFacade: '0x0',
       };
     case 'polygon':
       return {
@@ -76,7 +79,8 @@ export const useContracts = (): Contracts => {
         erc20Strategy: '0x9940D367E0596f64DbcbBd57f480359E4A2F852f',
         nftTokenFaucetStrategy: '0x2308BE9DFD702aeF9Ee42c28b54188A75f4313c9',
         uniswapPoolStrategy: '0xD35BA61d9Bd9AFe04347D88e59A4328a65dC9F4B',
-        votePowerFacade: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
+        votePowerAdapter: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
+        votePowerTokenFacade: '0x0',
       };
   }
 };
@@ -210,6 +214,10 @@ export const deployVotePowerFacade = async (signer: Signer): Promise<Contract> =
   const contract = await factory.deploy();
   return contract;
 };
+
+export const deployVotePowerTokenFacade = async (signer: Signer): Promise<Contract> => {
+  const factory = new ContractFactory(VOTE_POWER.abi, VOTE_POWER.bytecode, signer);
+}
 
 export const mintVibesTo = async (address: string, to: string, amount: string, signer: Signer): Promise<void> => {
   const contract = new Contract(address, VIBES.abi, signer);
