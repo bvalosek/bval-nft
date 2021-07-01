@@ -39,7 +39,7 @@ export const DecimalNumber: FunctionComponent<Props> = ({ number, interoplate, d
     return () => clearInterval(h);
   }, [interoplate, interoplate?.dailyRate]);
 
-  if (number === undefined) {
+  if (number == null) {
     return <>-</>;
   }
 
