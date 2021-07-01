@@ -16,7 +16,7 @@ export const Connect: FunctionComponent = (props) => {
 
   if (!walletPresent()) {
     return (
-      <Content>
+      <>
         <Title>⚠️ You Are Not On-Chain</Title>
         <p>
           <Vibes /> is a decentralized application built on the Polygon Layer 2 blockchain. Some features require a web3
@@ -26,19 +26,23 @@ export const Connect: FunctionComponent = (props) => {
           Please install <Button externalNavTo="https://metamask.io">METAMASK</Button> (browser plugin or mobile app) to
           access all parts of the site.
         </p>
-      </Content>
+      </>
     );
   }
 
   if (state !== 'ready') {
     return (
-      <Content>
-        <p>connect your MetaMask wallet.</p>
+      <>
+        <Title>Connect Your Wallet</Title>
+        <p>
+          <Vibes /> uses MetaMask as a web3 provider in order to communicate with the Polygon Layer 2 blockchain.
+          Connect your wallet to continue.
+        </p>
         <p style={{ textAlign: 'center' }}>
-          <Button onClick={() => doIt()}>CONNECT</Button>
+          <Button onClick={() => doIt()}>⚡ CONNECT</Button>
         </p>
         {error?.message && <p>🤮 error with injected web3 context: {error?.message}</p>}
-      </Content>
+      </>
     );
   }
 

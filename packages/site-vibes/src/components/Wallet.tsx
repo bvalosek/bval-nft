@@ -3,19 +3,17 @@ import React, { FunctionComponent } from 'react';
 import { useTokens } from '../hooks/tokens';
 import { useWallet } from '../hooks/wallet';
 import { getContracts } from '../lib/contracts';
-import { computeStats } from '../lib/faucet';
 import { ThemeConfig } from '../Theme';
 import { Button } from './Button';
 import { ButtonGroup } from './ButtonGroup';
 import { Connect } from './Connect';
 import { Content } from './Content';
-import { DecimalNumber } from './DecimalNumber';
 import { Divider } from './Divder';
 import { PageSection } from './PageSection';
-import { Stats } from './Stats';
 import { Title } from './Title';
 import { TokenTable } from './TokenTable';
 import { Vibes } from './Vibes';
+import { WalletStats } from './WalletStats';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
@@ -29,8 +27,8 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 });
 
 export const Wallet: FunctionComponent = () => {
-  const { balance, account, trackInMetamask, transactions, pooled, votePower } = useWallet();
-  const { tokens, sampledAt } = useTokens();
+  const { account, trackInMetamask } = useWallet();
+  const { tokens } = useTokens();
   const classes = useStyles();
 
   const track = async () => {
@@ -38,8 +36,6 @@ export const Wallet: FunctionComponent = () => {
   };
 
   const owned = tokens.filter((t) => t.owner === account);
-
-  const stats = computeStats(owned);
 
   return (
     <>
@@ -49,34 +45,7 @@ export const Wallet: FunctionComponent = () => {
             <div className={classes.panel}>
               <div>
                 <Title>Your Wallet</Title>
-                <Stats>
-                  <p>
-                    🏦 <strong>balance</strong>: <DecimalNumber number={balance} decimals={0} /> <Vibes />
-                    <br />
-                    🤑 <strong>claimable</strong>:{' '}
-                    <DecimalNumber
-                      number={stats.totalClaimable}
-                      interoplate={{ sampledAt, dailyRate: stats.totalDailyRate }}
-                    />{' '}
-                    <Vibes />
-                    <br />
-                    🏊‍♂️ <strong>pooled liquidity</strong>: <DecimalNumber number={pooled} decimals={0} /> <Vibes />
-                    <br />
-                    🗳 <strong>vote power</strong>: <DecimalNumber number={votePower} decimals={0} />
-                    <br />
-                    🖼 <strong>owned NFTs</strong>: {owned.length}
-                    <br />
-                    💎 <strong>mining</strong>: <DecimalNumber number={stats.totalDailyRate} decimals={0} /> <Vibes /> /
-                    day
-                    <br />
-                    ⚡️ <strong>pending trx</strong>:{' '}
-                    {transactions.length === 0
-                      ? 'none'
-                      : transactions.map((trx) => (
-                          <Button externalNavTo={`https://polygonscan.com/tx/${trx.hash}`}>{trx.nonce}</Button>
-                        ))}
-                  </p>
-                </Stats>
+                <WalletStats />
               </div>
               <div>
                 <Title>Actions</Title>
@@ -108,22 +77,26 @@ export const Wallet: FunctionComponent = () => {
           </Connect>
         </Content>
       </PageSection>
-      <PageSection>
-        <div>
-          <Title>Your NFTs</Title>
-        </div>
-        {owned.length > 0 && <TokenTable tokens={owned} />}
-        {owned.length === 0 && (
-          <Content>
-            <p>
-              You do not own any <Vibes /> NFTs.
-            </p>
-          </Content>
-        )}
-      </PageSection>
-      <PageSection>
-        <Divider />
-      </PageSection>
+      {account && (
+        <>
+          <PageSection>
+            <div>
+              <Title>Your NFTs</Title>
+            </div>
+            {owned.length > 0 && <TokenTable tokens={owned} />}
+            {owned.length === 0 && (
+              <Content>
+                <p>
+                  You do not own any <Vibes /> NFTs.
+                </p>
+              </Content>
+            )}
+          </PageSection>
+          <PageSection>
+            <Divider />
+          </PageSection>
+        </>
+      )}
     </>
   );
 };
