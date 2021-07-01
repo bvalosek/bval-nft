@@ -46,6 +46,12 @@ const additionalBvalAidrops = [
   '0xEEcd2A6ffe01B62ED26102705465Bc598bdF7DDA',
 ];
 
+const otherL1People = [
+  '0x6908c81da16a60a6abec06883ba27cf0398f47a9',
+  '0x271f2d33c88133878a9eaec8091de094c617013b',
+  '0x987aab2e64db6eb26bd591abdc9746fd44016267',
+];
+
 // https://polygonscan.com/token/0x64b10bc34746e3c7ac4505c76aec0c13e1d4965a#balances
 const booshCoinHolders = [
   '0x0c6204b8ebaf837d5cff51447050777cd9b39fc4',
@@ -100,6 +106,67 @@ const additionalVibesAirdrops = [
   '0x27641a64101fF152539dc88C24e09FF36Dc671c0',
   '0x4ffd5da06e6534F1e8B48a1fdFd19EaB0a6C0750',
   '0x046bBe099CfA0b6cc71d59D6E4Cd38c5d0eEF71b',
+  '0x5333bc481bEAB05f7B6e7681ec8Fc49B0fb0E053',
+  '0x83f8f7F1426580F64e54c1C9C9DC6007a95e5af0',
+  '0xD1dCe085C1D53cFc979B13A053B3AE66b74a8634',
+  '0xe288a00DF4b697606078876788e4D64633CD2e01',
+  '0xB7D3A787a39f25457CA511dC3f0591b546f5e02f',
+  '0x439ad039f0135eD849C1ebf692776265A1015C43',
+];
+
+// top screensaver collectors
+// https://polygonscan.com/token/0x486ca491c9a0a9ace266aa100976bfefc57a0dd4#balances
+const topScreensaverCollectors = [
+  '0x21db94192456295dd4bd7136580f1877264faafd',
+  '0x27641a64101ff152539dc88c24e09ff36dc671c0',
+  '0x9ec4ea049091265134181706868c695e441baa59',
+  '0x21db94192456295dd4bd7136580f1877264faafd',
+  '0x27641a64101ff152539dc88c24e09ff36dc671c0',
+  '0x9ec4ea049091265134181706868c695e441baa59',
+  '0x303eefedee1ba8e5d507a55465d946b2fea18583',
+  '0x22ec7a4429c381f5c382ac7ea624cc05d37ffdde',
+  '0x0e696712daded627f370ec9bbf9f7931cf19863d',
+  '0x544bb9000af946ec304a154a4ac1663bac3dbe23',
+  '0x0d5bb684506cebbf5fdfd6473691f19059d42d60',
+  '0x3a30c8dc7913d54ea9a7d7cfe41ed77d9bda7b78',
+  '0x3b3ac88fdfd33d8eb95d62d884ac552e46894887',
+  '0x6fd6afe08202d7aefdf533ee44dc0e62941c4b22',
+  '0xeb56bfe2b561d3191f4de93e11600e0933bf9554',
+  '0x8f75dcb28b4101ed7568ce7a7d4efb7dee526daf',
+  '0x7194d371a3a1658a2e6dec02b8c50bbb56fd60bc',
+  '0x05db7e001f6650745dcff8044d3e5ade3af4c03a',
+  '0x57e5f230f1a87d6276c2d9dbfd2c0c4a5beca4bf',
+  '0x6744d79392eb4d47c49a92f03bce87885fa0f3c7',
+  '0x6d765f26e56384ad21c5103995ad1c21fd239589',
+  '0xa58b4a80de82b889ff40e487c58208a429c77f88',
+];
+
+// https://polygonscan.com/token/0x2452d8049f04d54ca779257678a691ee4a413267#balances
+const topScreensaverV0Collectors = [
+  '0x21db94192456295dd4bd7136580f1877264faafd',
+  '0xa3d0562bf1714019b0a6900a12ad7662c405a4f8',
+  '0x885d6d7bf2f0b3d6f70f8f05ab67d5044a1dfe1c',
+  '0x544bb9000af946ec304a154a4ac1663bac3dbe23',
+  '0x6d765f26e56384ad21c5103995ad1c21fd239589',
+  '0x27641a64101ff152539dc88c24e09ff36dc671c0',
+  '0xb7d3a787a39f25457ca511dc3f0591b546f5e02f',
+  '0xa58b4a80de82b889ff40e487c58208a429c77f88',
+  '0xe288a00df4b697606078876788e4d64633cd2e01',
+  '0x0e696712daded627f370ec9bbf9f7931cf19863d',
+  '0x3b3ac88fdfd33d8eb95d62d884ac552e46894887',
+  '0x57e5f230f1a87d6276c2d9dbfd2c0c4a5beca4bf',
+  '0x3a30c8dc7913d54ea9a7d7cfe41ed77d9bda7b78',
+  '0x94aa50fe3c1ad32b0419004eee4f278ca3908876',
+  '0xbcb1e8284e3a998a50a88f1562ac399de560b974',
+  '0x8f75dcb28b4101ed7568ce7a7d4efb7dee526daf',
+  '0xdb08edbcf449de2a2b27448a8040935802c621f1',
+  '0x0fd73ea2391d2ee5806a15a22e67d583a403409b',
+  '0xff9911abdbe9d1f7d1a19595b93905c2a9ad60f4',
+];
+
+const blacklist = [
+  // dev address
+  '0xFF2c630C4D354b2D505EC986EE8188b6820FCC4C',
 ];
 
 const MaticAirdrop: FunctionComponent<{ address: string }> = ({ address }) => {
@@ -173,9 +240,14 @@ export const VIPs: FunctionComponent = () => {
         ...vibesTokenHolders,
         ...additionalVibesAirdrops,
         ...booshCoinHolders,
+        ...otherL1People,
+        ...topScreensaverCollectors,
+        ...topScreensaverV0Collectors,
       ].map((a) => a.toLowerCase())
     ),
-  ].sort();
+  ]
+    .sort()
+    .filter((a) => !blacklist.find((b) => b.toLowerCase() === a));
 
   return (
     <>
