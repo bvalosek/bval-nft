@@ -14,6 +14,7 @@ import { useWallet } from '../hooks/wallet';
 import { getTokenBalance, sendVibes, vibesAmount } from '../lib/vibes';
 import { getPooledVibes } from '../lib/quickswap';
 import { Button } from './Button';
+import { truncateHex } from '../lib/strings';
 
 // https://etherscan.io/token/0x27525344bbba0ddb182251387aedd0bde7d466b2#balances
 const bvalHolders = [
@@ -114,6 +115,7 @@ const additionalVibesAirdrops = [
   '0xe288a00DF4b697606078876788e4D64633CD2e01',
   '0xB7D3A787a39f25457CA511dC3f0591b546f5e02f',
   '0x439ad039f0135eD849C1ebf692776265A1015C43',
+  '0x41ff38896855C46d62bc0276B7c35bd05668fdd1',
 ];
 
 // top screensaver collectors
@@ -269,7 +271,8 @@ export const VIPs: FunctionComponent = () => {
                 {deduped.map((address) => (
                   <tr key={address}>
                     <td>
-                      <Address address={address} />
+                      {/* <Address address={address} /> */}
+                      {truncateHex(address)}
                     </td>
                     <td>
                       <MaticAirdrop address={address} />
