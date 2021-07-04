@@ -12,6 +12,7 @@ import {
   deployVibes,
   deployVIBESWellspring,
   deployVotePowerFacade,
+  deployVotePowerTokenFacade,
   grantSeederRole,
   mintVibesTo,
   useContracts,
@@ -110,12 +111,23 @@ export const Deploy: FunctionComponent = () => {
             Deploy Uniswap Strat
           </Button>
         </div>
-        <Text h2>Deploy Vote Power Facade</Text>
+        <Text h2>Deploy Vote Power Adapter</Text>
         <div>
           <Button
             type="success"
             onClick={() => {
               deployVotePowerFacade(library.getSigner());
+            }}
+          >
+            Deploy Uniswap Strat
+          </Button>
+        </div>
+        <Text h2>Deploy Vote Power Token Facade</Text>
+        <div>
+          <Button
+            type="success"
+            onClick={() => {
+              deployVotePowerTokenFacade(library.getSigner());
             }}
           >
             Deploy Uniswap Strat

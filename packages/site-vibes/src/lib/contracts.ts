@@ -22,6 +22,6 @@ export const getContracts = (): Contracts => {
     nftTokenFaucetStrategy: '0x2308BE9DFD702aeF9Ee42c28b54188A75f4313c9',
     uniswapPoolStrategy: '0xD35BA61d9Bd9AFe04347D88e59A4328a65dC9F4B',
     votePowerAdapter: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
-    votePowerTokenFacade: '0x0',
+    votePowerTokenFacade: '0xc6194299cdd7f0574ad8d63e23fd33c612efff98',
   };
 };

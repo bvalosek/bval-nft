@@ -6,14 +6,25 @@ import "./VotePower.sol";
 
 // An ERC-20 compat contract that just reports VIBES vote power as balance
 // This is not a real token, used for interop w/ tools like collab.land
-contract VotePowerTokenFacade is ERC20 {
-  VotePower public constant votePower = VotePower(0xA2f67C69B1F5cFa725839a110901761C718eeB59);
+contract VotePowerTokenFacade is IERC20 {
 
-  constructor() ERC20('VIBES Vote Power', 'govVIBES') { }
+  string public constant name = 'VIBES Vote Power';
+  string public constant symbol = 'govVIBES';
+  uint8 public constant decimals = 18;
+
+  VotePower public constant votePower = VotePower(0xA2f67C69B1F5cFa725839a110901761C718eeB59);
 
   // balanceOf will return VIBES vote power
   function balanceOf(address account) public view virtual override returns (uint256) {
     return votePower.getVotePower(account);
+  }
+
+  function allowance(address, address) override external pure returns (uint256) {
+    return 0;
+  }
+
+  function totalSupply() public pure virtual override returns (uint256) {
+    return 0;
   }
 
   function transfer(address, uint256) public virtual override returns (bool) {
@@ -25,14 +36,6 @@ contract VotePowerTokenFacade is ERC20 {
   }
 
   function transferFrom(address, address, uint256) public virtual override returns (bool) {
-    revert("this is not a real token");
-  }
-
-  function increaseAllowance(address, uint256) override public virtual returns (bool) {
-    revert("this is not a real token");
-  }
-
-  function decreaseAllowance(address, uint256) override public virtual returns (bool) {
     revert("this is not a real token");
   }
 

@@ -11,6 +11,7 @@ import {
   FAUCET_STRATEGY,
   UNISWAP_STRATEGY,
   VOTE_POWER,
+  VOTE_POWER_TOKEN_FACADE,
 } from '@bvalosek/solidity-contracts';
 import { SequenceCreateData, toHexStringBytes, TokenMintData } from '@bvalosek/lib-tokens';
 import { useNetworkName } from './web3';
@@ -80,7 +81,7 @@ export const useContracts = (): Contracts => {
         nftTokenFaucetStrategy: '0x2308BE9DFD702aeF9Ee42c28b54188A75f4313c9',
         uniswapPoolStrategy: '0xD35BA61d9Bd9AFe04347D88e59A4328a65dC9F4B',
         votePowerAdapter: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
-        votePowerTokenFacade: '0x0',
+        votePowerTokenFacade: '0xc6194299cdd7f0574ad8d63e23fd33c612efff98',
       };
   }
 };
@@ -216,8 +217,10 @@ export const deployVotePowerFacade = async (signer: Signer): Promise<Contract> =
 };
 
 export const deployVotePowerTokenFacade = async (signer: Signer): Promise<Contract> => {
-  const factory = new ContractFactory(VOTE_POWER.abi, VOTE_POWER.bytecode, signer);
-}
+  const factory = new ContractFactory(VOTE_POWER_TOKEN_FACADE.abi, VOTE_POWER_TOKEN_FACADE.bytecode, signer);
+  const contract = await factory.deploy();
+  return contract;
+};
 
 export const mintVibesTo = async (address: string, to: string, amount: string, signer: Signer): Promise<void> => {
   const contract = new Contract(address, VIBES.abi, signer);
