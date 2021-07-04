@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Button } from '../components/Button';
-import { ButtonGroup } from '../components/ButtonGroup';
-import { Connect } from '../components/Connect';
-import { Content } from '../components/Content';
-import { Input } from '../components/Input';
-import { PageSection } from '../components/PageSection';
-import { Title } from '../components/Title';
+import { Button } from './Button';
+import { ButtonGroup } from './ButtonGroup';
+import { Connect } from './Connect';
+import { Content } from './Content';
+import { Input } from './Input';
+import { PageSection } from './PageSection';
+import { Title } from './Title';
 import { useWallet } from '../hooks/wallet';
-import { cancelBid, unlistObject } from './ssw';
+import { cancelBid, unlistObject } from '../lib/ssw';
 
 export const SSWCancelBid: FunctionComponent = () => {
   const { library, registerTransactions } = useWallet();

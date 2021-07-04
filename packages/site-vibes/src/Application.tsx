@@ -10,7 +10,7 @@ import { Tokens } from './components/Tokens';
 import { Wallet } from './components/Wallet';
 import { useNextPrimaryPage } from './hooks/app';
 import { VIPs } from './components/vips';
-import { SSWCancelBid } from './lib/ssw-cancel-bid';
+import { SSWCancelBid } from './components/ssw-cancel-bid';
 
 export const Application: FunctionComponent = () => {
   const { next } = useNextPrimaryPage();

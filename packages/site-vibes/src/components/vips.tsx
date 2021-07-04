@@ -200,7 +200,7 @@ const MaticAirdrop: FunctionComponent<{ address: string }> = ({ address }) => {
 };
 
 const VibesAirdrop: FunctionComponent<{ address: string }> = ({ address }) => {
-  const [balance, setBalance] = useState<BigNumber>(BigNumber.from(0));
+  const [balance, setBalance] = useState<[BigNumber, BigNumber]>([BigNumber.from(0), BigNumber.from(0)]);
   const { library, registerTransactions } = useWallet();
   const [submitted, setSubmitted] = useState(false);
   const provider = getProvider();
@@ -211,7 +211,7 @@ const VibesAirdrop: FunctionComponent<{ address: string }> = ({ address }) => {
       getTokenBalance(provider, address),
       getPooledVibes(provider, address),
     ]);
-    setBalance(balance.add(pooled));
+    setBalance([balance, pooled]);
   };
 
   const drop = async () => {
@@ -224,9 +224,12 @@ const VibesAirdrop: FunctionComponent<{ address: string }> = ({ address }) => {
     fetch();
   }, [address]);
 
+  const [inWallet, inPool] = balance;
+
   return (
     <>
-      <Button onClick={() => drop()}>{!submitted ? '🎁' : '⏳'}</Button> <DecimalNumber number={balance} />
+      <Button onClick={() => drop()}>{!submitted ? '🎁' : '⏳'}</Button>{' '}
+      <DecimalNumber number={inWallet} decimals={0} /> + <DecimalNumber number={inPool} decimals={0} />
     </>
   );
 };
@@ -271,8 +274,7 @@ export const VIPs: FunctionComponent = () => {
                 {deduped.map((address) => (
                   <tr key={address}>
                     <td>
-                      {/* <Address address={address} /> */}
-                      {truncateHex(address)}
+                      <Address address={address} /> {truncateHex(address)}
                     </td>
                     <td>
                       <MaticAirdrop address={address} />
