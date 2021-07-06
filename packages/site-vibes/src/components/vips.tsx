@@ -116,6 +116,7 @@ const additionalVibesAirdrops = [
   '0xB7D3A787a39f25457CA511dC3f0591b546f5e02f',
   '0x439ad039f0135eD849C1ebf692776265A1015C43',
   '0x41ff38896855C46d62bc0276B7c35bd05668fdd1',
+  '0xC2bD7faca51549dbB8E701f48baAF5C135374613',
 ];
 
 // top screensaver collectors
