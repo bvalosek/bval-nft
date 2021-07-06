@@ -37,6 +37,12 @@ export const cancelBid = async (signer: Signer, tokenId: string): Promise<Contra
   return trx;
 };
 
+export const burnToken = async (signer: Signer, tokenId: string): Promise<ContractTransaction> => {
+  const ssw = new Contract(galleryAddress, SSW_GALLERY, signer);
+  const trx = await ssw.burn(tokenId);
+  return trx;
+};
+
 export const unlistObject = async (signer: Signer, tokenId: string): Promise<ContractTransaction> => {
   const ssw = new Contract(galleryAddress, SSW_GALLERY, signer);
   const trx = await ssw.approve('0x0000000000000000000000000000000000000000', tokenId);

@@ -7,7 +7,7 @@ import { Input } from './Input';
 import { PageSection } from './PageSection';
 import { Title } from './Title';
 import { useWallet } from '../hooks/wallet';
-import { cancelBid, unlistObject } from '../lib/ssw';
+import { burnToken, cancelBid, unlistObject } from '../lib/ssw';
 
 export const SSWCancelBid: FunctionComponent = () => {
   const { library, registerTransactions } = useWallet();
@@ -29,6 +29,11 @@ export const SSWCancelBid: FunctionComponent = () => {
     registerTransactions(trx);
   };
 
+  const burn = async () => {
+    const trx = await burnToken(library.getSigner(), tokenId);
+    registerTransactions(trx);
+  };
+
   return (
     <>
       <PageSection>
@@ -44,6 +49,9 @@ export const SSWCancelBid: FunctionComponent = () => {
               </Button>
               <Button onClick={() => unlist()} disabled={tokenId === ''}>
                 UNLIST OBJECT
+              </Button>
+              <Button onClick={() => burn()} disabled={tokenId === ''}>
+                BURN
               </Button>
             </ButtonGroup>
           </Connect>
