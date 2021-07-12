@@ -32,7 +32,7 @@ const factory = async () => {
 
 const BN = (amount) => `${amount}000000000000000000`;
 
-contract.only('VotePower', (accounts) => {
+contract('VotePower', (accounts) => {
   it('should handle zero power fine', async () => {
     const [, a2] = accounts;
     const { votePower } = await factory();
