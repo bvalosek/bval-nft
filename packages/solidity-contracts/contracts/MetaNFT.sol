@@ -96,8 +96,7 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
     // set VIP flag for all VIPs and hand out a single credit
     address[] memory vips = options.vips;
     for (uint256 i = 0; i < vips.length; i++) {
-      address vip = vips[i];
-      hasReservedToken[vip] = true;
+      hasReservedToken[vips[i]] = true;
     }
 
     // first non-vip token starts after all VIP tokens

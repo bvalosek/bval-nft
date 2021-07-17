@@ -23,7 +23,7 @@ const factory = async (options = {}) => {
 const { BN, toWei, fromWei } = web3.utils;
 
 contract.only('MetaNFT', (accounts) => {
-  const [a1, a2] = accounts;
+  const [a1, a2, a3, a4, a5] = accounts;
   describe('vip stuff', () => {
     it('should allow a free VIP mint', async () => {
       const { nft } = await factory({ vips: [a1] });
@@ -43,6 +43,25 @@ contract.only('MetaNFT', (accounts) => {
       const { nft } = await factory({ vips: [] });
       const task = nft.mint();
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'max');
+    });
+    it('should properly reserve VIP spots vs non-VIP spots', async () => {
+      const { nft } = await factory({ vips: [a1, a2, a3], maxMints: 3 });
+      await nft.mint({ from: a1 }); // 1
+      await nft.mint({ from: a4 }); // 4
+      await nft.mint({ from: a5 }); // 5
+      await nft.mint({ from: a1 }); // 6
+      await nft.mint({ from: a1 }); // 7
+      await nft.mint({ from: a2 }); // 2
+      await nft.mint({ from: a3 }); // 3
+      await nft.mint({ from: a3 }); // 8
+      assert.equal(await nft.ownerOf(1), a1);
+      assert.equal(await nft.ownerOf(2), a2);
+      assert.equal(await nft.ownerOf(3), a3);
+      assert.equal(await nft.ownerOf(4), a4);
+      assert.equal(await nft.ownerOf(5), a5);
+      assert.equal(await nft.ownerOf(6), a1);
+      assert.equal(await nft.ownerOf(7), a1);
+      assert.equal(await nft.ownerOf(8), a3);
     });
   });
   describe('mint data', () => {
@@ -139,6 +158,33 @@ contract.only('MetaNFT', (accounts) => {
       const { nft } = await factory();
       const task = nft.addCredits([], { from: a2 });
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
+    });
+  });
+  describe('costs', () => {
+    it('should not cost to mint reserved token', async () => {
+      const { nft } = await factory({ vips: [a1], mintCost: toWei('1000') });
+      await nft.mint();
+      assert.equal(await nft.mintCountByAddress(a1), 1);
+    });
+    it('should not cost to mint credit token', async () => {
+      const { nft } = await factory({ mintCost: toWei('1000') });
+      await nft.addCredits([{ account: a1, credits: 1 }]);
+      await nft.mint();
+      assert.equal(await nft.mintCountByAddress(a1), 1);
+    });
+    it('should fail if not enough CASH', async () => {
+      const { nft, token } = await factory({ mintCost: toWei('1000'), maxMints: 1 });
+      await token.approve(nft.address, toWei('1000000000'));
+      const task = nft.mint();
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'transfer amount exceeds balance');
+    });
+    it('should deduct cost', async () => {
+      const { nft, token } = await factory({ mintCost: toWei('1000'), maxMints: 1 });
+      await token.mint(toWei('2000'));
+      await token.approve(nft.address, toWei('1000000000'));
+
+      await nft.mint();
+      assert.equal(await token.balanceOf(a1), toWei('1000'));
     });
   });
 });
