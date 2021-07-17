@@ -34,7 +34,7 @@ const getVaultView = async (vault, account) => {
 
 const { BN, toWei, fromWei } = web3.utils;
 
-contract.only('CommitVault', (accounts) => {
+contract('CommitVault', (accounts) => {
   describe('basics', () => {
     it('should return zero starting balance', async () => {
       const [a1] = accounts;
@@ -216,7 +216,7 @@ contract.only('CommitVault', (accounts) => {
       await vault.withdraw(toWei('50'), { from: a2 });
     });
   });
-  describe.only('rewards', () => {
+  describe('rewards', () => {
     it('should tap out reward and chill', async () => {
       const [a1, a2] = accounts;
       const { vault, token, reward } = await factory();
