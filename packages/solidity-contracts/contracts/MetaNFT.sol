@@ -49,7 +49,6 @@ struct MetaNFTOptions {
   IMetadataResolver defaultMetadataResolver;
   uint256 mintCost;
   uint256 maxMints;
-  address[] vips;
 }
 
 // General utility NFT contract that costs a token to mint and has hot-swappable
@@ -93,7 +92,7 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
   mapping (address => uint256[]) public mintedByAddress;
 
   // primary incrementing ID
-  uint256 private _nextId;
+  uint256 private _nextId = 1;
 
   constructor(MetaNFTOptions memory options) ERC721(options.name, options.symbol) {
 
@@ -107,15 +106,6 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
     mintCost = options.mintCost;
     maxMints = options.maxMints;
     defaultMetadataResolver = options.defaultMetadataResolver;
-
-    // set VIP flag for all VIPs
-    address[] memory vips = options.vips;
-    for (uint256 i = 0; i < vips.length; i++) {
-      hasReservedToken[vips[i]] = true;
-    }
-
-    // first non-vip token starts after all VIP tokens
-    _nextId = vips.length + 1;
   }
 
   // ---
@@ -125,6 +115,17 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
   modifier isAdmin() {
     require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "requires DEFAULT_ADMIN_ROLE");
     _;
+  }
+
+  // set the VIPs that get a free and reserved NFT, cant be called once minting has started
+  function setVips(address[] memory vips) external isAdmin {
+    require(_nextId == 1, "cannot set VIPs after minting has started");
+    for (uint256 i = 0; i < vips.length; i++) {
+      hasReservedToken[vips[i]] = true;
+    }
+
+    // first non-vip token starts after all VIP tokens
+    _nextId = vips.length + 1;
   }
 
   // set the utility token cost to mint
@@ -234,24 +235,27 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
     return mintedByAddress[account].length;
   }
 
+  function getTokenData(uint256 tokenId) public view returns (TokenViewData memory) {
+    require(_exists(tokenId), "invalid token");
+    MintData memory mData = mintData[tokenId];
+    return TokenViewData({
+      id: tokenId,
+      owner: ownerOf(tokenId),
+      creator: mData.creator,
+      createdAtTimestamp: mData.timestamp,
+      createdAtBlock: mData.block,
+      seed: mData.seed,
+      isVip: mData.isVip,
+      isCredit: mData.isCredit
+    });
+  }
+
   // get a comprehensive view for an array of token IDs
   function batchGetTokenData(uint256[] memory tokenIds) external view returns (TokenViewData[] memory) {
     TokenViewData[] memory data = new TokenViewData[](tokenIds.length);
 
     for (uint256 i = 0; i < tokenIds.length; i++) {
-      uint256 tokenId = tokenIds[i];
-      require(_exists(tokenId), "invalid token");
-      MintData memory mData = mintData[tokenId];
-      data[i] = TokenViewData({
-        id: tokenId,
-        owner: ownerOf(tokenId),
-        creator: mData.creator,
-        createdAtTimestamp: mData.timestamp,
-        createdAtBlock: mData.block,
-        seed: mData.seed,
-        isVip: mData.isVip,
-        isCredit: mData.isCredit
-      });
+      data[i] = getTokenData(tokenIds[i]);
     }
 
     return data;

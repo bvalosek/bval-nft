@@ -14,7 +14,6 @@ const factory = async (options = {}) => {
     defaultMetadataResolver: resolver.address,
     mintCost: 0,
     maxMints: 0,
-    vips: [],
     ...options,
   });
   return { token, resolver, nft };
@@ -26,7 +25,8 @@ contract.only('MetaNFT', (accounts) => {
   const [a1, a2, a3, a4, a5] = accounts;
   describe('vip stuff', () => {
     it('should allow a free VIP mint', async () => {
-      const { nft } = await factory({ vips: [a1] });
+      const { nft } = await factory();
+      await nft.setVips([a1]);
       assert.equal(await nft.totalSupply(), 0);
       assert.equal(await nft.mintCountByAddress(a1), 0);
       await nft.mint();
@@ -34,18 +34,21 @@ contract.only('MetaNFT', (accounts) => {
       assert.equal(await nft.mintCountByAddress(a1), 1);
     });
     it('should not allow multiple VIP mints', async () => {
-      const { nft } = await factory({ vips: [a1] });
+      const { nft } = await factory();
+      await nft.setVips([a1]);
       await nft.mint();
       const task = nft.mint();
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'max');
     });
     it('should not allow non-vip mints', async () => {
-      const { nft } = await factory({ vips: [] });
+      const { nft } = await factory();
       const task = nft.mint();
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'max');
     });
     it('should properly reserve VIP spots vs non-VIP spots', async () => {
-      const { nft } = await factory({ vips: [a1, a2, a3], maxMints: 3 });
+      const { nft } = await factory({ maxMints: 3 });
+      await nft.setVips([a1, a2, a3]);
+
       await nft.mint({ from: a1 }); // 1
       await nft.mint({ from: a4 }); // 4
       await nft.mint({ from: a5 }); // 5
@@ -66,7 +69,9 @@ contract.only('MetaNFT', (accounts) => {
   });
   describe('mint data', () => {
     it('should indicate vip mint', async () => {
-      const { nft } = await factory({ vips: [a1], maxMints: 2 });
+      const { nft } = await factory({ maxMints: 2 });
+      await nft.setVips([a1]);
+
       await nft.mint();
       await nft.mint();
       await nft.mint({ from: a2 });
@@ -105,7 +110,8 @@ contract.only('MetaNFT', (accounts) => {
   });
   describe('metadata', () => {
     it('should return default metadata', async () => {
-      const { nft } = await factory({ vips: [a1] });
+      const { nft } = await factory();
+      await nft.setVips([a1]);
       await nft.mint();
       assert.equal(await nft.tokenURI(1), 'default');
     });
@@ -167,7 +173,8 @@ contract.only('MetaNFT', (accounts) => {
   });
   describe('costs', () => {
     it('should not cost to mint reserved token', async () => {
-      const { nft } = await factory({ vips: [a1], mintCost: toWei('1000') });
+      const { nft } = await factory({ mintCost: toWei('1000') });
+      await nft.setVips([a1]);
       await nft.mint();
       assert.equal(await nft.mintCountByAddress(a1), 1);
     });

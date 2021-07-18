@@ -11,6 +11,7 @@
   "devDependencies": {
     "@openzeppelin/contracts": "4.1.0",
     "@truffle/hdwallet-provider": "1.2.1",
+    "base64-sol": "1.0.1",
     "cross-env": "7.0.3",
     "dotenv": "8.2.0",
     "ganache-cli": "6.12.2",
