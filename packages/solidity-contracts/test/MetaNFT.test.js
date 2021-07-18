@@ -126,12 +126,6 @@ contract.only('MetaNFT', (accounts) => {
       await nft.mint(); // 1
       await nft.setMetadataResolver(1, '0x0000000000000000000000000000000000000000');
     });
-    it('should not allow metadata config without CONFIG role', async () => {
-      const { nft } = await factory({ maxMints: 1 });
-      await nft.mint(); // 1
-      const task = nft.setMetadataResolver(1, '0x0000000000000000000000000000000000000000', { from: a2 });
-      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires CONFIG_ROLE');
-    });
   });
   describe('admin', async () => {
     it('should not allow calling setMintCost without ADMIN role', async () => {
@@ -159,6 +153,17 @@ contract.only('MetaNFT', (accounts) => {
       const task = nft.addCredits([], { from: a2 });
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
     });
+    it('should not allow withdraw without WITHDRAW role', async () => {
+      const { nft, token } = await factory();
+      const task = nft.withdraw(token.address, { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires WITHDRAW_ROLE');
+    });
+    it('should not allow metadata config without CONFIG role', async () => {
+      const { nft } = await factory({ maxMints: 1 });
+      await nft.mint(); // 1
+      const task = nft.setMetadataResolver(1, '0x0000000000000000000000000000000000000000', { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires CONFIG_ROLE');
+    });
   });
   describe('costs', () => {
     it('should not cost to mint reserved token', async () => {
@@ -185,6 +190,36 @@ contract.only('MetaNFT', (accounts) => {
 
       await nft.mint();
       assert.equal(await token.balanceOf(a1), toWei('1000'));
+    });
+    it('should allow withdrawing payments', async () => {
+      const { nft, token } = await factory({ mintCost: toWei('1000'), maxMints: 1 });
+
+      // a2 pays for token
+      await token.mint(toWei('1000'), { from: a2 });
+      await token.approve(nft.address, toWei('1000'), { from: a2 });
+      await nft.mint({ from: a2 });
+
+      assert.equal(await token.balanceOf(a1), 0);
+      await nft.withdraw(token.address);
+      assert.equal(await token.balanceOf(a1), toWei('1000'));
+    });
+  });
+  describe('erc165 checks', () => {
+    it('should implement ERC-165', async () => {
+      const { nft } = await factory();
+      assert.isTrue(await nft.supportsInterface('0x01ffc9a7'));
+    });
+    it('should implement ERC-721', async () => {
+      const { nft } = await factory();
+      assert.isTrue(await nft.supportsInterface('0x80ac58cd'));
+    });
+    it('should implement ERC-721Metadata', async () => {
+      const { nft } = await factory();
+      assert.isTrue(await nft.supportsInterface('0x5b5e139f'));
+    });
+    it('should implement ERC-721Enumerable', async () => {
+      const { nft } = await factory();
+      assert.isTrue(await nft.supportsInterface('0x780e9d63'));
     });
   });
 });

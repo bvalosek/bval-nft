@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./interfaces/IOpenSeaContractURI.sol";
@@ -12,7 +11,19 @@ import "./interfaces/IOpenSeaContractURI.sol";
 struct MintData {
   address creator;
   uint256 timestamp;
-  uint256 blockNumber;
+  uint256 block;
+  uint256 seed;
+  bool isVip;
+  bool isCredit;
+}
+
+// view data for a single token
+struct TokenViewData {
+  uint256 id;
+  address owner;
+  address creator;
+  uint256 createdAtTimestamp;
+  uint256 createdAtBlock;
   uint256 seed;
   bool isVip;
   bool isCredit;
@@ -47,6 +58,9 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
 
   // grants ability to set metadata resolver for a token
   bytes32 public constant CONFIG_ROLE = keccak256("CONFIG_ROLE");
+
+  // grants ability to withdraw payments
+  bytes32 public constant WITHDRAW_ROLE = keccak256("WITHDRAW_ROLE");
 
   // utility token
   IERC20 public token;
@@ -84,8 +98,9 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
   constructor(MetaNFTOptions memory options) ERC721(options.name, options.symbol) {
 
     // deployer gets admin and config role
-    _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-    _setupRole(CONFIG_ROLE, _msgSender());
+    _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    _setupRole(CONFIG_ROLE, msg.sender);
+    _setupRole(WITHDRAW_ROLE, msg.sender);
 
     // set options from constructor arg
     token = options.token;
@@ -93,7 +108,7 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
     maxMints = options.maxMints;
     defaultMetadataResolver = options.defaultMetadataResolver;
 
-    // set VIP flag for all VIPs and hand out a single credit
+    // set VIP flag for all VIPs
     address[] memory vips = options.vips;
     for (uint256 i = 0; i < vips.length; i++) {
       hasReservedToken[vips[i]] = true;
@@ -107,28 +122,33 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
   // admin
   // ---
 
-  function setMintCost(uint256 cost) external {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "requires DEFAULT_ADMIN_ROLE");
+  modifier isAdmin() {
+    require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "requires DEFAULT_ADMIN_ROLE");
+    _;
+  }
+
+  // set the utility token cost to mint
+  function setMintCost(uint256 cost) external isAdmin {
     mintCost = cost;
   }
 
-  function setMaxMints(uint256 max) external {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "requires DEFAULT_ADMIN_ROLE");
+  // set max mints per address
+  function setMaxMints(uint256 max) external isAdmin {
     maxMints = max;
   }
 
-  function setDefaultMetadataResolver(IMetadataResolver resolver) external {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "requires DEFAULT_ADMIN_ROLE");
+  // set the default metadata resolver for tokens that dont have a resolver override
+  function setDefaultMetadataResolver(IMetadataResolver resolver) external isAdmin {
     defaultMetadataResolver = resolver;
   }
 
-  function setToken(IERC20 _token) external {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "requires DEFAULT_ADMIN_ROLE");
-    token = _token;
+  // set the utility token used for purchasing mints
+  function setToken(IERC20 token_) external isAdmin {
+    token = token_;
   }
 
-  function addCredits(Credit[] memory creditsToAdd) external {
-    require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "requires DEFAULT_ADMIN_ROLE");
+  // add credits to addresses
+  function addCredits(Credit[] memory creditsToAdd) external isAdmin {
     for (uint256 i = 0; i < creditsToAdd.length; i++) {
       Credit memory c = creditsToAdd[i];
       mintCreditsRemaining[c.account] += c.credits;
@@ -136,11 +156,21 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
   }
 
   // ---
+  // payments
+  // --
+
+  // withdraw funds from the contract
+  function withdraw(IERC20 token_) external {
+    require(hasRole(WITHDRAW_ROLE, msg.sender), "requires WITHDRAW_ROLE");
+    token_.transfer(msg.sender, token_.balanceOf(address(this)));
+  }
+
+  // ---
   // system
   // ---
 
   function setMetadataResolver(uint256 tokenId, IMetadataResolver resolver) external {
-    require(hasRole(CONFIG_ROLE, _msgSender()), "requires CONFIG_ROLE");
+    require(hasRole(CONFIG_ROLE, msg.sender), "requires CONFIG_ROLE");
     resolvers[tokenId] = resolver;
   }
 
@@ -149,36 +179,47 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
   // ---
 
   function mint() public {
-    address msgSender = _msgSender();
+    address minter = msg.sender;
 
     bool isVip;
     bool isCredit;
     uint256 tokenId;
 
-    if (hasReservedToken[msgSender]) {
-      delete hasReservedToken[msgSender];
+    if (hasReservedToken[minter]) {
+      delete hasReservedToken[minter];
       isVip = true;
       tokenId = ++claimedVipMints;
-    } else if (mintCreditsRemaining[msgSender] > 0) {
-      mintCreditsRemaining[msgSender] -= 1;
+    } else if (mintCreditsRemaining[minter] > 0) {
+      mintCreditsRemaining[minter] -= 1;
       isCredit = true;
       tokenId = _nextId++;
     } else if (mintCost > 0) {
-      require(mintedByAddress[msgSender].length < maxMints, "max mints exceeded");
-      token.transferFrom(msgSender, address(this), mintCost);
+      require(mintedByAddress[minter].length < maxMints, "this address has minted the max amount of NFTs");
+      token.transferFrom(minter, address(this), mintCost);
       tokenId = _nextId++;
     } else {
-      require(mintedByAddress[msgSender].length < maxMints, "max mints exceeded");
+      require(mintedByAddress[minter].length < maxMints, "this address has minted the max amount of NFTs");
       tokenId = _nextId++;
     }
 
-    _mint(msgSender, tokenId);
-    mintedByAddress[msgSender].push(tokenId);
+    _mint(minter, tokenId);
+    mintedByAddress[minter].push(tokenId);
+
+    // seed is a semi-random uint256, which can be used for downstream features.
+    // it can be influenced by a miner to target a specific seed value so it
+    // should not be depended on for anything "too important"
+    uint256 seed = uint256(keccak256(abi.encodePacked(
+      minter,
+      tokenId,
+      block.timestamp,
+      blockhash(block.number)
+    )));
+
     mintData[tokenId] = MintData({
-      creator: msgSender,
+      creator: minter,
       timestamp: block.timestamp,
-      blockNumber: block.number,
-      seed: uint256(keccak256(abi.encodePacked(msgSender, tokenId, block.number))),
+      block: block.number,
+      seed: seed,
       isCredit: isCredit,
       isVip: isVip
     });
@@ -193,6 +234,28 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
     return mintedByAddress[account].length;
   }
 
+  // get a comprehensive view for an array of token IDs
+  function batchGetTokenData(uint256[] memory tokenIds) external view returns (TokenViewData[] memory) {
+    TokenViewData[] memory data = new TokenViewData[](tokenIds.length);
+
+    for (uint256 i = 0; i < tokenIds.length; i++) {
+      uint256 tokenId = tokenIds[i];
+      require(_exists(tokenId), "invalid token");
+      MintData memory mData = mintData[tokenId];
+      data[i] = TokenViewData({
+        id: tokenId,
+        owner: ownerOf(tokenId),
+        creator: mData.creator,
+        createdAtTimestamp: mData.timestamp,
+        createdAtBlock: mData.block,
+        seed: mData.seed,
+        isVip: mData.isVip,
+        isCredit: mData.isCredit
+      });
+    }
+
+    return data;
+  }
 
   // ---
   // metadata
