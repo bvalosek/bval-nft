@@ -41,6 +41,7 @@ interface IMetadataResolver {
 struct MetaNFTOptions {
   string name;
   string symbol;
+  string contractURI;
   IERC20 token;
   IMetadataResolver defaultMetadataResolver;
   uint256 mintCost;
@@ -87,6 +88,9 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
   // all NFTs minted by a specific address
   mapping (address => uint256[]) public mintedByAddress;
 
+  // opensea collection metadata
+  string public contractURI;
+
   // primary incrementing ID
   uint256 private _nextId = 1;
 
@@ -102,6 +106,7 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
     mintCost = options.mintCost;
     maxMints = options.maxMints;
     defaultMetadataResolver = options.defaultMetadataResolver;
+    contractURI = options.contractURI;
   }
 
   // ---
@@ -122,6 +127,11 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
 
     // first non-vip token starts after all VIP tokens
     _nextId = vips.length + 1;
+  }
+
+  // change the contract URI (opensea metadata)
+  function setContractURI(string memory uri) external isAdmin {
+    contractURI = uri;
   }
 
   // set the utility token cost to mint

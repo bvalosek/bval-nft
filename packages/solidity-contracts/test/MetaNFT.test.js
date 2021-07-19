@@ -14,6 +14,7 @@ const factory = async (options = {}) => {
     defaultMetadataResolver: resolver.address,
     mintCost: 0,
     maxMints: 0,
+    contractURI: 'http://website',
     ...options,
   });
   return { token, resolver, nft };
@@ -32,6 +33,12 @@ contract.only('MetaNFT', (accounts) => {
       await nft.mint();
       assert.equal(await nft.totalSupply(), 1);
       assert.equal(await nft.mintCountByAddress(a1), 1);
+    });
+    it('should not allow setting VIPs after minting has started', async () => {
+      const { nft } = await factory({ maxMints: 1 });
+      await nft.mint();
+      const task = nft.setVips([a1]);
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'minting has started');
     });
     it('should not allow multiple VIP mints', async () => {
       const { nft } = await factory();
@@ -135,6 +142,11 @@ contract.only('MetaNFT', (accounts) => {
     it('should not allow calling addCredits without ADMIN role', async () => {
       const { nft } = await factory();
       const task = nft.addCredits([], { from: a2 });
+      await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
+    });
+    it('should not allow calling setVips without ADMIN role', async () => {
+      const { nft } = await factory();
+      const task = nft.setVips([], { from: a2 });
       await truffleAssert.fails(task, truffleAssert.ErrorType.REVERT, 'requires DEFAULT_ADMIN_ROLE');
     });
     it('should not allow withdraw without WITHDRAW role', async () => {
