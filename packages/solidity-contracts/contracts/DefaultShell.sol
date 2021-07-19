@@ -10,9 +10,9 @@ contract DefaultShell is MetadataResolver {
   using Strings for uint256;
 
   string[] public images = [
-    "ipfs://ipfs/QmdknAR4e5zydm5sgPGbQhcgZ8mudPig3e9oo6w37QC6cB",
-    "ipfs://ipfs/Qmb2yYpgWoQcFrDcUmexgSbnyw4TNQBcfJHQier3CMMzwv",
     "ipfs://ipfs/QmQgyFH5nJrzSGE8mpGQxrxKbrUmCaLDxKZTMvpcUpwzt7",
+    "ipfs://ipfs/Qmb2yYpgWoQcFrDcUmexgSbnyw4TNQBcfJHQier3CMMzwv",
+    "ipfs://ipfs/QmdknAR4e5zydm5sgPGbQhcgZ8mudPig3e9oo6w37QC6cB",
     "ipfs://ipfs/QmbuompGpU26b3autNHueSgs6eNeToK44zbcWY9TppJktZ"
   ];
 
