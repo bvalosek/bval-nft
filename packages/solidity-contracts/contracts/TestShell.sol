@@ -18,17 +18,22 @@ contract TestShell is MetadataResolver {
     return string(abi.encodePacked(
       "This is not a collectible; this is a self-sovereign modular application platform.\\n\\n",
       "Your [NTEST#", tokenId.toString(), "] is your personal carrier wave for the PTEST protocol.\\n\\n",
-      "https://website.com\\n\\n",
+      "Have you minted yours?\\n\\n",
       "---\\n\\n",
       "Originally minted by ", uint256(uint160(token.creator)).toHexString(20),
-      " at timestamp ", token.createdAtTimestamp.toString(), "." ,
+      " at timestamp ", token.createdAtTimestamp.toString(), ".\\n\\n" ,
       token.isVip
-        ? "\n\nThis NFT was the first [NTEST] minted by a founding member of PTEST."
-        : ""
+        ? "This NFT was a PTEST founder's first minted [NTEST].\\n\\n"
+        : "",
+      "https://website.com"
     ));
   }
 
+  function _computeExternalUrl(MetaNFT, uint256) override internal pure returns (string memory) {
+    return "https://website.com";
+  }
+
   function _computeImageUri(MetaNFT, uint256) override internal pure returns (string memory) {
-    return "https://gateway.pinata.cloud/ipfs/QmWcFCdDeDsSbty62PSm6dE8Yr3CtRBXFg3YwsdGyHauLK";
+    return "ipfs://ipfs/QmWcFCdDeDsSbty62PSm6dE8Yr3CtRBXFg3YwsdGyHauLK";
   }
 }
