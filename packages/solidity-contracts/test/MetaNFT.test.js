@@ -3,6 +3,7 @@ const truffleAssert = require('truffle-assertions');
 const MockERC20 = artifacts.require('MockERC20');
 const MockMetadataResolver = artifacts.require('MockMetadataResolver');
 const MetaNFT = artifacts.require('MetaNFT');
+const TestShell = artifacts.require('TestShell');
 
 const factory = async (options = {}) => {
   const token = await MockERC20.new();
@@ -217,6 +218,16 @@ contract.only('MetaNFT', (accounts) => {
     it('should implement ERC-721Enumerable', async () => {
       const { nft } = await factory();
       assert.isTrue(await nft.supportsInterface('0x780e9d63'));
+    });
+  });
+  describe('shell integration', () => {
+    it('should work as expected', async () => {
+      const { nft } = await factory({ maxMints: 1 });
+      await nft.setVips([a1]);
+      const resolver = await TestShell.new();
+      await nft.setDefaultMetadataResolver(resolver.address);
+      await nft.mint();
+      const resp = await nft.tokenURI(1);
     });
   });
 });

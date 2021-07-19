@@ -22,13 +22,15 @@ contract TestShell is MetadataResolver {
 
   function _computeDescription(MetaNFT nft, uint256 tokenId) override internal view returns (string memory) {
     TokenViewData memory token = nft.getTokenData(tokenId);
+    // return string(abi.encodePacked("hey", uint256(uint160(token.creator)).toHexString(20), "back"));
     return string(abi.encodePacked(
-      "This is not a collectible; this is a tokenized, self-sovereign modular application platform.\\n\\n",
-      "A [NTEST] is your personal carrier wave for the PTEST protocol.\\n\\n",
+      "This [NTEST] is a self-sovereign modular application platform.\\n\\n",
+      "A personal, tokenized carrier wave for the PTEST protocol.\\n\\n",
       "Have you minted yours?\\n\\n",
       "---\\n\\n",
-      "Originally minted by ", uint256(uint160(token.creator)).toHexString(20),
-      " at timestamp ", token.createdAtTimestamp.toString(), "." ,
+      "Originally minted by ",
+      uint256(uint160(token.creator)).toHexString(20),
+      " at timestamp ", uint256(token.createdAtTimestamp).toString(), "." ,
       token.isVip
         ? "\\n\\nThis NFT was a PTEST founder's first minted [NTEST].\\n\\n"
         : "\\n\\n",

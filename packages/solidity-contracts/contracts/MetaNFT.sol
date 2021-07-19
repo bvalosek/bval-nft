@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+pragma abicoder v2;
 
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -20,7 +21,7 @@ struct TokenViewData {
   uint256 id;
   address owner;
   address creator;
-  uint256 createdAtTimestamp;
+  uint64 createdAtTimestamp;
   uint256 seed;
   bool isVip;
 }
