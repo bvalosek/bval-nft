@@ -18,9 +18,9 @@ contract TestShell is MetadataResolver {
 		return string(abi.encodePacked(
 			"This token was minted in block ", token.createdAtBlock.toString(),
 			" at timestamp ", token.createdAtTimestamp.toString(),
-			" by address ", uint256(uint160(token.creator)).toHexString(20), ".\n\n",
-			"isVip: ", token.isVip ? "true" : "false", ".\n\n",
-			"isCredit: ", token.isCredit ? "true" : "false", ".\n\n",
+			" by address ", uint256(uint160(token.creator)).toHexString(20), ".\\n\\n",
+			"isVip: ", token.isVip ? "true" : "false", ".\\n\\n",
+			"isCredit: ", token.isCredit ? "true" : "false", ".\\n\\n",
 			"seed: ", token.seed.toHexString(32)
 		));
 	}

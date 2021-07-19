@@ -11,6 +11,7 @@ import { Wallet } from './components/Wallet';
 import { useNextPrimaryPage } from './hooks/app';
 import { VIPs } from './components/vips';
 import { SSWCancelBid } from './components/ssw-cancel-bid';
+import { Deploy } from './components/Deploy';
 
 export const Application: FunctionComponent = () => {
   const { next } = useNextPrimaryPage();
@@ -55,6 +56,9 @@ export const Application: FunctionComponent = () => {
         </Route>
         <Route path="/ssw-debug">
           <SSWCancelBid />
+        </Route>
+        <Route path="/deploy">
+          <Deploy />
         </Route>
       </Switch>
     </Page>

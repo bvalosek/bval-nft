@@ -15,8 +15,8 @@ abstract contract MetadataResolver is IMetadataResolver {
 
 	function getTokenURI(MetaNFT nft, uint256 tokenId) override external view returns (string memory) {
 		string memory name = _escapeQuotes(_computeName(nft, tokenId));
-		string memory description = _escapeQuotes(_computeName(nft, tokenId));
-		string memory image = _escapeQuotes(_computeName(nft, tokenId));
+		string memory description = _escapeQuotes(_computeDescription(nft, tokenId));
+		string memory image = _escapeQuotes(_computeImageUri(nft, tokenId));
 
 		return string(abi.encodePacked(
 			'data:application/json;base64,',

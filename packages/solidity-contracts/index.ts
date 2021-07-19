@@ -9,6 +9,8 @@ import faucetStrategy from './build/contracts/NFTTokenFaucetStrategy.json';
 import uniswapStrategy from './build/contracts/UniswapPoolStrategy.json';
 import votePower from './build/contracts/VotePower.json';
 import votePowerTokenFacade from './build/contracts/VotePowerTokenFacade.json';
+import defaultShell from './build/contracts/TestShell.json';
+import sqncr from './build/contracts/TestNFT.json';
 
 export const BVAL20 = bval20;
 export const BVAL721 = bval721;
@@ -21,3 +23,5 @@ export const FAUCET_STRATEGY = faucetStrategy;
 export const UNISWAP_STRATEGY = uniswapStrategy;
 export const VOTE_POWER = votePower;
 export const VOTE_POWER_TOKEN_FACADE = votePowerTokenFacade;
+export const DEFAULT_SHELL = defaultShell;
+export const SQNCR = sqncr;
