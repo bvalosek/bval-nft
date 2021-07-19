@@ -3,15 +3,15 @@ pragma solidity ^0.8.0;
 
 import "./MetaNFT.sol";
 
-struct TestNFTOptions {
+struct SQNCROptions {
   IERC20 token;
   IMetadataResolver defaultShell;
 }
 
-contract TestNFT is MetaNFT {
-  constructor(TestNFTOptions memory options) MetaNFT(MetaNFTOptions({
-    name: "Test NFT",
-    symbol: "TEST",
+contract SQNCR is MetaNFT {
+  constructor(SQNCROptions memory options) MetaNFT(MetaNFTOptions({
+    name: "VIBES [SQNCR]",
+    symbol: "SQNCR",
     token: options.token,
     defaultMetadataResolver: options.defaultShell,
     contractURI: "ipfs://ipfs/QmTdoCbC4nHLZH3EUXJZ6LggH3HWLuJv8zqzJLqZSgYrLn",

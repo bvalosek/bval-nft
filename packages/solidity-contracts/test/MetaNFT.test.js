@@ -3,7 +3,7 @@ const truffleAssert = require('truffle-assertions');
 const MockERC20 = artifacts.require('MockERC20');
 const MockMetadataResolver = artifacts.require('MockMetadataResolver');
 const MetaNFT = artifacts.require('MetaNFT');
-const TestShell = artifacts.require('TestShell');
+const DefaultShell = artifacts.require('DefaultShell');
 
 const factory = async (options = {}) => {
   const token = await MockERC20.new();
@@ -224,7 +224,7 @@ contract.only('MetaNFT', (accounts) => {
     it('should work as expected', async () => {
       const { nft } = await factory({ maxMints: 1 });
       await nft.setVips([a1]);
-      const resolver = await TestShell.new();
+      const resolver = await DefaultShell.new();
       await nft.setDefaultMetadataResolver(resolver.address);
       await nft.mint();
       const resp = await nft.tokenURI(1);
