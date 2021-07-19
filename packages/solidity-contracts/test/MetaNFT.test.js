@@ -78,34 +78,12 @@ contract.only('MetaNFT', (accounts) => {
 
       const info1 = await nft.mintData(1);
       assert.equal(info1.isVip, true);
-      assert.equal(info1.isCredit, false);
 
       const info2 = await nft.mintData(2);
       assert.equal(info2.isVip, false);
-      assert.equal(info2.isCredit, false);
 
       const info3 = await nft.mintData(3);
       assert.equal(info3.isVip, false);
-      assert.equal(info3.isCredit, false);
-    });
-    it('should indicate credit mint', async () => {
-      const { nft } = await factory({ maxMints: 2 });
-      await nft.addCredits([{ account: a1, credits: 1 }]);
-      await nft.mint();
-      await nft.mint();
-      await nft.mint({ from: a2 });
-
-      const info1 = await nft.mintData(1);
-      assert.equal(info1.isVip, false);
-      assert.equal(info1.isCredit, true);
-
-      const info2 = await nft.mintData(2);
-      assert.equal(info2.isVip, false);
-      assert.equal(info2.isCredit, false);
-
-      const info3 = await nft.mintData(3);
-      assert.equal(info3.isVip, false);
-      assert.equal(info3.isCredit, false);
     });
   });
   describe('metadata', () => {

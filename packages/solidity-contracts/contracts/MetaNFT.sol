@@ -9,12 +9,10 @@ import "./interfaces/IOpenSeaContractURI.sol";
 
 // data persisted when a token is minted
 struct MintData {
-  address creator;
-  uint256 timestamp;
-  uint256 block;
+  address creator;   // 20 bytes
+  bool isVip;        // 1 byte
+  uint64 timestamp;  // 8 bytes
   uint256 seed;
-  bool isVip;
-  bool isCredit;
 }
 
 // view data for a single token
@@ -23,10 +21,8 @@ struct TokenViewData {
   address owner;
   address creator;
   uint256 createdAtTimestamp;
-  uint256 createdAtBlock;
   uint256 seed;
   bool isVip;
-  bool isCredit;
 }
 
 // use to batch-add credits
@@ -218,10 +214,8 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
 
     mintData[tokenId] = MintData({
       creator: minter,
-      timestamp: block.timestamp,
-      block: block.number,
+      timestamp: uint64(block.timestamp),
       seed: seed,
-      isCredit: isCredit,
       isVip: isVip
     });
 
@@ -243,10 +237,8 @@ contract MetaNFT is AccessControlEnumerable, ERC721Enumerable {
       owner: ownerOf(tokenId),
       creator: mData.creator,
       createdAtTimestamp: mData.timestamp,
-      createdAtBlock: mData.block,
       seed: mData.seed,
-      isVip: mData.isVip,
-      isCredit: mData.isCredit
+      isVip: mData.isVip
     });
   }
 
