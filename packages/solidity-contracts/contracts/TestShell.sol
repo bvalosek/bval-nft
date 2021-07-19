@@ -9,7 +9,7 @@ import '@openzeppelin/contracts/utils/Strings.sol';
 contract TestShell is MetadataResolver {
   using Strings for uint256;
 
-  string[] private _images = [
+  string[] public images = [
     "ipfs://ipfs/QmaQhk8JTVTxNeWjA3aym7qTEDDE8B1mFssE1ufSN49Y8Y",
     "ipfs://ipfs/QmQkAKH84WgjACadJ3Z4feNCEEozfWrt4Z32WXYmZfFkRn",
     "ipfs://ipfs/QmVw3oFRMU5VTXsDaztaLL5hdZKajUCKKiH9cx4FyMEpZx",
@@ -28,10 +28,10 @@ contract TestShell is MetadataResolver {
       "Have you minted yours?\\n\\n",
       "---\\n\\n",
       "Originally minted by ", uint256(uint160(token.creator)).toHexString(20),
-      " at timestamp ", token.createdAtTimestamp.toString(), ".\\n\\n" ,
+      " at timestamp ", token.createdAtTimestamp.toString(), "." ,
       token.isVip
-        ? "This NFT was a PTEST founder's first minted [NTEST].\\n\\n"
-        : "",
+        ? "\\n\\nThis NFT was a PTEST founder's first minted [NTEST].\\n\\n"
+        : "\\n\\n",
       "https://website.com"
     ));
   }
@@ -42,7 +42,7 @@ contract TestShell is MetadataResolver {
 
   function _computeImageUri(MetaNFT nft, uint256 tokenId) override internal view returns (string memory) {
     TokenViewData memory token = nft.getTokenData(tokenId);
-    uint256 idx = token.seed % _images.length;
-    return _images[idx];
+    uint256 idx = token.seed % images.length;
+    return images[idx];
   }
 }

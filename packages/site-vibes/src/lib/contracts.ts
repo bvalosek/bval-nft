@@ -25,7 +25,7 @@ export const getContracts = (): Contracts => {
     uniswapPoolStrategy: '0xD35BA61d9Bd9AFe04347D88e59A4328a65dC9F4B',
     votePowerAdapter: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
     votePowerTokenFacade: '0xc6194299cdd7f0574ad8d63e23fd33c612efff98',
-    defaultShell: '0x1b4D5c02542790cec64dcC010A9C08f6d54D0201',
-    sqncr: '0xB309573dC52d7Ff80Ad9EdD21c0f16aDBed0825F',
+    defaultShell: '0xfd7bBd7317e1508D5a16Da805Ad61A2A932D3A4A',
+    sqncr: '0x2e89A6C03Db862c817Cb70D0c16114391C89Dc4F',
   };
 };

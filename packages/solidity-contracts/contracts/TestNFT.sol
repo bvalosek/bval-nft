@@ -16,6 +16,6 @@ contract TestNFT is MetaNFT {
     defaultMetadataResolver: options.defaultShell,
     contractURI: "ipfs://ipfs/QmTdoCbC4nHLZH3EUXJZ6LggH3HWLuJv8zqzJLqZSgYrLn",
     mintCost: 0,
-    maxMints: 0
+    maxMints: 100
   })) { }
 }
