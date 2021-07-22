@@ -9,7 +9,7 @@ export const asDecimal = (val: BigNumber, decimals = 18): [string, string] => {
   const padded = `${zeros}${d}`;
 
   const a = padded.slice(0, padded.length - decimals) || '0';
-  const b = padded.slice(-18);
+  const b = padded.slice(-decimals);
 
   return [a, b];
 };

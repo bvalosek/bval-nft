@@ -2,7 +2,9 @@ import React, { createContext, FunctionComponent, useContext, useEffect, useRef,
 import { useWeb3React } from '@web3-react/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { ContractTransaction } from 'ethers';
+
 import { getContracts } from '../contracts';
+import { getAccountView } from '../web3/account';
 
 const connector = new InjectedConnector({});
 
@@ -82,7 +84,11 @@ export const useWalletImplementation = () => {
     await trx.wait();
     setTransactions((trxs) => trxs.filter((t) => t !== trx));
     callbacks.current.forEach((cb) => cb());
-    // TODO : refetch wallet
+    fetchAccount();
+  };
+
+  const fetchAccount = async () => {
+    await getAccountView(account);
   };
 
   useEffect(() => {
@@ -98,7 +104,7 @@ export const useWalletImplementation = () => {
 
   useEffect(() => {
     if (state === 'ready' && library) {
-      // TODO : fetch account
+      fetchAccount();
     }
   }, [state, account]);
 
