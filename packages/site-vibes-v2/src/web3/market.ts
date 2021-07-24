@@ -12,6 +12,7 @@ export interface MarketView {
     totalSupply: BigNumber;
     vibesReserve: BigNumber;
     maticReserve: BigNumber;
+    totalLiquidityUsdc: BigNumber;
   };
 }
 
@@ -32,6 +33,7 @@ export const getMarketView = async (): Promise<MarketView> => {
   const vibesReserve = resp[1]._reserve1;
   const vibesMaticPrice = maticReserveVibes.mul(BigNumber.from(10).pow(18)).div(vibesReserve);
   const vibesUsdcPrice = vibesMaticPrice.mul(maticUsdPrice).div(BigNumber.from(10).pow(18));
+  const totalLiquidityUsdc = vibesUsdcPrice.mul(vibesReserve).mul(2).div(BigNumber.from(10).pow(18));
 
   const view: MarketView = {
     maticUsdcPrice: maticUsdPrice,
@@ -41,6 +43,7 @@ export const getMarketView = async (): Promise<MarketView> => {
       totalSupply: resp[0],
       maticReserve: maticReserveVibes,
       vibesReserve: vibesReserve,
+      totalLiquidityUsdc,
     },
   };
 

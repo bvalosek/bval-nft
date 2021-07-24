@@ -7,6 +7,7 @@ import { ThemeConfig } from '../Theme';
 
 interface Props {
   vibes: BigNumber;
+  decimals?: number;
 }
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
@@ -17,7 +18,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
   };
 });
 
-export const VibesPrice: FunctionComponent<Props> = ({ vibes }) => {
+export const VibesPrice: FunctionComponent<Props> = ({ vibes, decimals }) => {
   const { marketView } = useWallet();
   const classes = useStyles();
 
@@ -30,7 +31,7 @@ export const VibesPrice: FunctionComponent<Props> = ({ vibes }) => {
   return (
     <span className={classes.price}>
       ($
-      <DecimalNumber decimals={2} number={price} />)
+      <DecimalNumber decimals={decimals ?? 2} number={price} />)
     </span>
   );
 };

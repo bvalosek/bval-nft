@@ -7,6 +7,7 @@ import { Title } from './Title';
 import { DecimalNumber } from './DecimalNumber';
 import { Stats } from './Stats';
 import { TwoPanel } from './TwoPanel';
+import { VibesPrice } from './VibesPrice';
 
 export const MarketStats: FunctionComponent = () => {
   const { marketView } = useWallet();
@@ -18,9 +19,24 @@ export const MarketStats: FunctionComponent = () => {
         <div>
           <Stats>
             <p>
-              📈 <strong>VIBES price</strong>: $<DecimalNumber number={marketView.vibesUsdcPrice} decimals={5} />
+              📈 <strong>VIBES price</strong>{' '}
+              <Button externalNavTo={`https://info.quickswap.exchange/pair/${getContracts().quickswapVibesMatic}`}>
+                🔎
+              </Button>
+              : $
+              <DecimalNumber number={marketView.vibesUsdcPrice} decimals={5} />
               <br />
               📊 <strong>MATIC price</strong>: $<DecimalNumber number={marketView.maticUsdcPrice} decimals={2} />
+              <br />
+              💰 <strong>total liquidity</strong>:{' '}
+              <DecimalNumber number={marketView.vibesMaticPool.totalSupply} decimals={0} /> LP{' '}
+              <VibesPrice decimals={0} vibes={marketView.vibesMaticPool.vibesReserve.mul(2)} />
+              <br />
+              <strong>&nbsp;&nbsp;- VIBES</strong>:{' '}
+              <DecimalNumber number={marketView.vibesMaticPool.vibesReserve} decimals={0} />
+              <br />
+              <strong>&nbsp;&nbsp;- MATIC</strong>:{' '}
+              <DecimalNumber number={marketView.vibesMaticPool.maticReserve} decimals={0} />
             </p>
           </Stats>
         </div>

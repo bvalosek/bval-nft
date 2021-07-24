@@ -14,6 +14,8 @@ export interface AccountView {
   vibesMaticLpBalance: BigNumber;
   /** as a 18-decimal percent */
   shareOfVibesMaticLpPool: BigNumber;
+  lpUnderlyingVibes: BigNumber;
+  lpUnderlyingMatic: BigNumber;
 }
 
 export const getAccountView = async (address: string): Promise<AccountView> => {
@@ -21,7 +23,6 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
   const vibes = new Contract(getContracts().vibes, VIBES);
   const vpa = new Contract(getContracts().votePowerAdapter, VOTE_POWER_ADAPTER);
   const quickswap = new Contract(getContracts().quickswapVibesMatic, QUICKSWAP_PAIR);
-  const usdcQuickswap = new Contract(getContracts().quickswapUsdcMatic, QUICKSWAP_PAIR);
 
   const calls = [
     vpa.getVotePower(address),
@@ -29,13 +30,17 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
     vibes.balanceOf(address),
     quickswap.balanceOf(address),
     quickswap.totalSupply(),
+    quickswap.getReserves(),
   ];
 
   const resp = await provider.all(calls);
 
   const vibesMaticLpBalance = resp[3];
   const vibesMaticLpTotalSupply = resp[4];
+  const { _reserve0: maticReserve, _reserve1: vibesReserve } = resp[5];
   const shareOfVibesMaticLpPool = vibesMaticLpBalance.mul(BigNumber.from(10).pow(18)).div(vibesMaticLpTotalSupply);
+  const lpUnderlyingVibes = vibesReserve.mul(shareOfVibesMaticLpPool).div(BigNumber.from(10).pow(18));
+  const lpUnderlyingMatic = maticReserve.mul(shareOfVibesMaticLpPool).div(BigNumber.from(10).pow(18));
 
   const view: AccountView = {
     address,
@@ -44,6 +49,8 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
     vibesBalance: resp[2],
     vibesMaticLpBalance,
     shareOfVibesMaticLpPool,
+    lpUnderlyingVibes,
+    lpUnderlyingMatic,
   };
 
   return view;

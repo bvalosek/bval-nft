@@ -20,8 +20,22 @@ export const WalletStats: FunctionComponent = () => {
         <div>
           <Stats>
             <p>
-              🏦 <strong>balance</strong>: <DecimalNumber number={accountView.vibesBalance} decimals={0} /> <Vibes />{' '}
-              <VibesPrice vibes={accountView.vibesBalance} />
+              🏦 <strong>balance</strong>{' '}
+              <Button externalNavTo={`https://polygonscan.com/tokenholdings?a=${accountView.address}`}>🔎</Button>
+              : <DecimalNumber number={accountView.vibesBalance} decimals={0} /> <Vibes />{' '}
+              <VibesPrice vibes={accountView.vibesBalance} decimals={0} />
+              <br />
+              🏛 <strong>vote power</strong>: <DecimalNumber number={accountView.votePower} decimals={0} />
+              <br />
+              💰 <strong>your liquidity</strong>:{' '}
+              <DecimalNumber number={accountView.vibesMaticLpBalance} decimals={0} /> LP{' '}
+              <VibesPrice decimals={0} vibes={accountView.lpUnderlyingVibes.mul(2)} />
+              <br />
+              <strong>&nbsp;&nbsp;- VIBES</strong>:{' '}
+              <DecimalNumber number={accountView.lpUnderlyingVibes} decimals={0} />
+              <br />
+              <strong>&nbsp;&nbsp;- MATIC</strong>:{' '}
+              <DecimalNumber number={accountView.lpUnderlyingMatic} decimals={0} />
               <br />
               ⚡️ <strong>pending trx</strong>:{' '}
               {transactions.length === 0
