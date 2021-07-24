@@ -44,7 +44,5 @@ export const getMarketView = async (): Promise<MarketView> => {
     },
   };
 
-  console.log(view);
-
   return view;
 };
