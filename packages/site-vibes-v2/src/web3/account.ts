@@ -3,16 +3,48 @@ import { getContracts } from '../contracts';
 import { getProvider } from '../lib/rpc';
 import VIBES from './abi/vibes.json';
 import VOTE_POWER_ADAPTER from './abi/vote-power-adapater.json';
-import FAUCET_V2 from './abi/faucet-v2.json';
+import QUICKSWAP_PAIR from './abi/quickswap-pair.json';
+import { BigNumber } from 'ethers';
 
-export const getAccountView = async (address: string) => {
+export interface AccountView {
+  address: string;
+  votePower: BigNumber;
+  maticBalance: BigNumber;
+  vibesBalance: BigNumber;
+  vibesMaticLpBalance: BigNumber;
+  /** as a 18-decimal percent */
+  shareOfVibesMaticLpPool: BigNumber;
+}
+
+export const getAccountView = async (address: string): Promise<AccountView> => {
   const provider = new Provider(getProvider(), 137);
   const vibes = new Contract(getContracts().vibes, VIBES);
   const vpa = new Contract(getContracts().votePowerAdapter, VOTE_POWER_ADAPTER);
-  const faucet = new Contract(getContracts().faucetV2, FAUCET_V2);
+  const quickswap = new Contract(getContracts().quickswapVibesMatic, QUICKSWAP_PAIR);
+  const usdcQuickswap = new Contract(getContracts().quickswapUsdcMatic, QUICKSWAP_PAIR);
 
-  const calls = [vibes.balanceOf(address), vpa.getVotePower(address), faucet.tokenIdAt(100)];
+  const calls = [
+    vpa.getVotePower(address),
+    provider.getEthBalance(address),
+    vibes.balanceOf(address),
+    quickswap.balanceOf(address),
+    quickswap.totalSupply(),
+  ];
 
   const resp = await provider.all(calls);
-  console.log(resp);
+
+  const vibesMaticLpBalance = resp[3];
+  const vibesMaticLpTotalSupply = resp[4];
+  const shareOfVibesMaticLpPool = vibesMaticLpBalance.mul(BigNumber.from(10).pow(18)).div(vibesMaticLpTotalSupply);
+
+  const view: AccountView = {
+    address,
+    votePower: resp[0],
+    maticBalance: resp[1],
+    vibesBalance: resp[2],
+    vibesMaticLpBalance,
+    shareOfVibesMaticLpPool,
+  };
+
+  return view;
 };

@@ -4,7 +4,7 @@ import { InjectedConnector } from '@web3-react/injected-connector';
 import { ContractTransaction } from 'ethers';
 
 import { getContracts } from '../contracts';
-import { getAccountView } from '../web3/account';
+import { AccountView, getAccountView } from '../web3/account';
 
 const connector = new InjectedConnector({});
 
@@ -34,7 +34,7 @@ const switchToPolygon = async (provider: any) => {
           symbol: 'MATIC',
           decimals: 18,
         },
-        rpcUrls: ['https://rpc-mainnet.matic.network'],
+        rpcUrls: ['https://rpc-mainnet.maticvigil.com'],
         blockExplorerUrls: ['https://polygonscan.com'],
       },
     ],
@@ -50,6 +50,7 @@ const walletPresent = (): boolean => {
 export const useWalletImplementation = () => {
   const { activate, active, error, chainId, account, library } = useWeb3React();
   const [transactions, setTransactions] = useState<ContractTransaction[]>([]);
+  const [accountView, setAccountView] = useState<AccountView | null>(null);
   const callbacks = useRef<Array<() => unknown>>([]);
 
   const connect = async () => {
@@ -84,11 +85,11 @@ export const useWalletImplementation = () => {
     await trx.wait();
     setTransactions((trxs) => trxs.filter((t) => t !== trx));
     callbacks.current.forEach((cb) => cb());
-    fetchAccount();
+    await fetchAccount();
   };
 
   const fetchAccount = async () => {
-    await getAccountView(account);
+    setAccountView(await getAccountView(account));
   };
 
   useEffect(() => {
@@ -114,6 +115,7 @@ export const useWalletImplementation = () => {
     account,
     error,
     connect,
+    accountView,
     switchToPolygon: gotoPoly,
     trackInMetamask,
     registerTransactions,

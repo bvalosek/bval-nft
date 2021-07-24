@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/styles';
-import { BigNumber } from 'ethers';
 import React, { FunctionComponent } from 'react';
 import { useHistory } from 'react-router';
 import { useWallet } from '../hooks/wallet';
@@ -19,7 +18,7 @@ const useStyles = makeStyles<ThemeConfig>(() => {
 });
 
 export const WalletButton: FunctionComponent = () => {
-  const { state, connect, switchToPolygon, account, transactions, walletPresent } = useWallet();
+  const { state, connect, switchToPolygon, account, accountView, transactions, walletPresent } = useWallet();
   const history = useHistory();
   const classes = useStyles();
 
@@ -32,17 +31,21 @@ export const WalletButton: FunctionComponent = () => {
   }
 
   if (state === 'disconnected') {
-    return <Button onClick={() => connect()}>connect</Button>;
+    return <Button onClick={() => connect()}>⚡️ connect</Button>;
   }
 
   if (state === 'connected') {
-    return <Button onClick={() => switchToPolygon()}>switch to polygon</Button>;
+    return <Button onClick={() => switchToPolygon()}>🚀 switch to polygon</Button>;
+  }
+
+  if (accountView === null) {
+    return <Button>⌛️</Button>;
   }
 
   return (
     <Button onClick={() => history.push('/wallet')}>
       <span className={classes.onlyDesktop}>
-        <DecimalNumber number={BigNumber.from('420690000000000000000')} decimals={0} /> <Vibes /> |{' '}
+        <DecimalNumber number={accountView.vibesBalance} decimals={0} /> <Vibes /> |{' '}
       </span>
       <Address address={account} />
       {transactions.length ? (
