@@ -19,11 +19,7 @@ export const MarketStats: FunctionComponent = () => {
         <div>
           <Stats>
             <p>
-              📈 <strong>VIBES price</strong>{' '}
-              <Button externalNavTo={`https://info.quickswap.exchange/pair/${getContracts().quickswapVibesMatic}`}>
-                🔎
-              </Button>
-              : $
+              📈 <strong>VIBES price</strong> : $
               <DecimalNumber number={marketView.vibesUsdcPrice} decimals={5} />
               <br />
               📊 <strong>MATIC price</strong>: $<DecimalNumber number={marketView.maticUsdcPrice} decimals={2} />
@@ -47,6 +43,9 @@ export const MarketStats: FunctionComponent = () => {
             </Button>
             <Button externalNavTo={`https://polygonscan.com/address/${getContracts().quickswapVibesMatic}#tokentxns`}>
               🔎 VIEW market trxs
+            </Button>
+            <Button externalNavTo={`https://info.quickswap.exchange/pair/${getContracts().quickswapVibesMatic}`}>
+              📊 VIEW market stats
             </Button>
           </ButtonGroup>
         </div>

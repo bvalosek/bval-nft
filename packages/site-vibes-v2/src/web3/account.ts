@@ -4,7 +4,15 @@ import { getProvider } from '../lib/rpc';
 import VIBES from './abi/vibes.json';
 import VOTE_POWER_ADAPTER from './abi/vote-power-adapater.json';
 import QUICKSWAP_PAIR from './abi/quickswap-pair.json';
+import SQNCR from './abi/sqncr.json';
 import { BigNumber } from 'ethers';
+
+interface SQNCRData {
+  tokenId: BigNumber;
+  creator: string;
+  owner: string;
+  createdAt: Date;
+}
 
 export interface AccountView {
   address: string;
@@ -16,6 +24,7 @@ export interface AccountView {
   shareOfVibesMaticLpPool: BigNumber;
   lpUnderlyingVibes: BigNumber;
   lpUnderlyingMatic: BigNumber;
+  sqncrs: SQNCRData[];
 }
 
 export const getAccountView = async (address: string): Promise<AccountView> => {
@@ -23,6 +32,7 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
   const vibes = new Contract(getContracts().vibes, VIBES);
   const vpa = new Contract(getContracts().votePowerAdapter, VOTE_POWER_ADAPTER);
   const quickswap = new Contract(getContracts().quickswapVibesMatic, QUICKSWAP_PAIR);
+  const sqncr = new Contract(getContracts().sqncr, SQNCR);
 
   const calls = [
     vpa.getVotePower(address),
@@ -31,6 +41,7 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
     quickswap.balanceOf(address),
     quickswap.totalSupply(),
     quickswap.getReserves(),
+    sqncr.balanceOf(address),
   ];
 
   const resp = await provider.all(calls);
@@ -41,6 +52,23 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
   const shareOfVibesMaticLpPool = vibesMaticLpBalance.mul(BigNumber.from(10).pow(18)).div(vibesMaticLpTotalSupply);
   const lpUnderlyingVibes = vibesReserve.mul(shareOfVibesMaticLpPool).div(BigNumber.from(10).pow(18));
   const lpUnderlyingMatic = maticReserve.mul(shareOfVibesMaticLpPool).div(BigNumber.from(10).pow(18));
+  const ownedSQNCRs = resp[6].toNumber();
+
+  const toobi = [...new Array(ownedSQNCRs)].map((_, idx) => sqncr.tokenOfOwnerByIndex(address, idx));
+  const toobiResp = await provider.all(toobi);
+  const [sqncrs] = await provider.all([sqncr.batchGetTokenData(toobiResp)]);
+
+  console.log(sqncrs);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sqncrData = sqncrs.map((data: any) => {
+    return {
+      tokenId: data.id.toString(),
+      creator: data.creator,
+      owner: data.owner,
+      createdAt: new Date(data.createdAtTimestamp.toNumber() * 1000),
+    };
+  });
 
   const view: AccountView = {
     address,
@@ -51,6 +79,7 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
     shareOfVibesMaticLpPool,
     lpUnderlyingVibes,
     lpUnderlyingMatic,
+    sqncrs: sqncrData,
   };
 
   return view;

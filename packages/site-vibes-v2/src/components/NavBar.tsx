@@ -65,11 +65,14 @@ export const NavBar: FunctionComponent = () => {
       <div className={classes.container}>
         <div>
           {!open && (
-            <Button>
-              <Link to="/">
-                <Vibes accent={false} />
-              </Link>
-            </Button>
+            <>
+              <Button>
+                <Link to="/">
+                  <Vibes accent={false} />
+                </Link>
+              </Button>{' '}
+              <Button>▣ SQNCR#1</Button>
+            </>
           )}
         </div>
         <div className={classes.navs}>
