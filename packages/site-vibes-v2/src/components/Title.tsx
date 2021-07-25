@@ -9,11 +9,13 @@ interface Props {
 const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
   return {
     header: {
-      fontSize: theme.spacing(4),
-      '@media(min-width: 800px)': { fontSize: theme.spacing(5) },
+      fontSize: theme.spacing(4.5),
+      '@media(min-width: 800px)': { fontSize: theme.spacing(5.5) },
       margin: theme.scaledSpacing(5),
       textDecoration: 'underline',
+      fontWeight: 'bold',
       textAlign: (props) => props.align ?? 'center',
+      color: theme.palette.accent.secondary,
     },
   };
 });

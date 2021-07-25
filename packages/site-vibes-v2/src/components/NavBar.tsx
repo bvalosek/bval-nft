@@ -89,12 +89,16 @@ export const NavBar: FunctionComponent = () => {
       {open && (
         <div className={classes.menu}>
           <div>
+            <Button onClick={withClose(() => history.push('/wallet'))}>🏦 WALLET</Button>
+          </div>
+          <div>* * *</div>
+          <div>
+            <Button externalNavTo="https://docs.sickvibes.xyz">📚 DOCS</Button>
+          </div>
+          <div>
             <Button onClick={() => setOpen(false)} externalNavTo="https://discord.gg/qDrsjcGR2F">
               🗣 DISCORD
             </Button>
-          </div>
-          <div>
-            <Button externalNavTo="https://docs.sickvibes.xyz">📚 DOCS</Button>
           </div>
           <div>
             <Button externalNavTo="https://snapshot.org/#/sickvibes.eth">🗳 GOVERNANCE</Button>
@@ -107,9 +111,6 @@ export const NavBar: FunctionComponent = () => {
             >
               🤑 BUY <Vibes />
             </Button>
-          </div>
-          <div>
-            <Button onClick={withClose(() => history.push('/wallet'))}>🏦 WALLET</Button>
           </div>
         </div>
       )}

@@ -6,8 +6,7 @@ import VOTE_POWER_ADAPTER from './abi/vote-power-adapater.json';
 import QUICKSWAP_PAIR from './abi/quickswap-pair.json';
 import SQNCR from './abi/sqncr.json';
 import { BigNumber } from 'ethers';
-import { parseBase64MetadataUri } from '../lib/strings';
-import { SQNCRData } from './sqncr';
+import { getSQNCRView, SQNCRData } from './sqncr';
 
 export interface AccountView {
   address: string;
@@ -20,6 +19,8 @@ export interface AccountView {
   lpUnderlyingVibes: BigNumber;
   lpUnderlyingMatic: BigNumber;
   sqncrs: SQNCRData[];
+  mintedSQNCRs: number;
+  maxMints: number;
 }
 
 export const getAccountView = async (address: string): Promise<AccountView> => {
@@ -37,6 +38,8 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
     quickswap.totalSupply(),
     quickswap.getReserves(),
     sqncr.balanceOf(address),
+    sqncr.mintCountByAddress(address),
+    sqncr.maxMints(),
   ];
 
   const resp = await provider.all(calls);
@@ -48,31 +51,12 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
   const lpUnderlyingVibes = vibesReserve.mul(shareOfVibesMaticLpPool).div(BigNumber.from(10).pow(18));
   const lpUnderlyingMatic = maticReserve.mul(shareOfVibesMaticLpPool).div(BigNumber.from(10).pow(18));
   const ownedSQNCRs = resp[6].toNumber();
+  const mintedSQNCRs = resp[7].toNumber();
 
   const toobi = [...new Array(ownedSQNCRs)].map((_, idx) => sqncr.tokenOfOwnerByIndex(address, idx));
   const sqncrIds = await provider.all(toobi);
-  const [sqncrs, ...tokenURIs] = await provider.all([
-    sqncr.batchGetTokenData(sqncrIds),
-    ...sqncrIds.map((id) => sqncr.tokenURI(id)),
-  ]);
 
-  const metadata = tokenURIs.map(parseBase64MetadataUri);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const sqncrData: SQNCRData[] = sqncrs.map((data: any, idx: number) => {
-    const sqncr: SQNCRData = {
-      tokenId: data.id.toString(),
-      creator: data.creator,
-      owner: data.owner,
-      createdAt: new Date(data.createdAtTimestamp.toNumber() * 1000),
-      seed: data.seed,
-      metadata: metadata[idx],
-      variant: ['red', 'green', 'blue', 'purple'][data.seed.mod(4).toNumber()] as SQNCRData['variant'],
-    };
-
-    console.log(sqncr);
-    return sqncr;
-  });
+  const sqncrs = await getSQNCRView(sqncrIds);
 
   const view: AccountView = {
     address,
@@ -83,7 +67,9 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
     shareOfVibesMaticLpPool,
     lpUnderlyingVibes,
     lpUnderlyingMatic,
-    sqncrs: sqncrData,
+    sqncrs: sqncrs.map((v) => v.sqncr),
+    mintedSQNCRs,
+    maxMints: resp[8].toNumber(),
   };
 
   return view;

@@ -28,10 +28,10 @@ export const MarketStats: FunctionComponent = () => {
               <DecimalNumber number={marketView.vibesMaticPool.totalSupply} decimals={0} /> LP{' '}
               <VibesPrice decimals={0} vibes={marketView.vibesMaticPool.vibesReserve.mul(2)} />
               <br />
-              <strong>&nbsp;&nbsp;- VIBES</strong>:{' '}
+              <strong>&nbsp;&nbsp;&nbsp;- VIBES</strong>:{' '}
               <DecimalNumber number={marketView.vibesMaticPool.vibesReserve} decimals={0} />
               <br />
-              <strong>&nbsp;&nbsp;- MATIC</strong>:{' '}
+              <strong>&nbsp;&nbsp;&nbsp;- MATIC</strong>:{' '}
               <DecimalNumber number={marketView.vibesMaticPool.maticReserve} decimals={0} />
             </p>
           </Stats>

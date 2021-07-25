@@ -30,10 +30,10 @@ export const WalletStats: FunctionComponent = () => {
               <DecimalNumber number={accountView.vibesMaticLpBalance} decimals={0} /> LP{' '}
               <VibesPrice decimals={0} vibes={accountView.lpUnderlyingVibes.mul(2)} />
               <br />
-              <strong>&nbsp;&nbsp;- VIBES</strong>:{' '}
+              <strong>&nbsp;&nbsp;&nbsp;- VIBES</strong>:{' '}
               <DecimalNumber number={accountView.lpUnderlyingVibes} decimals={0} />
               <br />
-              <strong>&nbsp;&nbsp;- MATIC</strong>:{' '}
+              <strong>&nbsp;&nbsp;&nbsp;- MATIC</strong>:{' '}
               <DecimalNumber number={accountView.lpUnderlyingMatic} decimals={0} />
               <br />
               🎛 <strong>active SQNCR</strong>: {activeSQNCR ? <SQNCR sqncr={activeSQNCR} /> : <>(none)</>}
