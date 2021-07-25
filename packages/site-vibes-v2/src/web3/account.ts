@@ -6,14 +6,8 @@ import VOTE_POWER_ADAPTER from './abi/vote-power-adapater.json';
 import QUICKSWAP_PAIR from './abi/quickswap-pair.json';
 import SQNCR from './abi/sqncr.json';
 import { BigNumber } from 'ethers';
-
-interface SQNCRData {
-  tokenId: BigNumber;
-  creator: string;
-  owner: string;
-  createdAt: Date;
-  seed: BigNumber;
-}
+import { parseBase64MetadataUri } from '../lib/strings';
+import { SQNCRData } from './sqncr';
 
 export interface AccountView {
   address: string;
@@ -56,21 +50,29 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
   const ownedSQNCRs = resp[6].toNumber();
 
   const toobi = [...new Array(ownedSQNCRs)].map((_, idx) => sqncr.tokenOfOwnerByIndex(address, idx));
-  const toobiResp = await provider.all(toobi);
-  const [sqncrs] = await provider.all([sqncr.batchGetTokenData(toobiResp)]);
+  const sqncrIds = await provider.all(toobi);
+  const [sqncrs, ...tokenURIs] = await provider.all([
+    sqncr.batchGetTokenData(sqncrIds),
+    ...sqncrIds.map((id) => sqncr.tokenURI(id)),
+  ]);
+
+  const metadata = tokenURIs.map(parseBase64MetadataUri);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const sqncrData = sqncrs.map((data: any) => {
-    return {
+  const sqncrData: SQNCRData[] = sqncrs.map((data: any, idx: number) => {
+    const sqncr: SQNCRData = {
       tokenId: data.id.toString(),
       creator: data.creator,
       owner: data.owner,
       createdAt: new Date(data.createdAtTimestamp.toNumber() * 1000),
       seed: data.seed,
+      metadata: metadata[idx],
+      variant: ['red', 'green', 'blue', 'purple'][data.seed.mod(4).toNumber()] as SQNCRData['variant'],
     };
-  });
 
-  console.log(sqncrData);
+    console.log(sqncr);
+    return sqncr;
+  });
 
   const view: AccountView = {
     address,

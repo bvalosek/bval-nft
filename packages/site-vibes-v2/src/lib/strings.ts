@@ -29,3 +29,17 @@ export const formatBytes = (bytes: number, decimals = 2): string => {
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 };
+
+interface Metadata {
+  name: string;
+  description: string;
+  image: string;
+  external_url: string;
+  attributes: Array<{ trait_type: string; value: string }>;
+}
+
+export const parseBase64MetadataUri = (uri: string): Metadata => {
+  const [, encoded] = uri.match(/^data:application\/json;base64,(.*)$/) ?? [];
+  const payload = JSON.parse(atob(encoded));
+  return { ...payload, attributes: payload.attribues ?? [] };
+};

@@ -9,6 +9,9 @@ import { Vibes } from './Vibes';
 import { WalletButton } from './WalletButton';
 
 import { getContracts } from '../contracts';
+import { SQNCR } from './SQNCR';
+import { BigNumber } from '@ethersproject/bignumber';
+import { useWallet } from '../hooks/wallet';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
@@ -39,7 +42,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       background: theme.palette.background.main,
       fontSize: theme.spacing(4),
       '@media(min-width: 800px)': { fontSize: theme.spacing(5) },
-      marginTop: theme.spacing(5.5),
+      marginTop: theme.spacing(10),
       minHeight: '100vh',
       textAlign: 'right',
       '& > *': {
@@ -53,6 +56,7 @@ export const NavBar: FunctionComponent = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const history = useHistory();
+  const { activeSQNCR } = useWallet();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withClose = (fn: () => any) => () => {
@@ -70,8 +74,9 @@ export const NavBar: FunctionComponent = () => {
                 <Link to="/">
                   <Vibes accent={false} />
                 </Link>
-              </Button>{' '}
-              <Button>▣ SQNCR#1</Button>
+              </Button>
+              &nbsp;
+              <SQNCR sqncr={activeSQNCR} />
             </>
           )}
         </div>

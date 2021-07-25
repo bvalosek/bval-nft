@@ -124,6 +124,8 @@ export const useWalletImplementation = () => {
     }
   }, [state, account]);
 
+  const activeSQNCR = accountView && accountView.sqncrs.length > 0 ? accountView.sqncrs[0] : null;
+
   return {
     state,
     library,
@@ -138,6 +140,7 @@ export const useWalletImplementation = () => {
     transactions,
     onTransactions,
     walletPresent,
+    activeSQNCR,
   };
 };
 

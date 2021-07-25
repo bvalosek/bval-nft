@@ -31,6 +31,12 @@ export const createTheme = () => {
         tertiary: colors.pink,
         quadriarylolwhat: colors.yellow,
       },
+      sqncr: {
+        red: { main: '#ff003c' },
+        green: { main: '#45ff00' },
+        blue: { main: '#004eff' },
+        purple: { main: '#7200ff' },
+      },
     },
     font: '"DM Mono", monospace',
     maxWidth: '1000px',

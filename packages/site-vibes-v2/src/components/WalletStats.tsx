@@ -9,9 +9,10 @@ import { DecimalNumber } from './DecimalNumber';
 import { Stats } from './Stats';
 import { VibesPrice } from './VibesPrice';
 import { TwoPanel } from './TwoPanel';
+import { SQNCR } from './SQNCR';
 
 export const WalletStats: FunctionComponent = () => {
-  const { accountView, trackInMetamask, transactions } = useWallet();
+  const { accountView, trackInMetamask, transactions, activeSQNCR } = useWallet();
 
   return (
     <div>
@@ -35,11 +36,11 @@ export const WalletStats: FunctionComponent = () => {
               <strong>&nbsp;&nbsp;- MATIC</strong>:{' '}
               <DecimalNumber number={accountView.lpUnderlyingMatic} decimals={0} />
               <br />
-              🎛 <strong>owned SQNCRs</strong>: {accountView.sqncrs.length}
+              🎛 <strong>active SQNCR</strong>: {activeSQNCR ? <SQNCR sqncr={activeSQNCR} /> : <>(none)</>}
               <br />
               ⚡️ <strong>pending trx</strong>:{' '}
               {transactions.length === 0
-                ? 'none'
+                ? '(none)'
                 : transactions.map((trx) => (
                     <Button externalNavTo={`https://polygonscan.com/tx/${trx.hash}`}>{trx.nonce}</Button>
                   ))}
