@@ -10,7 +10,6 @@ import { WalletButton } from './WalletButton';
 
 import { getContracts } from '../contracts';
 import { SQNCR } from './SQNCR';
-import { BigNumber } from '@ethersproject/bignumber';
 import { useWallet } from '../hooks/wallet';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {

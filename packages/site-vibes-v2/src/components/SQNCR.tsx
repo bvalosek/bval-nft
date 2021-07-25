@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber';
 import { makeStyles } from '@material-ui/styles';
 import React, { FunctionComponent } from 'react';
 import { ThemeConfig } from '../Theme';
