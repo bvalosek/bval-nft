@@ -39,6 +39,19 @@ export const computeVariant = (tokenId: string, seed: BigNumber): SQNCRVariant =
   return ['red', 'green', 'blue', 'purple'][seed.mod(4).toNumber()] as SQNCRVariant;
 };
 
+export const getVariantName = (variant: SQNCRVariant): string => {
+  switch (variant) {
+    case 'red':
+      return 'FERA';
+    case 'green':
+      return 'SYNC';
+    case 'blue':
+      return 'ARC';
+    case 'purple':
+      return 'ISO';
+  }
+};
+
 export const getSQNCRView = async (tokenIds: string[]): Promise<SQNCRView[]> => {
   const provider = new Provider(getProvider(), 137);
   const sqncr = new MulticallContract(getContracts().sqncr, SQNCR);

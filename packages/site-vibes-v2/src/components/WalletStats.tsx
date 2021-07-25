@@ -36,7 +36,11 @@ export const WalletStats: FunctionComponent = () => {
               <strong>&nbsp;&nbsp;&nbsp;- MATIC</strong>:{' '}
               <DecimalNumber number={accountView.lpUnderlyingMatic} decimals={0} />
               <br />
-              🎛 <strong>active SQNCR</strong>: {activeSQNCR ? <SQNCR sqncr={activeSQNCR} /> : <>(none)</>}
+              🎛{' '}
+              <strong>
+                active <Button navTo="/sqncr">SQNCR</Button>
+              </strong>
+              : {activeSQNCR ? <SQNCR sqncr={activeSQNCR} /> : <>(none)</>}
               <br />
               ⚡️ <strong>pending trx</strong>:{' '}
               {transactions.length === 0

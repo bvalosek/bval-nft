@@ -2,12 +2,14 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { PageSection } from './PageSection';
 import { Content } from './Content';
 import { Title } from './Title';
-import { getSQNCRView, SQNCRView } from '../web3/sqncr';
+import { getSQNCRView, getVariantName, SQNCRView } from '../web3/sqncr';
 import { ipfsGatewayUrl } from '../lib/ipfs';
 import { useParams } from 'react-router-dom';
 import { ButtonGroup } from './ButtonGroup';
 import { Button } from './Button';
 import { TwoPanel } from './TwoPanel';
+import { Address } from './Address';
+import { getContracts } from '../contracts';
 
 interface Params {
   tokenId: string;
@@ -54,6 +56,7 @@ export const SQNCRDetail: FunctionComponent = () => {
 
   return (
     <>
+      <PageSection></PageSection>
       <PageSection>
         <Content>
           <TwoPanel>
@@ -61,9 +64,34 @@ export const SQNCRDetail: FunctionComponent = () => {
               <img src={ipfsGatewayUrl(view.sqncr.metadata.image)} />
             </div>
             <div>
-              <Title>SQNCR #{view.sqncr.tokenId}</Title>
+              <Content>
+                <Title>SQNCR #{view.sqncr.tokenId}</Title>
+                <p>
+                  <strong>👤 owner</strong>: <Address address={view.sqncr.owner} />
+                  <br />
+                  <strong>🏗 created by</strong>: <Address address={view.sqncr.creator} />
+                  <br />
+                  <strong>🗂 variant</strong>: {getVariantName(view.sqncr.variant)}
+                  <br />
+                  <strong>🌈 shell</strong>: DEFAULT.EXE
+                  <br />
+                  <strong>📅 created</strong>: {view.sqncr.createdAt.toDateString()}
+                  <br />
+                </p>
+                <ButtonGroup>
+                  <Button externalNavTo={`https://opensea.io/assets/matic/${getContracts().sqncr}/${tokenId}`}>
+                    ⛵️ VIEW on OpenSea
+                  </Button>
+                </ButtonGroup>
+              </Content>
             </div>
           </TwoPanel>
+        </Content>
+      </PageSection>
+      <PageSection>
+        <Content>
+          <Title>Installed Modules</Title>
+          <p style={{ textAlign: 'center' }}>(none)</p>
         </Content>
       </PageSection>
     </>

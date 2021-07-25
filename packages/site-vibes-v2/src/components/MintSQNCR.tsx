@@ -38,7 +38,7 @@ export const MintSQNCR: FunctionComponent = () => {
               {accountView?.maxMints > accountView?.mintedSQNCRs ? (
                 <Button onClick={() => mint()}>🚀 MINT your SQNCR</Button>
               ) : (
-                <Button disabled>max SQNCR mint count</Button>
+                <Button disabled>max SQNCRs minted</Button>
               )}
             </ButtonGroup>
           </Connect>

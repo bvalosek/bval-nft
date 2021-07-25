@@ -6,6 +6,5 @@ export const getProvider = (): JsonRpcProvider => {
 };
 
 export const getEthProvider = (): JsonRpcProvider => {
-  // default infura api key
   return new providers.JsonRpcProvider('https://mainnet.infura.io/v3/6a5ddbf0cff0460eb7931664d7495ef9', 1);
 };

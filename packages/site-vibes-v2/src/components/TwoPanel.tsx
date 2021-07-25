@@ -8,6 +8,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       '@media(min-width: 800px)': {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
+        gap: theme.spacing(8),
       },
       '@media(max-width:799px)': {
         '& div:first-child': { marginBottom: theme.spacing(4) },

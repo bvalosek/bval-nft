@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Route } from 'react-router-dom';
+import { ManageSQNCRs } from './components/ManageSQNCRs';
 import { MintSQNCR } from './components/MintSQNCR';
 import { Page } from './components/Page';
 import { SQNCRDetail } from './components/SQNCRDetails';
@@ -10,6 +11,9 @@ export const Application: FunctionComponent = () => {
     <Page>
       <Route path="/wallet">
         <Wallet />
+      </Route>
+      <Route exact path="/sqncr">
+        <ManageSQNCRs />
       </Route>
       <Route path="/mint-sqncr">
         <MintSQNCR />
