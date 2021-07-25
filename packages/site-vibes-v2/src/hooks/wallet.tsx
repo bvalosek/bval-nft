@@ -17,7 +17,12 @@ const addToMetamask = async (provider: any) => {
     method: 'wallet_watchAsset',
     params: {
       type: 'ERC20',
-      options: { address: getContracts().vibes, symbol: 'VIBES', decimals: 18 },
+      options: {
+        address: getContracts().vibes,
+        symbol: 'VIBES',
+        decimals: 18,
+        image: 'https://gateway.pinata.cloud/ipfs/Qmdy4Tv8XZEGS2BAcs99CkmoBw6NwBtJ7K38yJ8x5p4cYY',
+      },
     },
   });
 };

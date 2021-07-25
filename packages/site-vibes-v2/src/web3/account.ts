@@ -12,6 +12,7 @@ interface SQNCRData {
   creator: string;
   owner: string;
   createdAt: Date;
+  seed: BigNumber;
 }
 
 export interface AccountView {
@@ -58,8 +59,6 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
   const toobiResp = await provider.all(toobi);
   const [sqncrs] = await provider.all([sqncr.batchGetTokenData(toobiResp)]);
 
-  console.log(sqncrs);
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sqncrData = sqncrs.map((data: any) => {
     return {
@@ -67,8 +66,11 @@ export const getAccountView = async (address: string): Promise<AccountView> => {
       creator: data.creator,
       owner: data.owner,
       createdAt: new Date(data.createdAtTimestamp.toNumber() * 1000),
+      seed: data.seed,
     };
   });
+
+  console.log(sqncrData);
 
   const view: AccountView = {
     address,
