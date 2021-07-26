@@ -24,7 +24,7 @@ export const MarketStats: FunctionComponent = () => {
               <br />
               📈 <strong>VIBES price</strong>: <DecimalNumber number={marketView.vibesMaticPrice} decimals={5} /> MATIC
               <br />
-              📊 <strong>MATIC price</strong>: $<DecimalNumber number={marketView.maticUsdcPrice} decimals={2} />
+              📊 <strong>MATIC price</strong>: $<DecimalNumber number={marketView.maticUsdcPrice} decimals={2} /> USD
               <br />
               💰 <strong>total liquidity</strong>:{' '}
               <DecimalNumber number={marketView.vibesMaticPool.totalSupply} decimals={0} /> LP{' '}

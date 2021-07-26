@@ -9,7 +9,7 @@ import { MarketView, getMarketView } from '../web3/market';
 
 const connector = new InjectedConnector({});
 
-type WalletState = 'disconnected' | 'connected' | 'ready';
+type WalletState = 'init' | 'disconnected' | 'connected' | 'ready';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const addToMetamask = async (provider: any) => {
@@ -55,6 +55,7 @@ const walletPresent = (): boolean => {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useWalletImplementation = () => {
   const { activate, active, error, chainId, account, library } = useWeb3React();
+  const [isLoaded, setIsLoaded] = useState(false);
   const [transactions, setTransactions] = useState<ContractTransaction[]>([]);
   const [accountView, setAccountView] = useState<AccountView | null>(null);
   const [marketView, setMarketView] = useState<MarketView | null>(null);
@@ -78,6 +79,7 @@ export const useWalletImplementation = () => {
     if (await connector.isAuthorized()) {
       await connect();
     }
+    setIsLoaded(true);
   };
 
   const onTransactions = (callback: () => unknown) => {
@@ -107,11 +109,13 @@ export const useWalletImplementation = () => {
     attemptReconnect();
   }, []);
 
-  let state: WalletState = 'disconnected';
+  let state: WalletState = 'init';
   if (active && chainId === 137) {
     state = 'ready';
   } else if (active) {
     state = 'connected';
+  } else if (isLoaded) {
+    state = 'disconnected';
   }
 
   useEffect(() => {
@@ -119,10 +123,11 @@ export const useWalletImplementation = () => {
   }, []);
 
   useEffect(() => {
+    setAccountView(null);
     if (state === 'ready' && library) {
       fetchAccount();
     }
-  }, [state, account]);
+  }, [account]);
 
   const activeSQNCR = accountView && accountView.sqncrs.length > 0 ? accountView.sqncrs[0] : null;
 

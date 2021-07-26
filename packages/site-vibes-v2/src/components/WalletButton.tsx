@@ -30,15 +30,13 @@ export const WalletButton: FunctionComponent = () => {
     );
   }
 
-  if (state === 'disconnected') {
+  if (state === 'init') {
+    return <Button>⌛️</Button>;
+  } else if (state === 'disconnected') {
     return <Button onClick={() => connect()}>⚡️ connect</Button>;
-  }
-
-  if (state === 'connected') {
+  } else if (state === 'connected') {
     return <Button onClick={() => switchToPolygon()}>🚀 switch to polygon</Button>;
-  }
-
-  if (accountView === null) {
+  } else if (accountView === null) {
     return <Button>⌛️</Button>;
   }
 
