@@ -1,5 +1,6 @@
 import React, { createContext, FunctionComponent, useContext, useEffect, useState } from 'react';
 import { getMarketView, MarketView } from '../web3/market';
+import { getProtocolView, ProtocolView } from '../web3/protocol';
 
 /**
  * Global info about the protocol
@@ -7,9 +8,11 @@ import { getMarketView, MarketView } from '../web3/market';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useProtocolImplementation = () => {
   const [marketView, setMarketView] = useState<MarketView | null>(null);
+  const [protocolView, setProtocolView] = useState<ProtocolView | null>(null);
 
   const fetchProtocolInfo = async () => {
     setMarketView(await getMarketView());
+    setProtocolView(await getProtocolView());
   };
 
   useEffect(() => {
@@ -20,6 +23,7 @@ export const useProtocolImplementation = () => {
 
   return {
     marketView,
+    protocolView,
   };
 };
 
