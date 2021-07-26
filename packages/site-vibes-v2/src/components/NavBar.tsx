@@ -95,6 +95,9 @@ export const NavBar: FunctionComponent = () => {
             <Button onClick={withClose(() => history.push('/wallet'))}>🏦 WALLET</Button>
           </div>
           <div>
+            <Button onClick={withClose(() => history.push('/governance'))}>🏛 GOVERNANCE</Button>
+          </div>
+          <div>
             <Button onClick={withClose(() => history.push('/protocol'))}>⚙️ PROTOCOL</Button>
           </div>
           <div>* * *</div>
@@ -107,7 +110,7 @@ export const NavBar: FunctionComponent = () => {
             </Button>
           </div>
           <div>
-            <Button externalNavTo="https://snapshot.org/#/sickvibes.eth">🗳 GOVERNANCE</Button>
+            <Button externalNavTo="https://snapshot.org/#/sickvibes.eth">🗳 SNAPSHOT</Button>
           </div>
           <div>
             <Button

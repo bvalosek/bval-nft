@@ -13,9 +13,10 @@ export const Error404: FunctionComponent = () => {
         <Content>
           <Connect>
             <Title>⚠️ Page Not Found</Title>
-            <p>The request page was not found</p>
+            <p>The requested page was not found</p>
             <ButtonGroup>
-              <Button onClick={() => window.history.back()}>BACK</Button>
+              <Button onClick={() => window.history.back()}>⏪ BACK</Button>
+              <Button navTo="/">🏠 HOME</Button>
             </ButtonGroup>
           </Connect>
         </Content>
