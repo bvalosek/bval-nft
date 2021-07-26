@@ -19,8 +19,10 @@ export const MarketStats: FunctionComponent = () => {
         <div>
           <Stats>
             <p>
-              📈 <strong>VIBES price</strong> : $
-              <DecimalNumber number={marketView.vibesUsdcPrice} decimals={5} />
+              📈 <strong>VIBES price</strong>: $
+              <DecimalNumber number={marketView.vibesUsdcPrice} decimals={5} /> USD
+              <br />
+              📈 <strong>VIBES price</strong>: <DecimalNumber number={marketView.vibesMaticPrice} decimals={5} /> MATIC
               <br />
               📊 <strong>MATIC price</strong>: $<DecimalNumber number={marketView.maticUsdcPrice} decimals={2} />
               <br />
