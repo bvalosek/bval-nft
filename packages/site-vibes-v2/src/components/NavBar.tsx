@@ -48,6 +48,9 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
         marginBottom: theme.spacing(3),
       },
     },
+    onlyDesktop: {
+      '@media(max-width: 799px)': { display: 'none' },
+    },
   };
 });
 
@@ -75,7 +78,9 @@ export const NavBar: FunctionComponent = () => {
                 </Link>
               </Button>
               &nbsp;
-              <SQNCR sqncr={activeSQNCR} />
+              <div className={classes.onlyDesktop}>
+                <SQNCR sqncr={activeSQNCR} />
+              </div>
             </>
           )}
         </div>

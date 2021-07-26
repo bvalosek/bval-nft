@@ -60,6 +60,9 @@ export const WalletStats: FunctionComponent = () => {
             <Button onClick={() => trackInMetamask()}>
               🦊 TRACK <Vibes /> in MetaMask
             </Button>
+            <Button externalNavTo={`https://quickswap.exchange/#/add/${getContracts().vibes}/ETH`}>
+              🏊‍♀️ POOL liquidity
+            </Button>
             <Button
               externalNavTo={`https://quickswap.exchange/#/swap?inputCurrency=ETH&outputCurrency=${
                 getContracts().vibes
