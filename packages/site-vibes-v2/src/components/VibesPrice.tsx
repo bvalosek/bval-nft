@@ -1,37 +1,33 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { makeStyles } from '@material-ui/styles';
 import React, { FunctionComponent } from 'react';
-import { DecimalNumber } from '../../../site-vibes/src/components/DecimalNumber';
-import { useWallet } from '../hooks/wallet';
-import { ThemeConfig } from '../Theme';
+import { DecimalNumber } from './DecimalNumber';
+import { useProtocol } from '../hooks/protocol';
 
 interface Props {
   vibes: BigNumber;
-  decimals?: number;
 }
 
-const useStyles = makeStyles<ThemeConfig>((theme) => {
-  return {
-    price: {
-      color: theme.palette.foreground.secondary,
-    },
-  };
-});
-
-export const VibesPrice: FunctionComponent<Props> = ({ vibes, decimals }) => {
-  const { marketView } = useWallet();
-  const classes = useStyles();
+/** output the market price in vibes */
+export const VibesPrice: FunctionComponent<Props> = ({ vibes }) => {
+  const { marketView } = useProtocol();
 
   if (marketView === null) {
-    return <span className={classes.price}>-</span>;
+    return <>-</>;
   }
 
   const price = vibes.mul(marketView.vibesUsdcPrice).div(BigNumber.from(10).pow(18));
 
+  if (price.lt(BigNumber.from(10).pow(18))) {
+    return (
+      <>
+        $<DecimalNumber decimals={2} number={price} />
+      </>
+    );
+  }
+
   return (
-    <span className={classes.price}>
-      ($
-      <DecimalNumber decimals={decimals ?? 2} number={price} />)
-    </span>
+    <>
+      $<DecimalNumber decimals={0} number={price} />
+    </>
   );
 };
