@@ -39,7 +39,7 @@ export const SQNCRDetail: FunctionComponent = () => {
           <Title>⚠️ SQNCR Not Found</Title>
           <ButtonGroup>
             <Button navTo="/sqncr">🎛 VIEW my SQNCRs</Button>
-            <Button navTo="/mint-sqncr">🚀 MINT new SQNCR</Button>
+            <Button navTo="/sqncr/mint">🚀 MINT new SQNCR</Button>
           </ButtonGroup>
         </Content>
       </PageSection>

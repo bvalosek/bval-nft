@@ -24,7 +24,11 @@ export const WalletStats: FunctionComponent = () => {
               🏦 <strong>balance</strong>: <DecimalNumber number={accountView.vibesBalance} decimals={0} /> <Vibes />{' '}
               <VibesPrice vibes={accountView.vibesBalance} decimals={0} />
               <br />
-              🏛 <strong>vote power</strong>: <DecimalNumber number={accountView.votePower} decimals={0} />
+              🏛{' '}
+              <strong>
+                <Button navTo="/governance">vote power</Button>
+              </strong>
+              : <DecimalNumber number={accountView.votePower} decimals={0} />
               <br />
               💰 <strong>your liquidity</strong>:{' '}
               <DecimalNumber number={accountView.vibesMaticLpBalance} decimals={0} /> LP{' '}
