@@ -7,7 +7,7 @@ import { Title } from './Title';
 import { Vibes } from './Vibes';
 import { DecimalNumber } from './DecimalNumber';
 import { Stats } from './Stats';
-import { VibesPrice } from './VibesPrice';
+import { MarketPrice } from './MarketPrice';
 import { TwoPanel } from './TwoPanel';
 import { SQNCR } from './SQNCR';
 
@@ -21,8 +21,8 @@ export const WalletStats: FunctionComponent = () => {
         <div>
           <Stats>
             <p>
-              🏦 <strong>balance</strong>: <DecimalNumber number={accountView.vibesBalance} decimals={0} /> <Vibes /> (
-              <VibesPrice vibes={accountView.vibesBalance} />)
+              🏦 <strong>balance</strong>: <DecimalNumber number={accountView.vibesBalance} decimals={0} /> <Vibes /> ($
+              <MarketPrice amount={accountView.vibesBalance} price="vibesUsdcPrice" />)
               <br />
               🏛{' '}
               <strong>
@@ -31,8 +31,8 @@ export const WalletStats: FunctionComponent = () => {
               : <DecimalNumber number={accountView.votePower} decimals={0} />
               <br />
               💰 <strong>your liquidity</strong>:{' '}
-              <DecimalNumber number={accountView.vibesMaticLpBalance} decimals={0} /> LP (
-              <VibesPrice vibes={accountView.lpUnderlyingVibes.mul(2)} />)
+              <DecimalNumber number={accountView.vibesMaticLpBalance} decimals={0} /> LP ($
+              <MarketPrice amount={accountView.vibesMaticLpBalance} price="vibesMaticLpUsdcPrice" />)
               <br />
               <strong>&nbsp;&nbsp;&nbsp;- VIBES</strong>:{' '}
               <DecimalNumber number={accountView.lpUnderlyingVibes} decimals={0} />

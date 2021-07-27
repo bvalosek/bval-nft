@@ -7,7 +7,7 @@ import { Title } from './Title';
 import { DecimalNumber } from './DecimalNumber';
 import { Stats } from './Stats';
 import { TwoPanel } from './TwoPanel';
-import { VibesPrice } from './VibesPrice';
+import { MarketPrice } from './MarketPrice';
 
 export const MarketStats: FunctionComponent = () => {
   const { marketView } = useWallet();
@@ -28,7 +28,7 @@ export const MarketStats: FunctionComponent = () => {
               <br />
               💰 <strong>total liquidity</strong>:{' '}
               <DecimalNumber number={marketView.vibesMaticPool.totalSupply} decimals={0} /> LP{' '}
-              <VibesPrice decimals={0} vibes={marketView.vibesMaticPool.vibesReserve.mul(2)} />
+              <MarketPrice amount={marketView.vibesMaticPool.vibesReserve.mul(2)} price="vibesUsdcPrice" />
               <br />
               <strong>&nbsp;&nbsp;&nbsp;- VIBES</strong>:{' '}
               <DecimalNumber number={marketView.vibesMaticPool.vibesReserve} decimals={0} />

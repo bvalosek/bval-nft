@@ -5,6 +5,7 @@ import { Home } from './components/Home';
 import { ManageSQNCRs } from './components/ManageSQNCRs';
 import { MintSQNCR } from './components/MintSQNCR';
 import { Page } from './components/Page';
+import { Protocol } from './components/Protocol';
 import { SQNCRDetail } from './components/SQNCRDetails';
 import { Wallet } from './components/Wallet';
 
@@ -26,6 +27,9 @@ export const Application: FunctionComponent = () => {
         </Route>
         <Route path="/sqncr/:tokenId">
           <SQNCRDetail />
+        </Route>
+        <Route exact path="/protocol">
+          <Protocol />
         </Route>
         <Route path="*">
           <Error404 />
