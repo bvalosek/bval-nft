@@ -6,9 +6,12 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     content: {
       fontSize: theme.spacing(4),
-      '@media(min-width: 800px)': { fontSize: theme.spacing(5) },
+      gap: theme.spacing(5),
+      '@media(min-width: 800px)': {
+        fontSize: theme.spacing(5),
+        gap: theme.spacing(10),
+      },
       display: 'grid',
-      gap: theme.spacing(10),
       '& a': {
         color: theme.palette.accent.tertiary,
         textDecoration: 'underline',

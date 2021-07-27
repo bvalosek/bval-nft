@@ -11,6 +11,7 @@ import { WalletButton } from './WalletButton';
 import { getContracts } from '../contracts';
 import { SQNCR } from './SQNCR';
 import { useWallet } from '../hooks/wallet';
+import { FlashingLabel } from './FlashingLabel';
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
@@ -58,7 +59,7 @@ export const NavBar: FunctionComponent = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const history = useHistory();
-  const { activeSQNCR } = useWallet();
+  const { activeSQNCR, walletPresent, accountView } = useWallet();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withClose = (fn: () => any) => () => {
@@ -80,6 +81,11 @@ export const NavBar: FunctionComponent = () => {
               &nbsp;
               <div className={classes.onlyDesktop}>
                 <SQNCR sqncr={activeSQNCR} />
+                {activeSQNCR === null && accountView !== null && (
+                  <Button navTo="/sqncr/mint">
+                    <FlashingLabel label="MINT SQNCR" />
+                  </Button>
+                )}
               </div>
             </>
           )}
@@ -96,17 +102,21 @@ export const NavBar: FunctionComponent = () => {
           <div>
             <Button onClick={withClose(() => history.push('/'))}>🏠 HOME</Button>
           </div>
-          <div>
-            <Button onClick={withClose(() => history.push('/sqncr'))}>🎛 SQNCR</Button>
-          </div>
-          <div>
-            <Button onClick={withClose(() => history.push('/wallet'))}>🏦 WALLET</Button>
-          </div>
-          <div>
+          {/* <div>
             <Button onClick={withClose(() => history.push('/governance'))}>🏛 GOVERNANCE</Button>
-          </div>
+          </div> */}
           <div>
             <Button onClick={withClose(() => history.push('/protocol'))}>⚙️ PROTOCOL</Button>
+          </div>
+          <div>
+            <Button onClick={withClose(() => history.push('/sqncr'))} disabled={!walletPresent()}>
+              🎛 SQNCR
+            </Button>
+          </div>
+          <div>
+            <Button onClick={withClose(() => history.push('/wallet'))} disabled={!walletPresent()}>
+              🏦 WALLET
+            </Button>
           </div>
           <div>* * *</div>
           <div>

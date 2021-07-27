@@ -10,6 +10,7 @@ export interface MarketView {
   vibesUsdcPrice: BigNumber;
   vibesMaticLpUsdcPrice: BigNumber;
   vibesMaticPool: {
+    address: string;
     totalSupply: BigNumber;
     vibesReserve: BigNumber;
     maticReserve: BigNumber;
@@ -45,6 +46,7 @@ export const getMarketView = async (): Promise<MarketView> => {
     vibesUsdcPrice,
     vibesMaticLpUsdcPrice,
     vibesMaticPool: {
+      address: getContracts().quickswapVibesMatic,
       totalSupply: totalLpSupply,
       maticReserve: maticReserveVibes,
       vibesReserve: vibesReserve,
