@@ -32,6 +32,10 @@ export const Connect: FunctionComponent = (props) => {
     );
   }
 
+  if (state === 'init') {
+    return <Title>⌛️ LOADING</Title>;
+  }
+
   if (state !== 'ready') {
     return (
       <>
