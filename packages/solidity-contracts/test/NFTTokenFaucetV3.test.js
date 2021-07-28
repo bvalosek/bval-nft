@@ -4,6 +4,7 @@ const MockERC20 = artifacts.require('MockERC20');
 const MockERC721 = artifacts.require('MockERC721');
 const NFTTokenFaucetV2 = artifacts.require('NFTTokenFaucetV2');
 const NFTTokenFaucetV3 = artifacts.require('NFTTokenFaucetV3');
+const TokenLockManagerV2 = artifacts.require('TokenLockManagerV2');
 
 const { BN, toWei, fromWei } = web3.utils;
 const ZERO = '0x0000000000000000000000000000000000000000';
@@ -12,14 +13,19 @@ const INFINITY = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 const factory = async () => {
   const token = await MockERC20.new();
   const nft = await MockERC721.new();
-  const faucet = await NFTTokenFaucetV3.new(token.address, {
-    seeder: ZERO,
-    faucet: ZERO,
-    nft: ZERO,
+  const lock = await TokenLockManagerV2.new();
+  const faucet = await NFTTokenFaucetV3.new({
+    token: token.address,
+    lock: lock.address,
+    legacy: {
+      seeder: ZERO,
+      faucet: ZERO,
+      nft: ZERO,
+    },
   });
   await token.approve(faucet.address, INFINITY);
 
-  return { token, nft, faucet };
+  return { token, nft, faucet, lock };
 };
 
 // gas

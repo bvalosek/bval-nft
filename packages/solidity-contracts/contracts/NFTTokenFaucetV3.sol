@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 import "./NFTTokenFaucetV2.sol";
+import "./TokenLockManagerV2.sol";
 
 // data saved for-each token
 struct TokenData {
@@ -63,6 +64,12 @@ struct LegacyFaucetInput {
   IERC721 nft;
 }
 
+struct FaucetContractOptions {
+  IERC20 token;
+  TokenLockManagerV2 lock;
+  LegacyFaucetInput legacy;
+}
+
 // Seed NFTs from any contract with tokens that are "mined" at a linear rate,
 // claimable by the token owner.
 //
@@ -82,6 +89,9 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
 
   // ERC-20 contract
   IERC20 public token;
+
+  // token lock manager
+  TokenLockManagerV2 public lock;
 
   // contract -> tokenId -> data
   mapping (IERC721 => mapping (uint256 => TokenData)) private _tokenData;
@@ -109,8 +119,9 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
     uint256 dailyRate,
     uint256 totalDays);
 
-  constructor(IERC20 token_, LegacyFaucetInput memory legacy) {
-    token = token_;
+  constructor(FaucetContractOptions memory options) {
+    token = options.token;
+    lock = options.lock;
 
     // seeder role and admin role
     _setRoleAdmin(SEEDER_ADMIN_ROLE, SEEDER_ADMIN_ROLE);
@@ -120,8 +131,8 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
     _setupRole(SEEDER_ADMIN_ROLE, msg.sender);
     _setupRole(SEEDER_ROLE, msg.sender);
 
-    if (legacy.faucet != NFTTokenFaucetV2(address(0))) {
-      _legacySeed(legacy);
+    if (options.legacy.faucet != NFTTokenFaucetV2(address(0))) {
+      _legacySeed(options.legacy);
     }
   }
 
