@@ -23,7 +23,7 @@ const factory = async (options = {}) => {
 
 const { BN, toWei, fromWei } = web3.utils;
 
-contract.only('MetaNFT', (accounts) => {
+contract('MetaNFT', (accounts) => {
   const [a1, a2, a3, a4, a5] = accounts;
   describe('vip stuff', () => {
     it('should allow a free VIP mint', async () => {

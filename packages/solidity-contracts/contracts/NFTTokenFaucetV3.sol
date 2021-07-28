@@ -109,7 +109,17 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
     uint256 dailyRate,
     uint256 totalDays);
 
-  constructor(LegacyFaucetInput memory legacy) {
+  constructor(IERC20 token_, LegacyFaucetInput memory legacy) {
+    token = token_;
+
+    // seeder role and admin role
+    _setRoleAdmin(SEEDER_ADMIN_ROLE, SEEDER_ADMIN_ROLE);
+    _setRoleAdmin(SEEDER_ROLE, SEEDER_ADMIN_ROLE);
+
+    // contract deployer gets roles
+    _setupRole(SEEDER_ADMIN_ROLE, msg.sender);
+    _setupRole(SEEDER_ROLE, msg.sender);
+
     if (legacy.faucet != NFTTokenFaucetV2(address(0))) {
       _legacySeed(legacy);
     }
@@ -261,7 +271,6 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
       // invalid tokens cannot compute claimable, claimable stays zero
     }
 
-
     return tokenView;
   }
 
@@ -284,9 +293,9 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
   // returns true if token exists (and is not burnt)
   function _isTokenValid(IERC721 nft, uint256 tokenId) internal view returns (bool) {
     try nft.ownerOf(tokenId) returns (address) {
-      return false;
-    } catch  {
       return true;
+    } catch  {
+      return false;
     }
   }
 
