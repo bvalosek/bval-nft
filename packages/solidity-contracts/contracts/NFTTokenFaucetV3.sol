@@ -187,7 +187,7 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
       });
 
       // using zero values for rate and total days as sentinels for legacy seeds
-      emit Seed(nft, tokenId, seeder, address(faucet), block.timestamp, 0, 0);
+      emit Seed(nft, tokenId, seeder, address(faucet), legacyData.seedTimestamp, 0, 0);
     }
 
     legacyTokenCount += count;
