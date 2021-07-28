@@ -5,7 +5,7 @@ import { getProvider } from '../lib/rpc';
 import { parseBase64MetadataUri } from '../lib/strings';
 import SQNCR from './abi/sqncr.json';
 
-type SQNCRVariant = 'red' | 'green' | 'blue' | 'purple';
+type SQNCRColor = 'red' | 'green' | 'blue' | 'purple';
 
 export interface Metadata {
   name: string;
@@ -22,7 +22,7 @@ export interface SQNCRData {
   createdAt: Date;
   seed: BigNumber;
   metadata: Metadata;
-  variant: SQNCRVariant;
+  color: SQNCRColor;
 }
 
 export const mintSQNCR = async (signer: Signer): Promise<ContractTransaction> => {
@@ -35,21 +35,8 @@ export interface SQNCRView {
   sqncr: SQNCRData;
 }
 
-export const computeVariant = (tokenId: string, seed: BigNumber): SQNCRVariant => {
-  return ['red', 'green', 'blue', 'purple'][seed.mod(4).toNumber()] as SQNCRVariant;
-};
-
-export const getVariantName = (variant: SQNCRVariant): string => {
-  switch (variant) {
-    case 'red':
-      return 'FERA';
-    case 'green':
-      return 'SYNC';
-    case 'blue':
-      return 'ARC';
-    case 'purple':
-      return 'ISO';
-  }
+export const computeColor = (tokenId: string, seed: BigNumber): SQNCRColor => {
+  return ['red', 'green', 'blue', 'purple'][seed.mod(4).toNumber()] as SQNCRColor;
 };
 
 export const getSQNCRView = async (tokenIds: string[]): Promise<SQNCRView[]> => {
@@ -70,7 +57,7 @@ export const getSQNCRView = async (tokenIds: string[]): Promise<SQNCRView[]> => 
       createdAt: new Date(data.createdAtTimestamp.toNumber() * 1000),
       seed: data.seed,
       metadata: metadata[idx],
-      variant: computeVariant(data.id.toString(), data.seed),
+      color: computeColor(data.id.toString(), data.seed),
     };
 
     return sqncr;

@@ -4,7 +4,6 @@ import { Connect } from './Connect';
 import { Content } from './Content';
 import { Title } from './Title';
 import { useWallet } from '../hooks/wallet';
-import { getVariantName } from '../web3/sqncr';
 import { SQNCR } from './SQNCR';
 import { ButtonGroup } from './ButtonGroup';
 import { Button } from './Button';
@@ -44,7 +43,7 @@ export const ManageSQNCRs: FunctionComponent = () => {
                     <td>
                       <SQNCR sqncr={sqncr} />
                     </td>
-                    <td>{getVariantName(sqncr.variant)}</td>
+                    <td>???</td>
                     <td>DEFAULT.EXE</td>
                     <td>(none)</td>
                   </tr>

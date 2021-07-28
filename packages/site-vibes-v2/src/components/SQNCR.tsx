@@ -11,7 +11,7 @@ interface Props {
 const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
   return {
     sqncr: {
-      color: (props) => (props.sqncr ? theme.palette.sqncr[props.sqncr.variant].main : 'black'),
+      color: (props) => (props.sqncr ? theme.palette.sqncr[props.sqncr.color].main : 'black'),
     },
   };
 });

@@ -30,6 +30,22 @@ export const Protocol: FunctionComponent = () => {
     <>
       <PageSection>
         <Content>
+          <Title>VIBES Protocol</Title>
+          <p>
+            The <Vibes /> protocol is made up of a cluster smart contracts. Information about the parameters, roles, and
+            addresses of the main contracts are listed here.
+          </p>
+          <p>
+            For more information, check out the{' '}
+            <Button externalNavTo="https://docs.sickvibes.xyz/resources/architecture">
+              Architecture Documentation
+            </Button>{' '}
+            on the <Vibes /> documentation site.
+          </p>
+        </Content>
+      </PageSection>
+      <PageSection>
+        <Content>
           <div>
             <Title>VIBES Token</Title>
             <TwoPanel>
@@ -205,10 +221,12 @@ export const Protocol: FunctionComponent = () => {
                 </Stats>
               </div>
               <div>
-                <p>
-                  The <Vibes /> multisig uses a Gnosis Safe to store protocol assets and manage protocol parameters. All
-                  asset transfers or contract invocations take a 3-of-5 on-chain consensus.
-                </p>
+                <Content>
+                  <p>
+                    The <Vibes /> multisig uses a Gnosis Safe to store protocol assets and manage protocol parameters.
+                  </p>
+                  <p>All asset transfers or contract invocations take a 3-of-5 on-chain consensus.</p>
+                </Content>
               </div>
             </TwoPanel>
           </div>

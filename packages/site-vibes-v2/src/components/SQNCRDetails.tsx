@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { PageSection } from './PageSection';
 import { Content } from './Content';
 import { Title } from './Title';
-import { getSQNCRView, getVariantName, SQNCRView } from '../web3/sqncr';
+import { getSQNCRView, SQNCRView } from '../web3/sqncr';
 import { ipfsGatewayUrl } from '../lib/ipfs';
 import { useParams } from 'react-router-dom';
 import { ButtonGroup } from './ButtonGroup';
@@ -71,7 +71,7 @@ export const SQNCRDetail: FunctionComponent = () => {
                   <br />
                   <strong>🏗 created by</strong>: <Address address={view.sqncr.creator} />
                   <br />
-                  <strong>🗂 variant</strong>: {getVariantName(view.sqncr.variant)}
+                  <strong>🗂 variant</strong>: ???
                   <br />
                   <strong>🌈 shell</strong>: DEFAULT.EXE
                   <br />

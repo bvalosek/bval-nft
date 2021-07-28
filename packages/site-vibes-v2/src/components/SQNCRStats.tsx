@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Title } from './Title';
 import { useWallet } from '../hooks/wallet';
-import { getVariantName } from '../web3/sqncr';
 import { SQNCR } from './SQNCR';
 import { ButtonGroup } from './ButtonGroup';
 import { Button } from './Button';
@@ -47,7 +46,7 @@ export const SQNCRStats: FunctionComponent = () => {
                 <td>
                   <SQNCR sqncr={sqncr} />
                 </td>
-                <td>{getVariantName(sqncr.variant)}</td>
+                <td>???</td>
                 <td className={classes.onlyDesktop}>DEFAULT.EXE</td>
                 <td className={classes.onlyDesktop}>(none)</td>
               </tr>
