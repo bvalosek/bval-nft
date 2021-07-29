@@ -43,6 +43,8 @@ struct TokenView {
 
   // external state
   bool isValidToken;
+  uint256 unlocksAt;
+  address owner;
 
   // data
   address seeder;
@@ -60,8 +62,8 @@ struct TokenView {
 // used to do legacy seeds
 struct LegacyFaucetInput {
   address seeder;
-  NFTTokenFaucetV2 faucet;
   IERC721 nft;
+  NFTTokenFaucetV2 faucet;
 }
 
 struct FaucetContractOptions {
@@ -211,6 +213,7 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
   // take the generated tokens from an nft, up to amount
   function claim(IERC721 nft, uint256 tokenId, uint256 amount) public {
     require(_isApprovedOrOwner(nft, tokenId, msg.sender), "not owner or approved");
+    require(!lock.isTokenLocked(nft, tokenId), "token locked");
 
     // compute how much we can claim, only pay attention to amount if its less
     // than available
@@ -226,11 +229,11 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
     uint256 claimAt = data.lastClaimAt + toClaim * 1 days / data.dailyRate;
 
     // update balances and execute ERC-20 transfer
-    data.balance -= toClaim;
-    data.lastClaimAt = claimAt;
+    _tokenData[nft][tokenId].balance -= toClaim;
+    _tokenData[nft][tokenId].lastClaimAt = claimAt;
     token.transfer(msg.sender, toClaim);
 
-    emit Claim(nft, tokenId, msg.sender, amount);
+    emit Claim(nft, tokenId, msg.sender, toClaim);
   }
 
   // ---
@@ -255,14 +258,18 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
   // get token info. returns an empty struct (zero-inited) if not found
   function getToken(IERC721 nft, uint256 tokenId) public view returns (TokenView memory) {
     TokenData memory data = _tokenData[nft][tokenId];
+    bool isValid = _isTokenValid(nft, tokenId);
+
     TokenView memory tokenView = TokenView({
       nft: nft,
       tokenId: tokenId,
-      isValidToken: _isTokenValid(nft, tokenId),
+      isValidToken: isValid,
       seeder: data.seeder,
       operator: data.operator,
       seededAt: data.seededAt,
       dailyRate: data.dailyRate,
+      unlocksAt: lock.tokenUnlocksAt(nft, tokenId),
+      owner: isValid ? nft.ownerOf(tokenId) : address(0),
       isLegacyToken: data.isLegacyToken,
       balance: data.balance,
       lastClaimAt: data.lastClaimAt,
@@ -276,7 +283,7 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
       tokenView.lastClaimAt = legacyData.lastClaimAt;
       tokenView.claimable = legacyData.claimable;
     // else if its an actual valid token, resolve claimable amount
-    } else if (data.operator != address(0)) {
+    } else if (isValid) {
       tokenView.claimable = claimable(nft, tokenId);
     } else {
       // invalid tokens cannot compute claimable, claimable stays zero

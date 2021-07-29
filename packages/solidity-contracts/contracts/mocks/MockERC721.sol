@@ -14,4 +14,8 @@ contract MockERC721 is ERC721Enumerable {
   function burn(uint256 tokenId) external {
     _burn(tokenId);
   }
+
+  function tokenURI(uint256) override public pure returns (string memory) {
+    return "uri";
+  }
 }
