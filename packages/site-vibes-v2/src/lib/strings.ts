@@ -13,6 +13,10 @@ export const truncateHex = (hex: string | number | BigNumber, first = 4, last = 
 };
 
 export const extractFlavorText = (description: string): string => {
+  // dont apply cleanup to non-bval NFTs
+  if (description.match(!/bvalosek/m)) {
+    return description;
+  }
   const match = description.match(/^(.*?)\.? ?(\n|;)(.*)$/m);
   return match?.[1] ?? description;
 };

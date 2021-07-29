@@ -14,9 +14,11 @@ import { Vibes } from './Vibes';
 import { MediaInfo, Metadata, resolveCreator, resolveMediaInfo, resolveMetadata } from '../lib/nft';
 import { ButtonGroup } from './ButtonGroup';
 import { Button } from './Button';
-import { formatBytes } from '../lib/strings';
+import { extractFlavorText, formatBytes } from '../lib/strings';
 import { MarketPrice } from './MarketPrice';
 import { Stats } from './Stats';
+import { Divider } from './Divder';
+import { useWallet } from '../hooks/wallet';
 
 interface Params {
   nft: string;
@@ -38,6 +40,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 });
 
 export const TokenDetail: FunctionComponent = () => {
+  const { account } = useWallet();
   const { tokenId, nft } = useParams<Params>();
   const [tokenView, setTokenView] = useState<NFTView | null>(undefined);
   const [metadata, setMetadata] = useState<Metadata>(undefined);
@@ -90,13 +93,19 @@ export const TokenDetail: FunctionComponent = () => {
         <div className={classes.hero}>
           <div>TOKEN CARD HERE</div>
         </div>
+      </PageSection>
+      <PageSection>
+        <Content>
+          <div>
+            <Title align="left">{metadata.name}</Title>
+            <p>{extractFlavorText(metadata.description)}</p>
+          </div>
+        </Content>
+      </PageSection>
+      <PageSection>
         <TwoPanel>
           <div>
             <Content>
-              <div>
-                <Title align="left">{metadata.name}</Title>
-                <p>hey</p>
-              </div>
               <p>
                 <Stats>
                   <strong>🎨 artist:</strong> <Address address={creator} />
@@ -125,8 +134,25 @@ export const TokenDetail: FunctionComponent = () => {
               </p>
             </Content>
           </div>
-          <div>action</div>
+          <div>
+            <Content>
+              <ButtonGroup>
+                <Button disabled={tokenView.owner !== account} navTo={`/claim/${tokenView.tokenId}`}>
+                  😎 CLAIM <Vibes />
+                </Button>
+                <Button externalNavTo={`https://www.screensaver.world/object/${tokenView.tokenId}`}>
+                  🌌 VIEW on screensaver
+                </Button>
+                <Button externalNavTo={`https://opensea.io/assets/matic/${tokenView.nft}/${tokenView.tokenId}`}>
+                  ⛵️ VIEW on OpenSea
+                </Button>
+              </ButtonGroup>
+            </Content>
+          </div>
         </TwoPanel>
+      </PageSection>
+      <PageSection>
+        <Divider />
       </PageSection>
     </>
   );
