@@ -6,7 +6,7 @@ export const getContracts = () => {
     lock: '0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c',
     wellspring: '0x37bD35C6967B786306b6Fa201Ec5Cf5751675804',
     lockV2: '0x222DA9397FCfcea9DB8e3423cd0d3b64bd16ac33',
-    wellspringV2: '0x0',
+    wellspringV2: '0xAD66C0423cf2F73680A1403473EdC6e64EF1cB93',
 
     // gov
     votePowerAdapter: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
