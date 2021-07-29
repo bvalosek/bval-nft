@@ -21,7 +21,7 @@ const factory = async () => {
 const MAX_DEPLOYMENT_GAS = 400000;
 const MAX_MUTATION_GAS = 50000;
 
-contract.only('TokenLockManager', (accounts) => {
+contract('TokenLockManager', (accounts) => {
   describe('gas constraints', () => {
     it('should deploy with less than target deployment gas', async () => {
       const { lock } = await factory();

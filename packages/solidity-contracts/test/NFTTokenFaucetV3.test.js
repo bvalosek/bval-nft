@@ -3,6 +3,7 @@ const timeMachine = require('ganache-time-traveler');
 
 const MockERC20 = artifacts.require('MockERC20');
 const MockERC721 = artifacts.require('MockERC721');
+const MockERC721NoMetadata = artifacts.require('MockERC721NoMetadata');
 const NFTTokenFaucetV2 = artifacts.require('NFTTokenFaucetV2');
 const NFTTokenFaucetV3 = artifacts.require('NFTTokenFaucetV3');
 const TokenLockManagerV2 = artifacts.require('TokenLockManagerV2');
@@ -39,7 +40,7 @@ const factory = async () => {
 const MAX_DEPLOYMENT_GAS = 2500000;
 const MAX_MUTATION_GAS = 250000;
 
-contract('NFTTokenFaucetV3', (accounts) => {
+contract.only('NFTTokenFaucetV3', (accounts) => {
   const [a1, a2, a3, a4, a5] = accounts;
   describe('gas constraints', () => {
     it('should deploy with less than target deployment gas', async () => {
@@ -171,6 +172,7 @@ contract('NFTTokenFaucetV3', (accounts) => {
       assert.equal(view.nft, nft.address);
       assert.equal(view.tokenId, tokenId);
       assert.equal(view.isValidToken, true);
+      assert.equal(view.isSeeded, true);
       assert.equal(view.seeder, a3);
       assert.equal(view.operator, a1);
       assert.equal(view.dailyRate, toWei('1000'));
@@ -179,6 +181,7 @@ contract('NFTTokenFaucetV3', (accounts) => {
       assert.equal(view.claimable, toWei('0'));
       assert.equal(view.owner, a2);
       assert.equal(view.unlocksAt, 0);
+      assert.equal(view.tokenURI, 'uri');
       assert.equal(view.seededAt, view.lastClaimAt);
     });
     it('should still return token view for burned tokens', async () => {
@@ -192,6 +195,8 @@ contract('NFTTokenFaucetV3', (accounts) => {
       assert.equal(view.nft, nft.address);
       assert.equal(view.tokenId, tokenId);
       assert.equal(view.isValidToken, false);
+      assert.equal(view.isSeeded, true);
+      assert.equal(view.tokenURI, 'uri');
       assert.equal(view.owner, ZERO);
       assert.equal(view.claimable, 0);
     });
@@ -202,8 +207,37 @@ contract('NFTTokenFaucetV3', (accounts) => {
       assert.equal(view.nft, nft.address);
       assert.equal(view.tokenId, tokenId);
       assert.equal(view.isValidToken, false);
+      assert.equal(view.isSeeded, false);
+      // assert.equal(view.tokenURI, ''); // mock contract returns URI regardless if token has been minted
       assert.equal(view.owner, ZERO);
       assert.equal(view.claimable, 0);
+    });
+    it('should still return token view for non-seeded tokens', async () => {
+      const tokenId = '1';
+      const { faucet, nft } = await factory();
+      await nft.mint('1');
+      const view = await faucet.getToken(nft.address, tokenId);
+      assert.equal(view.nft, nft.address);
+      assert.equal(view.tokenId, tokenId);
+      assert.equal(view.isValidToken, true);
+      assert.equal(view.isSeeded, false);
+      assert.equal(view.tokenURI, 'uri');
+      assert.equal(view.owner, a1);
+      assert.equal(view.claimable, 0);
+    });
+    it('should still return token view if tokenURI doesnt exist / fails', async () => {
+      const tokenId = '1';
+      const { faucet } = await factory();
+      const nft = await MockERC721NoMetadata.new();
+      await nft.mint('1');
+      const view = await faucet.getToken(nft.address, tokenId);
+      assert.equal(view.nft, nft.address);
+      assert.equal(view.tokenId, tokenId);
+      assert.equal(view.isValidToken, true);
+      assert.equal(view.isSeeded, false);
+      assert.equal(view.owner, a1);
+      assert.equal(view.claimable, 0);
+      assert.equal(view.tokenURI, '');
     });
   });
   describe('claiming', () => {

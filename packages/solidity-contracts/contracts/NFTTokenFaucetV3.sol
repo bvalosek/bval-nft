@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 import "./NFTTokenFaucetV2.sol";
@@ -21,7 +22,7 @@ struct TokenData {
 }
 
 // query input for batch get token data
-struct GetTokenInput {
+struct Token {
   IERC721 nft;
   uint256 tokenId;
 }
@@ -45,6 +46,7 @@ struct TokenView {
   bool isValidToken;
   uint256 unlocksAt;
   address owner;
+  string tokenURI;
 
   // data
   address seeder;
@@ -57,6 +59,7 @@ struct TokenView {
 
   // state
   uint256 claimable;
+  bool isSeeded;
 }
 
 // used to do legacy seeds
@@ -95,14 +98,14 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
   // token lock manager
   TokenLockManagerV2 public lock;
 
-  // contract -> tokenId -> data
-  mapping (IERC721 => mapping (uint256 => TokenData)) private _tokenData;
-
   // total managed tokens
   uint256 public managedTokenCount;
 
   // legacy tokens
   uint256 public legacyTokenCount;
+
+  // contract -> tokenId -> data
+  mapping (IERC721 => mapping (uint256 => TokenData)) private _tokenData;
 
     // a claim has occured
   event Claim(
@@ -259,11 +262,14 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
   function getToken(IERC721 nft, uint256 tokenId) public view returns (TokenView memory) {
     TokenData memory data = _tokenData[nft][tokenId];
     bool isValid = _isTokenValid(nft, tokenId);
+    bool isSeeded = data.operator != address(0);
 
     TokenView memory tokenView = TokenView({
       nft: nft,
       tokenId: tokenId,
       isValidToken: isValid,
+      isSeeded: isSeeded,
+      tokenURI: _tokenURIOrEmpty(nft, tokenId),
       seeder: data.seeder,
       operator: data.operator,
       seededAt: data.seededAt,
@@ -283,7 +289,7 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
       tokenView.lastClaimAt = legacyData.lastClaimAt;
       tokenView.claimable = legacyData.claimable;
     // else if its an actual valid token, resolve claimable amount
-    } else if (isValid) {
+    } else if (isValid && isSeeded) {
       tokenView.claimable = claimable(nft, tokenId);
     } else {
       // invalid tokens cannot compute claimable, claimable stays zero
@@ -294,7 +300,7 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
 
   // gets a batch of tokens, OR empty (zero-ed out) struct if not found, DOES
   // NOT THROW if invalid token in order to be more accomodating for callers
-  function batchGetToken(GetTokenInput[] memory tokens) external view returns (TokenView[] memory) {
+  function batchGetToken(Token[] memory tokens) external view returns (TokenView[] memory) {
     TokenView[] memory data = new TokenView[](tokens.length);
 
     for (uint256 i = 0; i < tokens.length; i++) {
@@ -314,6 +320,15 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
       return true;
     } catch  {
       return false;
+    }
+  }
+
+  // return token URI if metadata is implemented, else empty string
+  function _tokenURIOrEmpty(IERC721 nft, uint256 tokenId) internal view returns (string memory) {
+    try IERC721Metadata(address(nft)).tokenURI(tokenId) returns (string memory uri) {
+      return uri;
+    } catch  {
+      return "";
     }
   }
 

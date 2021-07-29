@@ -5,7 +5,7 @@ const Multipay = artifacts.require('Multipay');
 
 const { toWei, fromWei } = web3.utils;
 
-contract.only('Multipay', (accounts) => {
+contract('Multipay', (accounts) => {
   const [a1, a2, a3, a4, a5] = accounts;
   describe('payments', () => {
     it('should increment batch id', async () => {

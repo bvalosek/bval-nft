@@ -19,3 +19,20 @@ contract MockERC721 is ERC721Enumerable {
     return "uri";
   }
 }
+
+contract MockERC721NoMetadata is ERC721 {
+
+  constructor() ERC721('MockERC721', 'MOCK') { }
+
+  function mint(uint256 tokenId) external {
+    _mint(_msgSender(), tokenId);
+  }
+
+  function burn(uint256 tokenId) external {
+    _burn(tokenId);
+  }
+
+  function tokenURI(uint256) override public pure returns (string memory) {
+    revert("no metadata");
+  }
+}
