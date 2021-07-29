@@ -11,6 +11,7 @@ import votePower from './build/contracts/VotePower.json';
 import votePowerTokenFacade from './build/contracts/VotePowerTokenFacade.json';
 import defaultShell from './build/contracts/DefaultShell.json';
 import sqncr from './build/contracts/SQNCR.json';
+import multipay from './build/contracts/Multipay.json';
 
 export const BVAL20 = bval20;
 export const BVAL721 = bval721;
@@ -25,3 +26,4 @@ export const VOTE_POWER = votePower;
 export const VOTE_POWER_TOKEN_FACADE = votePowerTokenFacade;
 export const DEFAULT_SHELL = defaultShell;
 export const SQNCR = sqncr;
+export const MULTIPAY = multipay;

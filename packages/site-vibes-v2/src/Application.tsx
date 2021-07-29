@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { Deploy } from './components/Deploy';
 import { Error404 } from './components/Error404';
 import { Home } from './components/Home';
 import { ManageSQNCRs } from './components/ManageSQNCRs';
@@ -30,6 +31,9 @@ export const Application: FunctionComponent = () => {
         </Route>
         <Route exact path="/protocol">
           <Protocol />
+        </Route>
+        <Route exact path="/deploy">
+          <Deploy />
         </Route>
         <Route path="*">
           <Error404 />

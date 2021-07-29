@@ -5,6 +5,8 @@ export const getContracts = () => {
     vibes: '0xd269af9008c674b3814b4830771453d6a30616eb',
     wellspring: '0x37bD35C6967B786306b6Fa201Ec5Cf5751675804',
     lock: '0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c',
+    wellspringV2: '0x0',
+    lockV2: '0x0',
 
     // gov
     votePowerAdapter: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
@@ -22,6 +24,9 @@ export const getContracts = () => {
     ssw: '0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4',
     quickswapVibesMatic: '0x4F9e9C2EB7D90447FA190d4986b9E0A1562E2587',
     quickswapUsdcMatic: '0x6e7a5fafcec6bb1e78bae2a1f0b612012bf14827',
+
+    // misc
+    multipay: '0xe7dBF1DECDee8A1990199580d2c732DD6FCBadc9',
   };
 };
 
