@@ -13,6 +13,7 @@ import defaultShell from './build/contracts/DefaultShell.json';
 import sqncr from './build/contracts/SQNCR.json';
 import multipay from './build/contracts/Multipay.json';
 import lockV2 from './build/contracts/TokenLockManagerV2.json';
+import wellspringV2 from './build/contracts/FaucetV3.json';
 
 export const BVAL20 = bval20;
 export const BVAL721 = bval721;
@@ -29,3 +30,4 @@ export const DEFAULT_SHELL = defaultShell;
 export const SQNCR = sqncr;
 export const MULTIPAY = multipay;
 export const LOCK_V2 = lockV2;
+export const WELLSPRING_V2 = wellspringV2;
