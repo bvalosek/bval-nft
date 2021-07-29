@@ -9,10 +9,9 @@ import { DecimalNumber } from './DecimalNumber';
 import { Stats } from './Stats';
 import { MarketPrice } from './MarketPrice';
 import { TwoPanel } from './TwoPanel';
-import { SQNCR } from './SQNCR';
 
 export const WalletStats: FunctionComponent = () => {
-  const { accountView, trackInMetamask, transactions, activeSQNCR } = useWallet();
+  const { accountView, trackInMetamask, transactions } = useWallet();
 
   return (
     <div>
@@ -24,11 +23,7 @@ export const WalletStats: FunctionComponent = () => {
               🏦 <strong>balance</strong>: <DecimalNumber number={accountView.vibesBalance} decimals={0} /> <Vibes /> ($
               <MarketPrice amount={accountView.vibesBalance} price="vibesUsdcPrice" />)
               <br />
-              🏛{' '}
-              <strong>
-                <Button navTo="/governance">vote power</Button>
-              </strong>
-              : <DecimalNumber number={accountView.votePower} decimals={0} />
+              🏛 <strong>voter power</strong>: <DecimalNumber number={accountView.votePower} decimals={0} />
               <br />
               💰 <strong>your liquidity</strong>:{' '}
               <DecimalNumber number={accountView.vibesMaticLpBalance} decimals={0} /> LP ($
@@ -39,12 +34,6 @@ export const WalletStats: FunctionComponent = () => {
               <br />
               <strong>&nbsp;&nbsp;&nbsp;- MATIC</strong>:{' '}
               <DecimalNumber number={accountView.lpUnderlyingMatic} decimals={0} />
-              <br />
-              🎛{' '}
-              <strong>
-                active <Button navTo="/sqncr">SQNCR</Button>
-              </strong>
-              : {activeSQNCR ? <SQNCR sqncr={activeSQNCR} /> : <>(none)</>}
               <br />
               ⚡️ <strong>pending trx</strong>:{' '}
               {transactions.length === 0

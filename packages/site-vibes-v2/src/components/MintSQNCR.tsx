@@ -12,7 +12,6 @@ import { Vibes } from './Vibes';
 import { TwoPanel } from './TwoPanel';
 import { useProtocol } from '../hooks/protocol';
 import { DecimalNumber } from './DecimalNumber';
-import { Stats } from './Stats';
 import { MarketPrice } from './MarketPrice';
 
 export const MintSQNCR: FunctionComponent = () => {
@@ -34,11 +33,10 @@ export const MintSQNCR: FunctionComponent = () => {
         <PageSection>
           <Content>
             <Title>Transaction Submitted</Title>
-            <p>Your SQNCR is being minted</p>
-            <p>😎 Nice work.</p>
+            <p>😎 Your SQNCR is being minted.</p>
             <ButtonGroup>
               <Button externalNavTo={`https://polygonscan.com/tx/${mintTrx.hash}`}>🔎 VIEW transaction</Button>
-              <Button navTo="/sqncr">🎛 MANAGE your SQNCRs</Button>
+              <Button navTo="/wallet">🎛 VIEW your SQNCRs</Button>
             </ButtonGroup>
           </Content>
         </PageSection>
@@ -63,23 +61,24 @@ export const MintSQNCR: FunctionComponent = () => {
                     🏄‍♀️ It's a personal, tokenized carrier wave for the <Vibes />{' '}
                     <Button navTo="/protocol">protocol</Button>.
                   </p>
-                  <p>
-                    🌈 Install <strong>shells</strong> to modify your SQNCR's appearance, or install{' '}
-                    <strong>modules</strong> to give your SQNCR more functionality.
-                  </p>
                 </Content>
               </div>
               <div>
                 {protocolView && accountView && (
-                  <p style={{ textAlign: 'center' }}>
-                    <strong>total minted</strong>: {protocolView.sqncr.totalMinted} / ∞
-                    <br />
-                    <strong>minted by you</strong>: {accountView.sqncrs.length} / {protocolView.sqncr.maxMints}
-                    <br />
-                    <strong>mint cost</strong>: <DecimalNumber decimals={0} number={protocolView.sqncr.mintCost} />{' '}
-                    <Vibes /> ($
-                    <MarketPrice amount={protocolView.sqncr.mintCost} price="vibesUsdcPrice" />)
-                  </p>
+                  <Content>
+                    <p style={{ textAlign: 'center' }}>
+                      <strong>total minted</strong>: {protocolView.sqncr.totalMinted} / ∞
+                      <br />
+                      <strong>minted by you</strong>: {accountView.sqncrs.length} / {protocolView.sqncr.maxMints}
+                      <br />
+                      <strong>mint cost</strong>: <DecimalNumber decimals={0} number={protocolView.sqncr.mintCost} />{' '}
+                      <Vibes /> ($
+                      <MarketPrice amount={protocolView.sqncr.mintCost} price="vibesUsdcPrice" />)
+                    </p>
+                    <ButtonGroup>
+                      <Button navTo="/wallet">🎛 VIEW your SQNCRs</Button>
+                    </ButtonGroup>
+                  </Content>
                 )}
               </div>
             </TwoPanel>
