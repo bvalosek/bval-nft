@@ -7,6 +7,18 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 // upgrades from V1 to work across multiple nft contracts
 contract TokenLockManagerV2 {
 
+  event Lock(
+    IERC721 indexed nft,
+    uint256 indexed tokenId,
+    uint256 unlockAt
+  );
+
+  event Unlock(
+    IERC721 indexed nft,
+    uint256 indexed tokenId,
+    uint256 unlockAt
+  );
+
   // timestamp when a token should be considered unlocked
   mapping(IERC721 => mapping (uint256 => uint)) private _tokenUnlockTime;
 
@@ -20,6 +32,8 @@ contract TokenLockManagerV2 {
 
     uint unlockAt = block.timestamp + 30 days;
     _tokenUnlockTime[nft][tokenId] = unlockAt;
+
+    emit Lock(nft, tokenId, unlockAt);
   }
 
   // unlock token (shorten unlock time down to 1 day at most)
@@ -30,6 +44,8 @@ contract TokenLockManagerV2 {
     uint current = _tokenUnlockTime[nft][tokenId];
     uint unlockAt = current > max ? max : current;
     _tokenUnlockTime[nft][tokenId] = unlockAt;
+
+    emit Unlock(nft, tokenId, unlockAt);
   }
 
   // ---

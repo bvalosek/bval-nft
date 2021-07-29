@@ -3,10 +3,10 @@ export const getContracts = () => {
   return {
     // core
     vibes: '0xd269af9008c674b3814b4830771453d6a30616eb',
-    wellspring: '0x37bD35C6967B786306b6Fa201Ec5Cf5751675804',
     lock: '0x6Eb8E2770939F586F0B5A3C0143aB353E5Fff44c',
+    wellspring: '0x37bD35C6967B786306b6Fa201Ec5Cf5751675804',
+    lockV2: '0x222DA9397FCfcea9DB8e3423cd0d3b64bd16ac33',
     wellspringV2: '0x0',
-    lockV2: '0x0',
 
     // gov
     votePowerAdapter: '0xA2f67C69B1F5cFa725839a110901761C718eeB59',
