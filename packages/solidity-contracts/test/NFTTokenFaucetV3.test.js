@@ -29,6 +29,7 @@ const factory = async () => {
       seeder: ZERO,
       faucet: ZERO,
       nft: ZERO,
+      lock: ZERO,
     },
   });
   await token.approve(faucet.address, INFINITY);

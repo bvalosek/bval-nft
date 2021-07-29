@@ -67,6 +67,7 @@ struct LegacyFaucetInput {
   address seeder;
   IERC721 nft;
   NFTTokenFaucetV2 faucet;
+  TokenLockManager lock;
 }
 
 struct FaucetContractOptions {
@@ -98,6 +99,9 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
   // token lock manager
   TokenLockManagerV2 public lock;
 
+  // token lock manager from legacy contract
+  TokenLockManager public legacyLock;
+
   // total managed tokens
   uint256 public managedTokenCount;
 
@@ -107,7 +111,7 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
   // contract -> tokenId -> data
   mapping (IERC721 => mapping (uint256 => TokenData)) private _tokenData;
 
-    // a claim has occured
+  // a claim has occured
   event Claim(
     IERC721 indexed nft,
     uint256 indexed tokenId,
@@ -136,6 +140,8 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
     _setupRole(SEEDER_ADMIN_ROLE, msg.sender);
     _setupRole(SEEDER_ROLE, msg.sender);
 
+    // legacy stuff
+    legacyLock = options.legacy.lock;
     if (options.legacy.faucet != NFTTokenFaucetV2(address(0))) {
       _legacySeed(options.legacy);
     }
@@ -274,12 +280,12 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
       operator: data.operator,
       seededAt: data.seededAt,
       dailyRate: data.dailyRate,
-      unlocksAt: lock.tokenUnlocksAt(nft, tokenId),
       owner: isValid ? nft.ownerOf(tokenId) : address(0),
       isLegacyToken: data.isLegacyToken,
       balance: data.balance,
       lastClaimAt: data.lastClaimAt,
-      claimable: 0 // set below
+      claimable: 0, // set below
+      unlocksAt: 0 // set below
     });
 
     // if its a legacy token, query the original contract for real-time info
@@ -288,9 +294,10 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
       tokenView.balance = legacyData.balance;
       tokenView.lastClaimAt = legacyData.lastClaimAt;
       tokenView.claimable = legacyData.claimable;
-    // else if its an actual valid token, resolve claimable amount
+    // else if its an actual valid token, resolve claimable amount and lock status
     } else if (isValid && isSeeded) {
       tokenView.claimable = claimable(nft, tokenId);
+      tokenView.unlocksAt = lock.tokenUnlocksAt(nft, tokenId);
     } else {
       // invalid tokens cannot compute claimable, claimable stays zero
     }
