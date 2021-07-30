@@ -39,7 +39,7 @@ const factory = async () => {
 
 // gas
 const MAX_DEPLOYMENT_GAS = 2500000;
-const MAX_MUTATION_GAS = 250000;
+const MAX_MUTATION_GAS = 310000;
 
 contract.only('NFTTokenFaucetV3', (accounts) => {
   const [a1, a2, a3, a4, a5] = accounts;
@@ -151,14 +151,31 @@ contract.only('NFTTokenFaucetV3', (accounts) => {
         );
       });
     });
-    it('should increment token count', async () => {
-      const tokenId = '1';
+  });
+  describe('token iteration', () => {
+    it('should iterate through all tokens', async () => {
       const { faucet, nft, token } = await factory();
       await token.mint(toWei('100000'));
       await nft.mint('1');
-      assert.equal(await faucet.managedTokenCount(), 0);
-      await faucet.seed({ nft: nft.address, tokenId, seeder: a1, dailyRate: toWei('1000'), totalDays: 100 });
-      assert.equal(await faucet.managedTokenCount(), 1);
+      await nft.mint('2');
+      await nft.mint('3');
+      await faucet.seed({ nft: nft.address, tokenId: '1', seeder: a2, dailyRate: toWei('1000'), totalDays: 1 });
+      await faucet.seed({ nft: nft.address, tokenId: '2', seeder: a2, dailyRate: toWei('1000'), totalDays: 1 });
+      await faucet.seed({ nft: nft.address, tokenId: '3', seeder: a3, dailyRate: toWei('1000'), totalDays: 1 });
+
+      assert.equal((await faucet.allTokens(0)).tokenId, 1);
+      assert.equal((await faucet.allTokens(0)).nft, nft.address);
+      assert.equal((await faucet.allTokens(1)).tokenId, 2);
+      assert.equal((await faucet.allTokens(2)).tokenId, 3);
+
+      assert.equal((await faucet.tokensBySeeder(a2, 0)).tokenId, 1);
+      assert.equal((await faucet.tokensBySeeder(a2, 1)).tokenId, 2);
+      assert.equal((await faucet.tokensBySeeder(a3, 0)).tokenId, 3);
+
+      assert.equal(await faucet.allTokensCount(), 3);
+      assert.equal(await faucet.tokensBySeederCount(a1), 0);
+      assert.equal(await faucet.tokensBySeederCount(a2), 2);
+      assert.equal(await faucet.tokensBySeederCount(a3), 1);
     });
   });
   describe('token view', () => {

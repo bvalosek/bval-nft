@@ -12,8 +12,8 @@ import "./TokenLockManagerV2.sol";
 
 // data saved for-each token
 struct TokenData {
-  address seeder; // faucet v2 address for legacy tokens, else artist
-  address operator; // msg.sender for seed operation
+  address seeder; // artist that seeds the nft
+  address operator; // msg.sender for seed operation, or legacy faucet
   uint256 seededAt;
   uint256 dailyRate;
   bool isLegacyToken; // true = using v2
@@ -102,11 +102,11 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
   // token lock manager from legacy contract
   TokenLockManager public legacyLock;
 
-  // total managed tokens
-  uint256 public managedTokenCount;
+  // all seeded tokens
+  Token[] public allTokens;
 
-  // legacy tokens
-  uint256 public legacyTokenCount;
+  // seeded tokens by seeder
+  mapping (address => Token[]) public tokensBySeeder;
 
   // contract -> tokenId -> data
   mapping (IERC721 => mapping (uint256 => TokenData)) private _tokenData;
@@ -176,7 +176,7 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
       lastClaimAt: block.timestamp
     });
 
-    managedTokenCount++;
+    _indexToken(nft, tokenId, seeder);
 
     emit Seed(nft, tokenId, seeder, msg.sender, block.timestamp, dailyRate, totalDays);
   }
@@ -208,11 +208,12 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
         lastClaimAt: 0
       });
 
+      _indexToken(nft, tokenId, seeder);
+
       // using zero values for rate and total days as sentinels for legacy seeds
       emit Seed(nft, tokenId, seeder, address(faucet), legacyData.seedTimestamp, 0, 0);
     }
 
-    legacyTokenCount += count;
   }
 
   // ---
@@ -317,9 +318,25 @@ contract NFTTokenFaucetV3 is AccessControlEnumerable {
     return data;
   }
 
+  // total managed token count
+  function allTokensCount() external view returns (uint256) {
+    return allTokens.length;
+  }
+
+  // total managed token count
+  function tokensBySeederCount(address seeder) external view returns (uint256) {
+    return tokensBySeeder[seeder].length;
+  }
+
   // ---
   // utils
   // ---
+
+  function _indexToken(IERC721 nft, uint256 tokenId, address seeder) internal {
+    Token memory entry = Token({ nft: nft, tokenId: tokenId });
+    allTokens.push(entry);
+    tokensBySeeder[seeder].push(entry);
+  }
 
   // returns true if token exists (and is not burnt)
   function _isTokenValid(IERC721 nft, uint256 tokenId) internal view returns (bool) {
