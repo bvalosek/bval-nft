@@ -17,7 +17,7 @@ const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
         gap: theme.spacing(8),
       },
       '@media(max-width:799px)': {
-        '& div:first-child': { marginBottom: theme.spacing(4) },
+        '& > div:first-child': { marginBottom: theme.spacing(4) },
       },
     },
   };

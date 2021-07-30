@@ -6,6 +6,7 @@ import { TokenCard } from './TokenCard';
 
 interface Props {
   views: NFTView[];
+  detailed?: boolean;
 }
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
@@ -23,12 +24,12 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
   };
 });
 
-export const TokenGrid: FunctionComponent<Props> = ({ views }) => {
+export const TokenGrid: FunctionComponent<Props> = ({ views, detailed }) => {
   const classes = useStyles();
   return (
     <div className={classes.container}>
       {views.map((view) => (
-        <TokenCard key={`${view.nft}:${view.tokenId}`} view={view} />
+        <TokenCard detailed key={`${view.nft}:${view.tokenId}`} view={view} />
       ))}
     </div>
   );

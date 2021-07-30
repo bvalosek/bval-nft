@@ -95,5 +95,6 @@ export const getRecentTokens = async ({ limit = 10, offset = 0, seeder }: Recent
   const views = await getNFTDetails(tokens);
   const filtered = views.filter((v): v is NFTView => v !== null);
   if (filtered.length !== views.length) throw new Error();
+  console.log(filtered);
   return filtered;
 };

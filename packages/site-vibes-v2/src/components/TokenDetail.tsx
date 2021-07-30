@@ -32,9 +32,8 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       display: 'flex',
       justifyContent: 'center',
       '& > div': {
-        padding: theme.spacing(4),
         marginTop: theme.spacing(6),
-        maxHeight: '50vh',
+        // maxHeight: '50vh',
       },
     },
   };
@@ -68,30 +67,28 @@ export const TokenDetail: FunctionComponent = () => {
     );
   }
 
-  if (!tokenView.isSeeded) {
-    return (
-      <PageSection>
-        <Content>
-          <Title>{metadata.name}</Title>
-          <p>⚠️ This token is not a VIBES NFT.</p>
-          <ButtonGroup>
-            <Button externalNavTo={`https://opensea.io/assets/matic/${tokenView.nft}/${tokenView.tokenId}`}>
-              ⛵️ VIEW on OpenSea
-            </Button>
-          </ButtonGroup>
-        </Content>
-      </PageSection>
-    );
-  }
+  // if (!tokenView.isSeeded) {
+  //   return (
+  //     <PageSection>
+  //       <Content>
+  //         <Title>{metadata.name}</Title>
+  //         <p>⚠️ This token is not a VIBES NFT.</p>
+  //         <ButtonGroup>
+  //           <Button externalNavTo={`https://opensea.io/assets/matic/${tokenView.nft}/${tokenView.tokenId}`}>
+  //             ⛵️ VIEW on OpenSea
+  //           </Button>
+  //         </ButtonGroup>
+  //       </Content>
+  //     </PageSection>
+  //   );
+  // }
 
   return (
     <>
       <PageSection>
         <div className={classes.hero}>
           <div>
-            <div>
-              <TokenCard view={tokenView} />
-            </div>
+            <TokenCard view={tokenView} />
           </div>
         </div>
       </PageSection>

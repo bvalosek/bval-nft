@@ -17,6 +17,13 @@ const FEATURED: Token = { nft: '0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4', tok
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
+    cta: {
+      '@media(max-width: 799px)': {
+        minHeight: '70vh',
+        display: 'grid',
+        alignItems: 'center',
+      },
+    },
     hero: {
       '@media(min-width: 800px)': {
         marginTop: theme.spacing(10),
@@ -30,7 +37,7 @@ export const Home: FunctionComponent = () => {
   const classes = useStyles();
 
   const fetchTokens = async () => {
-    const tokens = await getRecentTokens({ limit: 7 });
+    const tokens = await getRecentTokens({ limit: 30 });
     setTokens(tokens);
   };
 
@@ -57,7 +64,7 @@ export const Home: FunctionComponent = () => {
       <div className={classes.hero}>
         <PageSection>
           <TwoPanel alignItems="center">
-            <div>
+            <div className={classes.cta}>
               <Content>
                 <Title>😎 Welcome to VIBES</Title>
                 <p>
@@ -74,14 +81,14 @@ export const Home: FunctionComponent = () => {
                 <p> </p>
               </Content>
             </div>
-            <div>{featured && <TokenCard view={featured} />}</div>
+            <div>{featured && <TokenCard detailed view={featured} />}</div>
           </TwoPanel>
         </PageSection>
       </div>
       <PageSection>
         <Content>
-          <Title>Recent VIBES NFTs</Title>
-          <TokenGrid views={recent} />
+          <Title>🔥 Recent VIBES NFTs</Title>
+          <TokenGrid detailed views={recent} />
         </Content>
       </PageSection>
       <PageSection>

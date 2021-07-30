@@ -61,6 +61,13 @@ export const MintSQNCR: FunctionComponent = () => {
                     🏄‍♀️ It's a personal, tokenized carrier wave for the <Vibes />{' '}
                     <Button navTo="/protocol">protocol</Button>.
                   </p>
+                  <ButtonGroup>
+                    {accountView?.maxMints > accountView?.mintedSQNCRs ? (
+                      <Button onClick={() => mint()}>🚀 MINT your SQNCR</Button>
+                    ) : (
+                      <Button disabled>max SQNCRs minted</Button>
+                    )}
+                  </ButtonGroup>
                 </Content>
               </div>
               <div>
@@ -82,13 +89,6 @@ export const MintSQNCR: FunctionComponent = () => {
                 )}
               </div>
             </TwoPanel>
-            <ButtonGroup>
-              {accountView?.maxMints > accountView?.mintedSQNCRs ? (
-                <Button onClick={() => mint()}>🚀 MINT your SQNCR</Button>
-              ) : (
-                <Button disabled>max SQNCRs minted</Button>
-              )}
-            </ButtonGroup>
           </Connect>
         </Content>
       </PageSection>

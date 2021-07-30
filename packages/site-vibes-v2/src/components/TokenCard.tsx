@@ -6,31 +6,37 @@ import { Metadata, resolveMetadata } from '../lib/nft';
 import { NFTView } from '../web3/wellspringv2';
 import { DecimalNumber } from './DecimalNumber';
 import { NFTLink } from './NFTLink';
-import { TwoPanel } from './TwoPanel';
-import { VerticalGap } from './VerticalGap';
-import { Title } from './Title';
-import { Address } from '../../../site-vibes/src/components/Address';
+import { Address } from './Address';
 import { Button } from './Button';
 
 interface Props {
   view: NFTView;
+  detailed?: boolean;
 }
 
 const useStyles = makeStyles<ThemeConfig>((theme) => {
   return {
     token: {
-      fontSize: theme.spacing(5),
+      fontSize: theme.spacing(4),
+      display: 'grid',
+      gap: theme.spacing(2),
     },
     media: {
-      maxWidth: '50vh',
+      '@media(min-width: 800px)': {
+        maxWidth: '50vh',
+      },
       '& img': {
         width: '100%',
       },
     },
+    top: {
+      display: 'grid',
+      gridTemplateColumns: '1fr auto',
+    },
   };
 });
 
-export const TokenCard: FunctionComponent<Props> = ({ view }) => {
+export const TokenCard: FunctionComponent<Props> = ({ view, detailed }) => {
   const classes = useStyles();
   const [metadata, setMetadata] = useState<Metadata>(undefined);
 
@@ -48,20 +54,20 @@ export const TokenCard: FunctionComponent<Props> = ({ view }) => {
   }
 
   return (
-    <VerticalGap className={classes.token} gap={4}>
-      <div className={classes.media}>
-        <Link to={`/tokens/${view.nft}/${view.tokenId}`}>
-          {metadata.image && <img src={metadata.image} />}
-          {metadata.animation_url && (
-            <video autoPlay muted loop controls={false}>
-              <source src={metadata.animation_url} />
-            </video>
-          )}
-        </Link>
-      </div>
-      {/* <VerticalGap gap={0.5}>
+    <>
+      <div className={classes.token}>
+        <div className={classes.media}>
+          <Link to={`/tokens/${view.nft}/${view.tokenId}`}>
+            {metadata.image && <img src={metadata.image} />}
+            {metadata.animation_url && (
+              <video autoPlay muted loop controls={false}>
+                <source src={metadata.animation_url} />
+              </video>
+            )}
+          </Link>
+        </div>
         <div className={classes.info}>
-          <TwoPanel template="1fr auto">
+          <div className={classes.top}>
             <div>
               <DecimalNumber
                 number={view.claimable}
@@ -72,21 +78,21 @@ export const TokenCard: FunctionComponent<Props> = ({ view }) => {
             <div>
               <NFTLink view={view} />
             </div>
-          </TwoPanel>
-        </div>
-        <div>
-          <Title align="left" margin={0}>
-            {metadata.name}
-          </Title>
-        </div>
-        {metadata.creator && (
-          <div>
-            <Button>
-              <Address address={metadata.creator} />
-            </Button>
           </div>
-        )}
-      </VerticalGap> */}
-    </VerticalGap>
+          {detailed && (
+            <div>
+              <div>{metadata.name}</div>
+              {metadata.creator && (
+                <div>
+                  <Button>
+                    <Address address={metadata.creator} />
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
