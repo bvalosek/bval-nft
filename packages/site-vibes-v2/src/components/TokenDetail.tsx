@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/styles';
 import { ThemeConfig } from '../Theme';
 import { DecimalNumber } from './DecimalNumber';
 import { Vibes } from './Vibes';
-import { MediaInfo, Metadata, resolveCreator, resolveMediaInfo, resolveMetadata } from '../lib/nft';
+import { Metadata, resolveMetadata } from '../lib/nft';
 import { ButtonGroup } from './ButtonGroup';
 import { Button } from './Button';
 import { extractFlavorText, formatBytes } from '../lib/strings';
@@ -19,6 +19,7 @@ import { MarketPrice } from './MarketPrice';
 import { Stats } from './Stats';
 import { Divider } from './Divder';
 import { useWallet } from '../hooks/wallet';
+import { TokenCard } from './TokenCard';
 
 interface Params {
   nft: string;
@@ -33,7 +34,7 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       '& > div': {
         padding: theme.spacing(4),
         marginTop: theme.spacing(6),
-        maxHeight: '60vh',
+        maxHeight: '50vh',
       },
     },
   };
@@ -44,16 +45,12 @@ export const TokenDetail: FunctionComponent = () => {
   const { tokenId, nft } = useParams<Params>();
   const [tokenView, setTokenView] = useState<NFTView | null>(undefined);
   const [metadata, setMetadata] = useState<Metadata>(undefined);
-  const [creator, setCreator] = useState<string>(undefined);
-  const [media, setMedia] = useState<MediaInfo>(undefined);
   const classes = useStyles();
 
   const fetchToken = async () => {
     const [view] = await getNFTDetails([{ nft, tokenId }]);
+    const metadata = await resolveMetadata(view);
     setTokenView(view);
-    const metadata = await resolveMetadata(view.tokenUri);
-    setCreator(await resolveCreator(view, metadata));
-    setMedia(await resolveMediaInfo(view, metadata));
     setMetadata(metadata);
   };
 
@@ -76,7 +73,7 @@ export const TokenDetail: FunctionComponent = () => {
       <PageSection>
         <Content>
           <Title>{metadata.name}</Title>
-          <p>This is not a VIBES NFT</p>
+          <p>⚠️ This token is not a VIBES NFT.</p>
           <ButtonGroup>
             <Button externalNavTo={`https://opensea.io/assets/matic/${tokenView.nft}/${tokenView.tokenId}`}>
               ⛵️ VIEW on OpenSea
@@ -91,7 +88,11 @@ export const TokenDetail: FunctionComponent = () => {
     <>
       <PageSection>
         <div className={classes.hero}>
-          <div>TOKEN CARD HERE</div>
+          <div>
+            <div>
+              <TokenCard view={tokenView} />
+            </div>
+          </div>
         </div>
       </PageSection>
       <PageSection>
@@ -108,8 +109,12 @@ export const TokenDetail: FunctionComponent = () => {
             <Content>
               <p>
                 <Stats>
-                  <strong>🎨 artist:</strong> <Address address={creator} />
-                  <br />
+                  {metadata.creator && (
+                    <>
+                      <strong>🎨 artist:</strong> <Address address={metadata.creator} />
+                      <br />
+                    </>
+                  )}
                   <strong>🔥 seeded by:</strong> <Address address={tokenView.seeder} />
                   <br />
                   <strong>🌈 collector:</strong> <Address address={tokenView.owner} />
@@ -129,7 +134,11 @@ export const TokenDetail: FunctionComponent = () => {
                   <strong>💰 value:</strong> <DecimalNumber number={tokenView.balance} decimals={0} /> <Vibes /> ($
                   <MarketPrice amount={tokenView.balance} price="vibesUsdcPrice" />)
                   <br />
-                  <strong>🖼 media:</strong> {media.mimeType} {formatBytes(media.size)}
+                  {metadata.media && (
+                    <>
+                      <strong>🖼 media:</strong> {metadata.media.mimeType} {formatBytes(metadata.media.size)}
+                    </>
+                  )}
                 </Stats>
               </p>
             </Content>

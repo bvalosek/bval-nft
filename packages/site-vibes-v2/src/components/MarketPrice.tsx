@@ -18,7 +18,7 @@ export const MarketPrice: FunctionComponent<Props> = ({ amount, price, decimals 
 
   const number = amount.mul(marketView[price]).div(BigNumber.from(10).pow(18));
 
-  if (number.lt(BigNumber.from(10).pow(18).mul(10))) {
+  if (number.lt(BigNumber.from(10).pow(18).mul(100))) {
     return (
       <>
         <DecimalNumber decimals={decimals ?? 2} number={number} />

@@ -4,7 +4,7 @@ import { getContracts } from '../contracts';
 import { getProvider } from '../lib/rpc';
 import WELLSPRING_V2 from './abi/wellspring-v2.json';
 
-interface Token {
+export interface Token {
   nft: string;
   tokenId: string;
 }

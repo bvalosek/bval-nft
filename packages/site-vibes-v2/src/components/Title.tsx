@@ -4,6 +4,7 @@ import { ThemeConfig } from '../Theme';
 
 interface Props {
   align?: 'center' | 'left' | 'right';
+  margin?: number;
 }
 
 const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
@@ -11,7 +12,7 @@ const useStyles = makeStyles<ThemeConfig, Props>((theme) => {
     header: {
       fontSize: theme.spacing(4.5),
       '@media(min-width: 800px)': { fontSize: theme.spacing(5.5) },
-      margin: `${theme.scaledSpacing(5)} 0`,
+      margin: (props) => `${theme.spacing(props.margin ?? 5)} 0`,
       textDecoration: 'underline',
       fontWeight: 'bold',
       textAlign: (props) => props.align ?? 'center',

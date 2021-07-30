@@ -5,6 +5,7 @@ import { Content } from './Content';
 import { PageSection } from './PageSection';
 import { SQNCRStats } from './SQNCRStats';
 import { WalletStats } from './WalletStats';
+import { Title } from './Title';
 
 export const Wallet: FunctionComponent = () => {
   return (
@@ -14,6 +15,9 @@ export const Wallet: FunctionComponent = () => {
           <Connect>
             <WalletStats />
             <SQNCRStats />
+            <div>
+              <Title>Your VIBES NFTs</Title>
+            </div>
             <Divider />
           </Connect>
         </Content>
