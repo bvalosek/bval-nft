@@ -1,5 +1,5 @@
-import { BigNumber, Contract } from 'ethers';
-import { Provider, Contract as MulticallContract, Contract } from 'ethers-multicall';
+import { BigNumber } from 'ethers';
+import { Provider, Contract as MulticallContract } from 'ethers-multicall';
 import { getContracts } from '../contracts';
 import { getProvider } from '../lib/rpc';
 import WELLSPRING_V2 from './abi/wellspring-v2.json';
@@ -55,6 +55,38 @@ export const getNFTDetails = async (tokens: Token[]): Promise<(NFTView | null)[]
   });
 
   return projected;
+};
+
+interface RecentTokens {
+  limit?: number;
+  offset?: number;
+  seeder?: string;
+}
+
+export const getRecentTokens = async ({ limit = 10, offset = 0, seeder }: RecentTokens = {}): Promise<NFTView[]> => {
+  const provider = new Provider(getProvider(), 137);
+  const wellspringV2 = new MulticallContract(getContracts().wellspringV2, WELLSPRING_V2);
+
+  // total tokens we have
+  const [count] = await provider.all([
+    seeder ? wellspringV2.tokensBySeederCount(seeder) : wellspringV2.allTokensCount(),
+  ]);
+
+  // create an array of offsets to fetch
+  const start = Math.max(0, count.toNumber() - 1 - offset);
+  const take = Math.min(limit, start);
+  const offsets = [...new Array(take)].map((_, idx) => start - idx);
+
+  // use the offsets to query for the tokenIDs
+  const tokens = await provider.all(
+    offsets.map((offset) => (seeder ? wellspringV2.tokensBySeeder(seeder, offset) : wellspringV2.allTokens(offset)))
+  );
+
+  // fetch deets and filter for null (shouldnt happen, just for narrowing)
+  const views = await getNFTDetails(tokens);
+  const filtered = views.filter((v): v is NFTView => v !== null);
+  if (filtered.length !== views.length) throw new Error();
+  return filtered;
 };
 
 // interface TokenFilter {
