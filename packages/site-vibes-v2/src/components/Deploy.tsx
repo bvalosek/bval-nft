@@ -35,6 +35,7 @@ export const Deploy: FunctionComponent = () => {
         seeder: '0x303eefedee1ba8e5d507a55465d946b2fea18583',
         nft: contracts.ssw,
         faucet: contracts.wellspring,
+        lock: contracts.lock,
       },
     });
     registerTransactions(contract.deployTransaction);

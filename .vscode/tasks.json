@@ -10,7 +10,7 @@
     {
       "label": "⚙️ Compile all smart contracts",
       "type": "shell",
-      "command": "npm run contracts:build",
+      "command": "rm -rf ./packages/solidity-contracts/build && npm run contracts:build",
       "problemMatcher": [],
     },
     {
