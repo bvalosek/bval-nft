@@ -12,18 +12,21 @@ interface Token {
 export interface NFTView {
   nft: string;
   tokenId: string;
+
+  unlocksAt: number;
   owner: string;
   tokenUri: string;
 
-  isSeeded: boolean;
   seeder: string;
   operator: string;
-  isLegacyToken: boolean;
-
+  seededAt: number;
   dailyRate: BigNumber;
+  isLegacyToken: boolean;
   balance: BigNumber;
   lastClaimAt: number;
+
   claimable: BigNumber;
+  isSeeded: boolean;
 
   sampledAt: number;
 }
@@ -40,16 +43,22 @@ export const getNFTDetails = async (tokens: Token[]): Promise<(NFTView | null)[]
     return {
       nft: v.nft,
       tokenId: v.tokenId.toString(),
+
+      unlocksAt: v.unlocksAt.toNumber(),
       owner: v.owner,
       tokenUri: v.tokenURI,
-      isSeeded: v.isSeeded,
+
       seeder: v.seeder,
       operator: v.operator,
-      isLegacyToken: v.isLegacyToken,
+      seededAt: v.seededAt.toNumber(),
       dailyRate: v.dailyRate,
+      isLegacyToken: v.isLegacyToken,
       balance: v.balance,
       lastClaimAt: v.lastClaimAt.toNumber(),
+
       claimable: v.claimable,
+      isSeeded: v.isSeeded,
+
       sampledAt: now,
     };
   });
@@ -88,22 +97,3 @@ export const getRecentTokens = async ({ limit = 10, offset = 0, seeder }: Recent
   if (filtered.length !== views.length) throw new Error();
   return filtered;
 };
-
-// interface TokenFilter {
-//   nfts?: string[];
-//   seeders?: string[];
-// }
-
-// export const getSeededTokens = async (): Promise<string[]> => {
-//   const wellspringV2 = new Contract(getContracts().wellspringV2, WELLSPRING_V2, getProvider());
-//   const filter = wellspringV2.filters.Seed();
-//   console.log(filter);
-//   const resp = await wellspringV2.queryFilter(filter, 17093344, 'latest');
-//   // const resp = await getProvider().getLogs({
-//   //   address: getContracts().wellspringV2,
-//   //   fromBlock: 17393344,
-//   //   toBlock: 'latest',
-//   //   topics: filter.topics,
-//   // });
-//   console.log(resp);
-// };
