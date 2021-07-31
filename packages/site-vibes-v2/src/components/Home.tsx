@@ -37,7 +37,7 @@ export const Home: FunctionComponent = () => {
   const classes = useStyles();
 
   const fetchTokens = async () => {
-    const tokens = await getRecentTokens({ limit: 30 });
+    const tokens = await getRecentTokens({ limit:  });
     setTokens(tokens);
   };
 
