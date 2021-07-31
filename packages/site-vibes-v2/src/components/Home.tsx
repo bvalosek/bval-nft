@@ -1,8 +1,8 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Content } from './Content';
 import { PageSection } from './PageSection';
 import { Title } from './Title';
-import { getRecentTokens, NFTView, Token } from '../web3/wellspringv2';
+import { Token } from '../web3/wellspringv2';
 import { TwoPanel } from './TwoPanel';
 import { Vibes } from './Vibes';
 import { ButtonGroup } from './ButtonGroup';
@@ -12,6 +12,7 @@ import { Divider } from './Divder';
 import { makeStyles } from '@material-ui/styles';
 import { ThemeConfig } from '../Theme';
 import { TokenGrid } from './TokenGrid';
+import { useTokens } from '../hooks/tokens';
 
 const FEATURED: Token = { nft: '0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4', tokenId: '3353' };
 
@@ -33,21 +34,10 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 });
 
 export const Home: FunctionComponent = () => {
-  const [tokens, setTokens] = useState<NFTView[]>(undefined);
+  const { tokens } = useTokens();
   const classes = useStyles();
 
-  const fetchTokens = async () => {
-    const tokens = await getRecentTokens({ limit: 7 });
-    setTokens(tokens);
-  };
-
-  useEffect(() => {
-    fetchTokens();
-  }, []);
-
-  const featured = (tokens ?? []).find((t) => t.nft === FEATURED.nft && t.tokenId === FEATURED.tokenId);
-
-  if (!tokens) {
+  if (tokens === null) {
     return (
       <PageSection>
         <Content>
@@ -57,6 +47,7 @@ export const Home: FunctionComponent = () => {
     );
   }
 
+  const featured = tokens.find((t) => t.nft === FEATURED.nft && t.tokenId === FEATURED.tokenId);
   const recent = tokens.slice(1, 7);
 
   return (

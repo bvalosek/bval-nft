@@ -7,6 +7,7 @@ import WELLSPRING from './abi/wellspring.json';
 import VPA from './abi/vote-power-adapater.json';
 import QUICKSWAP_PAIR from './abi/quickswap-pair.json';
 import SQNCR from './abi/sqncr.json';
+import WELLSPRING_V2 from './abi/wellspring-v2.json';
 
 export interface ProtocolView {
   vibesToken: {
@@ -21,6 +22,11 @@ export interface ProtocolView {
     address: string;
     tokenCount: number;
     reserveVibesBalance: BigNumber;
+  };
+  wellspringV2: {
+    address: string;
+    tokenCount: number;
+    totalVibesLocked: BigNumber;
   };
   sqncr: {
     address: string;
@@ -55,6 +61,7 @@ export const getProtocolView = async (): Promise<ProtocolView> => {
   const provider = new Provider(getProvider(), 137);
   const vibes = new Contract(contracts.vibes, VIBES);
   const wellspring = new Contract(contracts.wellspring, WELLSPRING);
+  const wellspringV2 = new Contract(contracts.wellspringV2, WELLSPRING_V2);
   const vpa = new Contract(contracts.votePowerAdapter, VPA);
   const vibesMaticLp = new Contract(contracts.quickswapVibesMatic, QUICKSWAP_PAIR);
   const usdcMaticLp = new Contract(getContracts().quickswapUsdcMatic, QUICKSWAP_PAIR);
@@ -80,6 +87,9 @@ export const getProtocolView = async (): Promise<ProtocolView> => {
     vibesMaticLp.totalSupply(),
     vibesMaticLp.getReserves(),
     usdcMaticLp.getReserves(),
+
+    wellspringV2.allTokensCount(),
+    vibes.balanceOf(contracts.wellspringV2),
   ];
 
   const resp = await provider.all(calls);
@@ -102,6 +112,9 @@ export const getProtocolView = async (): Promise<ProtocolView> => {
     totalVibesMaticLp,
     vibesMaticReserves,
     usdcMaticReserves,
+
+    wellspringV2TokenCount,
+    wellspringV2TVL,
   ] = resp;
 
   const maticReserveUsdc = usdcMaticReserves._reserve0;
@@ -123,6 +136,11 @@ export const getProtocolView = async (): Promise<ProtocolView> => {
       address: contracts.wellspring,
       reserveVibesBalance: wellspringReserveBalance,
       tokenCount: wellspringTokenCount.toNumber(),
+    },
+    wellspringV2: {
+      address: contracts.wellspringV2,
+      tokenCount: wellspringV2TokenCount.toNumber(),
+      totalVibesLocked: wellspringV2TVL,
     },
     gnosisSafe: {
       address: contracts.gnosisSafe,

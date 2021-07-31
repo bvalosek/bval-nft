@@ -8,6 +8,7 @@ import { createTheme } from './Theme';
 import { WalletProvider } from './hooks/wallet';
 import { Application } from './Application';
 import { ProtocolProvider } from './hooks/protocol';
+import { TokensProvider } from './hooks/tokens';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getLibrary = (provider: any) => new Web3Provider(provider);
@@ -17,9 +18,11 @@ const Root: FunctionComponent = () => (
     <Web3ReactProvider getLibrary={getLibrary}>
       <WalletProvider>
         <ProtocolProvider>
-          <BrowserRouter>
-            <Application />
-          </BrowserRouter>
+          <TokensProvider>
+            <BrowserRouter>
+              <Application />
+            </BrowserRouter>
+          </TokensProvider>
         </ProtocolProvider>
       </WalletProvider>
     </Web3ReactProvider>

@@ -29,7 +29,11 @@ export interface NFTView {
   isSeeded: boolean;
 
   sampledAt: number;
+  claimed: BigNumber;
+  mined: BigNumber;
 }
+
+export const nftViewId = (view: Token): string => `${view.nft}:${view.tokenId}`;
 
 export const getNFTDetails = async (tokens: Token[]): Promise<(NFTView | null)[]> => {
   const provider = new Provider(getProvider(), 137);
@@ -40,6 +44,13 @@ export const getNFTDetails = async (tokens: Token[]): Promise<(NFTView | null)[]
 
   const projected = views.map<NFTView | null>((v) => {
     if (!v.isValidToken) return null;
+
+    const mined = BigNumber.from(now)
+      .sub(v.seededAt)
+      .mul(v.dailyRate)
+      .div(60 * 60 * 24);
+    const claimed = mined.sub(v.claimable);
+
     return {
       nft: v.nft,
       tokenId: v.tokenId.toString(),
@@ -60,6 +71,8 @@ export const getNFTDetails = async (tokens: Token[]): Promise<(NFTView | null)[]
       isSeeded: v.isSeeded,
 
       sampledAt: now,
+      mined,
+      claimed,
     };
   });
 
@@ -83,8 +96,10 @@ export const getRecentTokens = async ({ limit = 10, offset = 0, seeder }: Recent
 
   // create an array of offsets to fetch
   const start = Math.max(0, count.toNumber() - 1 - offset);
-  const take = Math.min(limit, start);
+  const take = Math.min(limit, start + 1);
   const offsets = [...new Array(take)].map((_, idx) => start - idx);
+
+  console.log(offsets);
 
   // use the offsets to query for the tokenIDs
   const tokens = await provider.all(
@@ -95,6 +110,5 @@ export const getRecentTokens = async ({ limit = 10, offset = 0, seeder }: Recent
   const views = await getNFTDetails(tokens);
   const filtered = views.filter((v): v is NFTView => v !== null);
   if (filtered.length !== views.length) throw new Error();
-  console.log(filtered);
   return filtered;
 };

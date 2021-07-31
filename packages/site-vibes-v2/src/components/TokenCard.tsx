@@ -1,13 +1,13 @@
 import { makeStyles } from '@material-ui/styles';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { ThemeConfig } from '../Theme';
-import { Metadata, resolveMetadata } from '../lib/nft';
 import { NFTView } from '../web3/wellspringv2';
 import { DecimalNumber } from './DecimalNumber';
 import { NFTLink } from './NFTLink';
 import { Address } from './Address';
 import { Button } from './Button';
+import { useTokens } from '../hooks/tokens';
 
 interface Props {
   view: NFTView;
@@ -38,16 +38,9 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 
 export const TokenCard: FunctionComponent<Props> = ({ view, detailed }) => {
   const classes = useStyles();
-  const [metadata, setMetadata] = useState<Metadata>(undefined);
+  const { getMetadata } = useTokens();
 
-  const fetchToken = async () => {
-    const metadata = await resolveMetadata(view);
-    setMetadata(metadata);
-  };
-
-  useEffect(() => {
-    fetchToken();
-  }, [view.nft, view.tokenId]);
+  const metadata = getMetadata(view);
 
   if (!metadata) {
     return null;

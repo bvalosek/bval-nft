@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/styles';
 import React, { FunctionComponent } from 'react';
 import { ThemeConfig } from '../Theme';
-import { NFTView } from '../web3/wellspringv2';
+import { NFTView, nftViewId } from '../web3/wellspringv2';
 import { TokenCard } from './TokenCard';
 
 interface Props {
@@ -29,7 +29,7 @@ export const TokenGrid: FunctionComponent<Props> = ({ views, detailed }) => {
   return (
     <div className={classes.container}>
       {views.map((view) => (
-        <TokenCard detailed key={`${view.nft}:${view.tokenId}`} view={view} />
+        <TokenCard detailed key={nftViewId(view)} view={view} />
       ))}
     </div>
   );

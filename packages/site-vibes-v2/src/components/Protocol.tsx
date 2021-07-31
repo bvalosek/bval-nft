@@ -12,19 +12,27 @@ import { MarketPrice } from './MarketPrice';
 import { TwoPanel } from './TwoPanel';
 import { Divider } from './Divder';
 import { ButtonGroup } from './ButtonGroup';
+import { useTokens } from '../hooks/tokens';
+import { BigNumber } from '@ethersproject/bignumber';
 
 export const Protocol: FunctionComponent = () => {
   const { protocolView } = useProtocol();
+  const { tokens } = useTokens();
 
-  if (protocolView === null) {
+  if (protocolView == null || tokens == null) {
     return (
       <PageSection>
         <Content>
-          <Title>⌛️ Loading</Title>
+          <Title>⌛️ LOADING</Title>
         </Content>
       </PageSection>
     );
   }
+
+  const totalMined = tokens.reduce((acc, t) => acc.add(t.mined), BigNumber.from(0));
+  const totalClaimed = tokens.reduce((acc, t) => acc.add(t.claimed), BigNumber.from(0));
+  const totalDailyRate = tokens.reduce((acc, t) => acc.add(t.dailyRate), BigNumber.from(0));
+  const totalClaimable = tokens.reduce((acc, t) => acc.add(t.claimable), BigNumber.from(0));
 
   return (
     <>
@@ -150,20 +158,58 @@ export const Protocol: FunctionComponent = () => {
                   <strong>TVL</strong>:{' '}
                   <DecimalNumber decimals={0} number={protocolView.wellspring.reserveVibesBalance} /> <Vibes /> ($
                   <MarketPrice amount={protocolView.wellspring.reserveVibesBalance} price="vibesUsdcPrice" />)
-                  <br />
-                  <strong>managed tokens</strong>: {protocolView.wellspring.tokenCount}
                 </Stats>
               </div>
               <div>
                 <Content>
                   <p>
-                    The <Vibes /> Wellspring is the contract that handles the bookkeeping associated with provenance
+                    The original <Vibes /> Wellspring contract that handles the bookkeeping associated with provenance
                     mining.
                   </p>
                   <p>
-                    Locked tokens cannot be removed (outside of provenance mining) unless an injected NFT has been
-                    burned.
+                    Read data is proxied through the Wellspring V2 contract now, but the original seeded <Vibes /> are
+                    still locked in this contract.
                   </p>
+                </Content>
+              </div>
+            </TwoPanel>
+          </div>
+          <div>
+            <Title>Wellspring v2</Title>
+            <TwoPanel>
+              <div>
+                <Stats>
+                  <strong>address</strong>:{' '}
+                  <Button externalNavTo={`https://polygonscan.com/address/${protocolView.wellspringV2.address}`}>
+                    <Address address={protocolView.wellspringV2.address} />
+                  </Button>
+                  <br />
+                  <strong>TVL</strong>:{' '}
+                  <DecimalNumber decimals={0} number={protocolView.wellspringV2.totalVibesLocked} /> <Vibes /> ($
+                  <MarketPrice amount={protocolView.wellspringV2.totalVibesLocked} price="vibesUsdcPrice" />)
+                  <br />
+                  <strong>managed tokens</strong>: {protocolView.wellspringV2.tokenCount}
+                  <br />
+                  <strong>mining</strong>: <DecimalNumber decimals={0} number={totalDailyRate} /> <Vibes /> / day ($
+                  <MarketPrice amount={totalDailyRate} price="vibesUsdcPrice" />)
+                  <br />
+                  <strong>mined</strong>: <DecimalNumber decimals={0} number={totalMined} /> <Vibes /> ($
+                  <MarketPrice amount={totalMined} price="vibesUsdcPrice" />)
+                  <br />
+                  <strong>claimable</strong>: <DecimalNumber decimals={0} number={totalClaimable} /> <Vibes /> ($
+                  <MarketPrice amount={totalClaimable} price="vibesUsdcPrice" />)
+                  <br />
+                  <strong>claimed</strong>: <DecimalNumber decimals={0} number={totalClaimed} /> <Vibes /> ($
+                  <MarketPrice amount={totalClaimed} price="vibesUsdcPrice" />)
+                </Stats>
+              </div>
+              <div>
+                <Content>
+                  <p>
+                    Wellspring V2 improves on V1 by adding support for multiple NFT contracts, better on-chain
+                    enumerability, and multi-artist support.
+                  </p>
+                  <p>Locked tokens cannot be removed except by NFT owners via provenance mining</p>
                 </Content>
               </div>
             </TwoPanel>

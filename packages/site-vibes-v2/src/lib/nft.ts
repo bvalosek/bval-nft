@@ -1,4 +1,4 @@
-import { NFTView } from '../web3/wellspringv2';
+import { NFTView, nftViewId } from '../web3/wellspringv2';
 import { fetchIpfsJson } from './ipfs';
 import memoize from 'lodash/memoize';
 
@@ -17,8 +17,6 @@ export interface Metadata {
   };
 }
 
-const cacheKey = (view: NFTView): string => `${view.nft}:${view.tokenId}`;
-
 export const resolveMetadata = memoize(async (view: NFTView): Promise<Metadata> => {
   const uri = view.tokenUri;
 
@@ -36,7 +34,7 @@ export const resolveMetadata = memoize(async (view: NFTView): Promise<Metadata> 
   const fetched = await fetchIpfsJson<Metadata>(match[1]);
 
   return fetched;
-}, cacheKey);
+}, nftViewId);
 
 const parseBase64MetadataUri = (uri: string): Metadata => {
   const [, encoded] = uri.match(/^data:application\/json;base64,(.*)$/) ?? [];
