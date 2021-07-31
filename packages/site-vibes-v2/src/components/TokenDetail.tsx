@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { useParams } from 'react-router-dom';
+
 import { Content } from './Content';
 import { PageSection } from './PageSection';
 import { Title } from './Title';
@@ -83,10 +84,6 @@ export const TokenDetail: FunctionComponent = () => {
     );
   }
 
-  const moreByArtist = tokens.filter(
-    (t) => getMetadata(t)?.creator === metadata.creator && nftViewId(t) !== nftViewId(tokenView)
-  );
-
   return (
     <>
       <PageSection>
@@ -113,19 +110,19 @@ export const TokenDetail: FunctionComponent = () => {
                   {metadata.creator && (
                     <>
                       <strong>🎨 artist:</strong>{' '}
-                      <Button>
+                      <Button navTo={`/profile/${metadata.creator}/created`}>
                         <Address address={metadata.creator} />
                       </Button>
                       <br />
                     </>
                   )}
                   <strong>🔥 seeded by:</strong>{' '}
-                  <Button>
+                  <Button navTo={`/profile/${tokenView.seeder}/seeded`}>
                     <Address address={tokenView.seeder} />
                   </Button>
                   <br />
                   <strong>🌈 collector:</strong>{' '}
-                  <Button>
+                  <Button navTo={`/profile/${tokenView.owner}/owned`}>
                     <Address address={tokenView.owner} />
                   </Button>
                   <br />
@@ -170,16 +167,6 @@ export const TokenDetail: FunctionComponent = () => {
           </div>
         </TwoPanel>
       </PageSection>
-      {metadata.creator && moreByArtist.length > 0 && (
-        <PageSection>
-          <Content>
-            <Title>
-              More VIBES NFTs by <Address address={metadata.creator} />
-            </Title>
-            {moreByArtist.map((t) => t.tokenId)}
-          </Content>
-        </PageSection>
-      )}
       <PageSection>
         <Divider />
       </PageSection>

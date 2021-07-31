@@ -110,6 +110,14 @@ export const NavBar: FunctionComponent = () => {
               🏦 WALLET
             </Button>
           </div>
+          <div>
+            <Button
+              onClick={withClose(() => history.push(`/profile/${accountView?.address}`))}
+              disabled={!walletPresent()}
+            >
+              ⭐️ PROFILE
+            </Button>
+          </div>
           <div>* * *</div>
           <div>
             <Button externalNavTo="https://docs.sickvibes.xyz">📚 DOCS</Button>

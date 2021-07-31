@@ -77,7 +77,7 @@ export const TokenCard: FunctionComponent<Props> = ({ view, detailed }) => {
               <div>{metadata.name}</div>
               {metadata.creator && (
                 <div>
-                  <Button>
+                  <Button navTo={`/profile/${metadata.creator}/created`}>
                     <Address address={metadata.creator} />
                   </Button>
                 </div>

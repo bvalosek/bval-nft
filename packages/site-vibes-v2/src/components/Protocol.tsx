@@ -65,8 +65,8 @@ export const Protocol: FunctionComponent = () => {
                       <Address address={protocolView.vibesToken.address} />
                     </Button>
                     <br />
-                    <strong>total supply</strong>:{' '}
-                    <DecimalNumber decimals={0} number={protocolView.vibesToken.totalSupply} /> ($
+                    <strong>supply</strong>: <DecimalNumber decimals={0} number={protocolView.vibesToken.totalSupply} />{' '}
+                    ($
                     <MarketPrice amount={protocolView.vibesToken.totalSupply} price="vibesUsdcPrice" />)
                   </Stats>
                   <ButtonGroup>

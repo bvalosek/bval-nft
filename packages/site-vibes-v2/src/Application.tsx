@@ -6,6 +6,7 @@ import { Home } from './components/Home';
 import { ManageSQNCRs } from './components/ManageSQNCRs';
 import { MintSQNCR } from './components/MintSQNCR';
 import { Page } from './components/Page';
+import { Profile } from './components/Profile';
 import { Protocol } from './components/Protocol';
 import { SQNCRDetail } from './components/SQNCRDetails';
 import { TokenDetail } from './components/TokenDetail';
@@ -40,6 +41,9 @@ export const Application: FunctionComponent = () => {
             <Redirect to={`/tokens/0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4/${props.match.params.tokenId}`} />
           )}
         />
+        <Route path="/profile/:address">
+          <Profile />
+        </Route>
         <Route exact path="/tokens/:nft/:tokenId">
           <TokenDetail />
         </Route>
