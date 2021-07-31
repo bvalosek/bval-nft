@@ -3,9 +3,9 @@ import { PageSection } from './PageSection';
 import { Content } from './Content';
 import { Title } from './Title';
 import { Vibes } from './Vibes';
-import { Address } from '../../../site-vibes/src/components/Address';
+import { Address } from './Address';
 import { useProtocol } from '../hooks/protocol';
-import { DecimalNumber } from '../../../site-vibes/src/components/DecimalNumber';
+import { DecimalNumber } from './DecimalNumber';
 import { Stats } from './Stats';
 import { Button } from './Button';
 import { MarketPrice } from './MarketPrice';
@@ -14,9 +14,9 @@ import { Divider } from './Divder';
 import { ButtonGroup } from './ButtonGroup';
 
 export const Protocol: FunctionComponent = () => {
-  const { protocolView, marketView } = useProtocol();
+  const { protocolView } = useProtocol();
 
-  if (protocolView === null || marketView === null) {
+  if (protocolView === null) {
     return (
       <PageSection>
         <Content>
@@ -86,26 +86,33 @@ export const Protocol: FunctionComponent = () => {
                 <Stats>
                   <strong>address</strong>:{' '}
                   <Button
-                    externalNavTo={`https://quickswap.exchange/#/swap?inputCurrency=ETH&outputCurrency=${marketView.vibesMaticPool.address}`}
+                    externalNavTo={`https://quickswap.exchange/#/swap?inputCurrency=ETH&outputCurrency=${protocolView.quickswap.vibesMaticPool.address}`}
                   >
-                    <Address address={marketView.vibesMaticPool.address} />
+                    <Address address={protocolView.quickswap.vibesMaticPool.address} />
                   </Button>
                   <br />
-                  <strong>VIBES price</strong>: <DecimalNumber number={marketView.vibesUsdcPrice} decimals={5} /> USD
+                  <strong>VIBES price</strong>:{' '}
+                  <DecimalNumber number={protocolView.quickswap.vibesUsdcPrice} decimals={5} /> USD
                   <br />
-                  <strong>VIBES price</strong>: <DecimalNumber number={marketView.vibesMaticPrice} decimals={5} /> MATIC
+                  <strong>VIBES price</strong>:{' '}
+                  <DecimalNumber number={protocolView.quickswap.vibesMaticPrice} decimals={5} /> MATIC
                   <br />
-                  <strong>MATIC price</strong>: <DecimalNumber number={marketView.maticUsdcPrice} decimals={2} /> USD
+                  <strong>MATIC price</strong>:{' '}
+                  <DecimalNumber number={protocolView.quickswap.maticUsdcPrice} decimals={2} /> USD
                   <br />
                   <strong>total liquidity</strong>:{' '}
-                  <DecimalNumber number={marketView.vibesMaticPool.totalSupply} decimals={0} /> LP ($
-                  <MarketPrice amount={marketView.vibesMaticPool.vibesReserve.mul(2)} price="vibesUsdcPrice" />)
+                  <DecimalNumber number={protocolView.quickswap.vibesMaticPool.totalSupply} decimals={0} /> LP ($
+                  <MarketPrice
+                    amount={protocolView.quickswap.vibesMaticPool.vibesReserve.mul(2)}
+                    price="vibesUsdcPrice"
+                  />
+                  )
                   <br />
                   <strong>&nbsp;- VIBES</strong>:{' '}
-                  <DecimalNumber number={marketView.vibesMaticPool.vibesReserve} decimals={0} />
+                  <DecimalNumber number={protocolView.quickswap.vibesMaticPool.vibesReserve} decimals={0} />
                   <br />
                   <strong>&nbsp;- MATIC</strong>:{' '}
-                  <DecimalNumber number={marketView.vibesMaticPool.maticReserve} decimals={0} />
+                  <DecimalNumber number={protocolView.quickswap.vibesMaticPool.maticReserve} decimals={0} />
                 </Stats>
               </div>
               <div>
@@ -116,11 +123,13 @@ export const Protocol: FunctionComponent = () => {
                   </p>
                   <ButtonGroup>
                     <Button
-                      externalNavTo={`https://polygonscan.com/address/${marketView.vibesMaticPool.address}#tokentxns`}
+                      externalNavTo={`https://polygonscan.com/address/${protocolView.quickswap.vibesMaticPool.address}#tokentxns`}
                     >
                       🔎 VIEW market trxs
                     </Button>
-                    <Button externalNavTo={`https://info.quickswap.exchange/pair/${marketView.vibesMaticPool.address}`}>
+                    <Button
+                      externalNavTo={`https://info.quickswap.exchange/pair/${protocolView.quickswap.vibesMaticPool.address}`}
+                    >
                       📊 VIEW market stats
                     </Button>
                   </ButtonGroup>

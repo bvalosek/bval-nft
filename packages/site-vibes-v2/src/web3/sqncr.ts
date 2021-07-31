@@ -1,19 +1,12 @@
 import { Contract, BigNumber, ContractTransaction, Signer } from 'ethers';
 import { Provider, Contract as MulticallContract } from 'ethers-multicall';
 import { getContracts } from '../contracts';
+import { Metadata } from '../lib/nft';
 import { getProvider } from '../lib/rpc';
 import { parseBase64MetadataUri } from '../lib/strings';
 import SQNCR from './abi/sqncr.json';
 
 type SQNCRColor = 'red' | 'green' | 'blue' | 'purple';
-
-export interface Metadata {
-  name: string;
-  description: string;
-  image: string;
-  external_url: string;
-  attributes: Array<{ trait_type: string; value: string }>;
-}
 
 export interface SQNCRData {
   tokenId: string;

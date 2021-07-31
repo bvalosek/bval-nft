@@ -35,6 +35,19 @@ export interface ProtocolView {
     vibesBalance: BigNumber;
     vibesMaticLpBalance: BigNumber;
   };
+  quickswap: {
+    maticUsdcPrice: BigNumber;
+    vibesMaticPrice: BigNumber;
+    vibesUsdcPrice: BigNumber;
+    vibesMaticLpUsdcPrice: BigNumber;
+    vibesMaticPool: {
+      address: string;
+      totalSupply: BigNumber;
+      vibesReserve: BigNumber;
+      maticReserve: BigNumber;
+      totalLiquidityUsdc: BigNumber;
+    };
+  };
 }
 
 export const getProtocolView = async (): Promise<ProtocolView> => {
@@ -44,6 +57,7 @@ export const getProtocolView = async (): Promise<ProtocolView> => {
   const wellspring = new Contract(contracts.wellspring, WELLSPRING);
   const vpa = new Contract(contracts.votePowerAdapter, VPA);
   const vibesMaticLp = new Contract(contracts.quickswapVibesMatic, QUICKSWAP_PAIR);
+  const usdcMaticLp = new Contract(getContracts().quickswapUsdcMatic, QUICKSWAP_PAIR);
   const sqncr = new Contract(contracts.sqncr, SQNCR);
 
   const calls = [
@@ -62,6 +76,10 @@ export const getProtocolView = async (): Promise<ProtocolView> => {
     sqncr.mintCost(),
     sqncr.maxMints(),
     sqncr.totalSupply(),
+
+    vibesMaticLp.totalSupply(),
+    vibesMaticLp.getReserves(),
+    usdcMaticLp.getReserves(),
   ];
 
   const resp = await provider.all(calls);
@@ -80,7 +98,21 @@ export const getProtocolView = async (): Promise<ProtocolView> => {
     sqncrMintCost,
     sqncrMaxMints,
     sqncrTotalSupply,
+
+    totalVibesMaticLp,
+    vibesMaticReserves,
+    usdcMaticReserves,
   ] = resp;
+
+  const maticReserveUsdc = usdcMaticReserves._reserve0;
+  const usdcReserve = usdcMaticReserves._reserve1.mul(BigNumber.from(10).pow(12)); // usdc decimal = 6;
+  const maticUsdPrice = usdcReserve.mul(BigNumber.from(10).pow(18)).div(maticReserveUsdc);
+  const maticReserveVibes = vibesMaticReserves._reserve0;
+  const vibesReserve = vibesMaticReserves._reserve1;
+  const vibesMaticPrice = maticReserveVibes.mul(BigNumber.from(10).pow(18)).div(vibesReserve);
+  const vibesUsdcPrice = vibesMaticPrice.mul(maticUsdPrice).div(BigNumber.from(10).pow(18));
+  const totalLiquidityUsdc = vibesUsdcPrice.mul(vibesReserve).mul(2).div(BigNumber.from(10).pow(18));
+  const vibesMaticLpUsdcPrice = totalLiquidityUsdc.mul(BigNumber.from(10).pow(18)).div(totalVibesMaticLp);
 
   const view: ProtocolView = {
     vibesToken: {
@@ -108,6 +140,19 @@ export const getProtocolView = async (): Promise<ProtocolView> => {
     votePowerAdapter: {
       address: contracts.votePowerAdapter,
       strategies: vpsStrategies,
+    },
+    quickswap: {
+      maticUsdcPrice: maticUsdPrice,
+      vibesMaticPrice,
+      vibesUsdcPrice,
+      vibesMaticLpUsdcPrice,
+      vibesMaticPool: {
+        address: contracts.quickswapVibesMatic,
+        totalSupply: totalVibesMaticLp,
+        maticReserve: maticReserveVibes,
+        vibesReserve: vibesReserve,
+        totalLiquidityUsdc,
+      },
     },
   };
 

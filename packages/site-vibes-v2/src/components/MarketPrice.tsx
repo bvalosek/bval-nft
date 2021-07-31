@@ -10,13 +10,13 @@ interface Props {
 }
 
 export const MarketPrice: FunctionComponent<Props> = ({ amount, price, decimals }) => {
-  const { marketView } = useProtocol();
+  const { protocolView } = useProtocol();
 
-  if (marketView === null) {
+  if (protocolView === null) {
     return <>-</>;
   }
 
-  const number = amount.mul(marketView[price]).div(BigNumber.from(10).pow(18));
+  const number = amount.mul(protocolView.quickswap[price]).div(BigNumber.from(10).pow(18));
 
   if (number.lt(BigNumber.from(10).pow(18).mul(100))) {
     return (

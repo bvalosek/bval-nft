@@ -5,7 +5,6 @@ import { ContractTransaction } from 'ethers';
 
 import { getContracts } from '../contracts';
 import { AccountView, getAccountView } from '../web3/account';
-import { MarketView, getMarketView } from '../web3/market';
 
 const connector = new InjectedConnector({});
 
@@ -58,7 +57,6 @@ export const useWalletImplementation = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [transactions, setTransactions] = useState<ContractTransaction[]>([]);
   const [accountView, setAccountView] = useState<AccountView | null>(null);
-  const [marketView, setMarketView] = useState<MarketView | null>(null);
   const callbacks = useRef<Array<() => unknown>>([]);
 
   const connect = async () => {
@@ -94,15 +92,11 @@ export const useWalletImplementation = () => {
     await trx.wait();
     setTransactions((trxs) => trxs.filter((t) => t !== trx));
     callbacks.current.forEach((cb) => cb());
-    await Promise.all([fetchAccount(), fetchMarketInfo()]);
+    await Promise.all([fetchAccount()]);
   };
 
   const fetchAccount = async () => {
     setAccountView(await getAccountView(account));
-  };
-
-  const fetchMarketInfo = async () => {
-    setMarketView(await getMarketView());
   };
 
   useEffect(() => {
@@ -117,10 +111,6 @@ export const useWalletImplementation = () => {
   } else if (isLoaded) {
     state = 'disconnected';
   }
-
-  useEffect(() => {
-    fetchMarketInfo();
-  }, []);
 
   useEffect(() => {
     setAccountView(null);
@@ -138,7 +128,6 @@ export const useWalletImplementation = () => {
     error,
     connect,
     accountView,
-    marketView,
     switchToPolygon: gotoPoly,
     trackInMetamask,
     registerTransactions,
