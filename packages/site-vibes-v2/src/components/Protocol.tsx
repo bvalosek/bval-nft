@@ -190,8 +190,8 @@ export const Protocol: FunctionComponent = () => {
                   <br />
                   <strong>managed tokens</strong>: {protocolView.wellspringV2.tokenCount}
                   <br />
-                  <strong>mining</strong>: <DecimalNumber decimals={0} number={totalDailyRate} /> <Vibes /> / day ($
-                  <MarketPrice amount={totalDailyRate} price="vibesUsdcPrice" />)
+                  <strong>mining</strong>: <DecimalNumber decimals={0} number={totalDailyRate} /> <Vibes /> ($
+                  <MarketPrice amount={totalDailyRate} price="vibesUsdcPrice" />) / day
                   <br />
                   <strong>mined</strong>: <DecimalNumber decimals={0} number={totalMined} /> <Vibes /> ($
                   <MarketPrice amount={totalMined} price="vibesUsdcPrice" />)

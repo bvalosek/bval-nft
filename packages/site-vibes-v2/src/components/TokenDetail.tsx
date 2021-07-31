@@ -83,6 +83,10 @@ export const TokenDetail: FunctionComponent = () => {
     );
   }
 
+  const moreByArtist = tokens.filter(
+    (t) => getMetadata(t)?.creator === metadata.creator && nftViewId(t) !== nftViewId(tokenView)
+  );
+
   return (
     <>
       <PageSection>
@@ -108,13 +112,22 @@ export const TokenDetail: FunctionComponent = () => {
                 <Stats>
                   {metadata.creator && (
                     <>
-                      <strong>🎨 artist:</strong> <Address address={metadata.creator} />
+                      <strong>🎨 artist:</strong>{' '}
+                      <Button>
+                        <Address address={metadata.creator} />
+                      </Button>
                       <br />
                     </>
                   )}
-                  <strong>🔥 seeded by:</strong> <Address address={tokenView.seeder} />
+                  <strong>🔥 seeded by:</strong>{' '}
+                  <Button>
+                    <Address address={tokenView.seeder} />
+                  </Button>
                   <br />
-                  <strong>🌈 collector:</strong> <Address address={tokenView.owner} />
+                  <strong>🌈 collector:</strong>{' '}
+                  <Button>
+                    <Address address={tokenView.owner} />
+                  </Button>
                   <br />
                   <strong>😎 claimable:</strong>{' '}
                   <DecimalNumber
@@ -130,7 +143,6 @@ export const TokenDetail: FunctionComponent = () => {
                   <br />
                   <strong>💰 value:</strong> <DecimalNumber number={tokenView.balance} decimals={0} /> <Vibes /> ($
                   <MarketPrice amount={tokenView.balance} price="vibesUsdcPrice" />)
-                  <br />
                   <br />
                   {metadata.media && (
                     <>
@@ -158,6 +170,16 @@ export const TokenDetail: FunctionComponent = () => {
           </div>
         </TwoPanel>
       </PageSection>
+      {metadata.creator && moreByArtist.length > 0 && (
+        <PageSection>
+          <Content>
+            <Title>
+              More VIBES NFTs by <Address address={metadata.creator} />
+            </Title>
+            {moreByArtist.map((t) => t.tokenId)}
+          </Content>
+        </PageSection>
+      )}
       <PageSection>
         <Divider />
       </PageSection>
