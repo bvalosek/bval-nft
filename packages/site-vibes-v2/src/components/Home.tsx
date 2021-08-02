@@ -41,14 +41,14 @@ export const Home: FunctionComponent = () => {
     return (
       <PageSection>
         <Content>
-          <Title>⌛️ LOADING</Title>
+          <Title>⌛️ LOADING VIBES</Title>
         </Content>
       </PageSection>
     );
   }
 
   const featured = tokens.find((t) => t.nft === FEATURED.nft && t.tokenId === FEATURED.tokenId);
-  const recent = tokens.slice(1, 7);
+  const recent = tokens.filter((t) => t !== featured).slice(0, 6);
 
   return (
     <>

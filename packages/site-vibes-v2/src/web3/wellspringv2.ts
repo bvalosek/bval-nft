@@ -99,8 +99,6 @@ export const getRecentTokens = async ({ limit = 10, offset = 0, seeder }: Recent
   const take = Math.min(limit, start + 1);
   const offsets = [...new Array(take)].map((_, idx) => start - idx);
 
-  console.log(offsets);
-
   // use the offsets to query for the tokenIDs
   const tokens = await provider.all(
     offsets.map((offset) => (seeder ? wellspringV2.tokensBySeeder(seeder, offset) : wellspringV2.allTokens(offset)))

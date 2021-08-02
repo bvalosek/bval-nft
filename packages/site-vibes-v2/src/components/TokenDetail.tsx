@@ -34,7 +34,6 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
       justifyContent: 'center',
       '& > div': {
         marginTop: theme.spacing(6),
-        // maxHeight: '50vh',
       },
     },
   };
@@ -105,49 +104,47 @@ export const TokenDetail: FunctionComponent = () => {
         <TwoPanel>
           <div>
             <Content>
-              <p>
-                <Stats>
-                  {metadata.creator && (
-                    <>
-                      <strong>🎨 artist:</strong>{' '}
-                      <Button navTo={`/profile/${metadata.creator}/created`}>
-                        <Address address={metadata.creator} />
-                      </Button>
-                      <br />
-                    </>
-                  )}
-                  <strong>🔥 seeded by:</strong>{' '}
-                  <Button navTo={`/profile/${tokenView.seeder}/seeded`}>
-                    <Address address={tokenView.seeder} />
-                  </Button>
-                  <br />
-                  <strong>🌈 collector:</strong>{' '}
-                  <Button navTo={`/profile/${tokenView.owner}/owned`}>
-                    <Address address={tokenView.owner} />
-                  </Button>
-                  <br />
-                  <strong>😎 claimable:</strong>{' '}
-                  <DecimalNumber
-                    number={tokenView.claimable}
-                    decimals={3}
-                    interoplate={{ dailyRate: tokenView.dailyRate, sampledAt: tokenView.sampledAt }}
-                  />{' '}
-                  <Vibes /> ($
-                  <MarketPrice amount={tokenView.claimable} price="vibesUsdcPrice" />)
-                  <br />
-                  <strong>💎 mining:</strong> <DecimalNumber number={tokenView.dailyRate} decimals={0} /> <Vibes /> ($
-                  <MarketPrice amount={tokenView.dailyRate} price="vibesUsdcPrice" decimals={2} />) / day
-                  <br />
-                  <strong>💰 value:</strong> <DecimalNumber number={tokenView.balance} decimals={0} /> <Vibes /> ($
-                  <MarketPrice amount={tokenView.balance} price="vibesUsdcPrice" />)
-                  <br />
-                  {metadata.media && (
-                    <>
-                      <strong>🖼 media:</strong> {metadata.media.mimeType} {formatBytes(metadata.media.size)}
-                    </>
-                  )}
-                </Stats>
-              </p>
+              <Stats>
+                {metadata.creator && (
+                  <>
+                    <strong>🎨 artist:</strong>{' '}
+                    <Button navTo={`/profile/${metadata.creator}/created`}>
+                      <Address address={metadata.creator} />
+                    </Button>
+                    <br />
+                  </>
+                )}
+                <strong>🔥 seeded by:</strong>{' '}
+                <Button navTo={`/profile/${tokenView.seeder}/seeded`}>
+                  <Address address={tokenView.seeder} />
+                </Button>
+                <br />
+                <strong>🌈 collector:</strong>{' '}
+                <Button navTo={`/profile/${tokenView.owner}/owned`}>
+                  <Address address={tokenView.owner} />
+                </Button>
+                <br />
+                <strong>😎 claimable:</strong>{' '}
+                <DecimalNumber
+                  number={tokenView.claimable}
+                  decimals={3}
+                  interoplate={{ dailyRate: tokenView.dailyRate, sampledAt: tokenView.sampledAt }}
+                />{' '}
+                <Vibes /> ($
+                <MarketPrice amount={tokenView.claimable} price="vibesUsdcPrice" />)
+                <br />
+                <strong>💎 mining:</strong> <DecimalNumber number={tokenView.dailyRate} decimals={0} /> <Vibes /> ($
+                <MarketPrice amount={tokenView.dailyRate} price="vibesUsdcPrice" decimals={2} />) / day
+                <br />
+                <strong>💰 value:</strong> <DecimalNumber number={tokenView.balance} decimals={0} /> <Vibes /> ($
+                <MarketPrice amount={tokenView.balance} price="vibesUsdcPrice" />)
+                <br />
+                {metadata.media && (
+                  <>
+                    <strong>🖼 media:</strong> {metadata.media.mimeType} {formatBytes(metadata.media.size)}
+                  </>
+                )}
+              </Stats>
             </Content>
           </div>
           <div>

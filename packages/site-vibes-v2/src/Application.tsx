@@ -41,9 +41,12 @@ export const Application: FunctionComponent = () => {
             <Redirect to={`/tokens/0x486ca491C9A0a9ACE266AA100976bfefC57A0Dd4/${props.match.params.tokenId}`} />
           )}
         />
-        <Route path="/profile/:address">
-          <Profile />
-        </Route>
+        <Route
+          exact
+          path="/profile/:address"
+          render={(props) => <Redirect to={`/profile/${props.match.params.address}/owned`} />}
+        />
+        <Route path="/profile/:address/:section" component={Profile} />
         <Route exact path="/tokens/:nft/:tokenId">
           <TokenDetail />
         </Route>

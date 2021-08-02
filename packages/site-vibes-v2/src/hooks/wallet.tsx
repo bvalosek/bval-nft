@@ -113,11 +113,13 @@ export const useWalletImplementation = () => {
   }
 
   useEffect(() => {
-    setAccountView(null);
-    if (state === 'ready' && library) {
+    if (state !== 'ready') {
+      setAccountView(null);
+    } else if (state === 'ready' && library) {
+      setAccountView(null);
       fetchAccount();
     }
-  }, [account]);
+  }, [account, state]);
 
   const activeSQNCR = accountView && accountView.sqncrs.length > 0 ? accountView.sqncrs[0] : null;
 

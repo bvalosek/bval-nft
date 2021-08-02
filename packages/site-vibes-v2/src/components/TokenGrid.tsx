@@ -26,6 +26,13 @@ const useStyles = makeStyles<ThemeConfig>((theme) => {
 
 export const TokenGrid: FunctionComponent<Props> = ({ views, detailed }) => {
   const classes = useStyles();
+  if (views.length === 0) {
+    return (
+      <>
+        <p style={{ textAlign: 'center' }}>(none)</p>
+      </>
+    );
+  }
   return (
     <div className={classes.container}>
       {views.map((view) => (

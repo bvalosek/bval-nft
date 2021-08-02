@@ -10,16 +10,18 @@ import { Button } from './Button';
 import { TwoPanel } from './TwoPanel';
 import { Address } from './Address';
 import { getContracts } from '../contracts';
+import { Divider } from './Divder';
 
 interface Params {
   tokenId: string;
 }
 
 export const SQNCRDetail: FunctionComponent = () => {
-  const [view, setView] = useState<SQNCRView | null | 'error'>(null);
+  const [view, setView] = useState<SQNCRView | 'loading' | 'error'>('loading');
   const { tokenId } = useParams<Params>();
 
   const fetchSQNCR = async () => {
+    setView('loading');
     try {
       const [sqncr] = await getSQNCRView([tokenId]);
       setView(sqncr);
@@ -44,11 +46,11 @@ export const SQNCRDetail: FunctionComponent = () => {
         </Content>
       </PageSection>
     );
-  } else if (view === null) {
+  } else if (view === 'loading') {
     return (
       <PageSection>
         <Content>
-          <title>⌛️ Loading, Please Wait</title>
+          <Title>⌛️ LOADING SQNCR</Title>
         </Content>
       </PageSection>
     );
@@ -89,10 +91,7 @@ export const SQNCRDetail: FunctionComponent = () => {
         </Content>
       </PageSection>
       <PageSection>
-        <Content>
-          <Title>Installed Modules</Title>
-          <p style={{ textAlign: 'center' }}>(none)</p>
-        </Content>
+        <Divider />
       </PageSection>
     </>
   );
