@@ -36,7 +36,7 @@ export const TokenGrid: FunctionComponent<Props> = ({ views, detailed }) => {
   return (
     <div className={classes.container}>
       {views.map((view) => (
-        <TokenCard detailed key={nftViewId(view)} view={view} />
+        <TokenCard detailed={detailed} key={nftViewId(view)} view={view} />
       ))}
     </div>
   );
